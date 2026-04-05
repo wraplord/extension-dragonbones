@@ -1,0 +1,41 @@
+local skeleton_json = resource.load("/custom_res/character1/YahKabisah_ske.json")
+local tex_json = resource.load("/custom_res/character1/YahKabisah_tex.json")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	--initiate dragon bones and upload json data
+	self.instance = dragonbones.create()
+	dragonbones.load_data(self.instance, skeleton_json, tex_json)
+	print("No of slots", dragonbones.get_no_slots(self.instance))
+
+	--update animation and get buffers
+	dragonbones.update(self.instance)
+	local buffer_table = dragonbones.get_buffers(self.instance)
+	local bt =  buffer_table[1]
+	--pprint(bt)
+
+	--pass
+	--set projection matrix
+	print(bt.projection)
+	go.set("DragonModel#mesh", "u_mvpMatrix", bt.projection)
+
+	--pass
+	--Debugging: check positions, texCoord for reasonable data
+	local positions = buffer.get_stream(bt.buffer, hash("a_position")) --hash("a_texCoord")
+	for i = 1, bt.buffer_count, 2 do
+		print(positions[i], positions[i+1])
+	end
+	--set mesh vertices
+	--self.res = go.get("DragonModel#mesh", "vertices")
+	--self.buffer = resource.get_buffer(self.res)
+	--resource.set_buffer(self.res, bt.buffer)
+
+	--pass
+	--indices
+	local indices = buffer.get_stream(bt.indices, hash("indices"))
+	for i = 1, bt.indices_count,3 do
+		print(indices[i], indices[i+1], indices[i+2])
+	end
+	
+end

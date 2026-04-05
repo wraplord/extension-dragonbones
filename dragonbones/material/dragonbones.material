@@ -1,0 +1,28 @@
+name: "dragonbones"
+tags: "model"
+vertex_program: "/dragonbones/material/dragonbones.vp"
+fragment_program: "/dragonbones/material/dragonbones.fp"
+vertex_space: VERTEX_SPACE_LOCAL
+vertex_constants {
+  name: "u_mvpMatrix"
+  type: CONSTANT_TYPE_USER_MATRIX4
+  value {
+  }
+}
+fragment_constants {
+  name: "tint"
+  type: CONSTANT_TYPE_USER
+  value {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+}
+samplers {
+  name: "u_texture"
+  wrap_u: WRAP_MODE_CLAMP_TO_EDGE
+  wrap_v: WRAP_MODE_CLAMP_TO_EDGE
+  filter_min: FILTER_MODE_MIN_DEFAULT
+  filter_mag: FILTER_MODE_MAG_DEFAULT
+}

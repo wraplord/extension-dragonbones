@@ -1,0 +1,108 @@
+- name: dragonbones
+  type: table
+  desc: Functions and constants for playing dragonbones animatios
+
+  members:
+
+  - name: create
+    type: function
+    desc: initialize dragonbones. Get instance object to be pass to all functions.
+      called destroy to free this object.
+
+    return:
+      - name: instance
+        type: userdata
+        desc: Id of the game object
+
+  - name: load_data
+    type: function
+    desc: Called after initialization. Pass in the skeleton and texture jsons as buffers.
+
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragonbones instance.
+      
+      - name: skeleton_json
+        type: handle
+        desc: A resource buffer of skeleton json.
+
+      - name: tex_json
+        type: handle
+        desc: A resource buffer of atlas json.
+  
+  - name: update
+    type: function
+    desc: advance dragobones world by 1/60f.
+
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+
+  - name: resize
+    type: function
+    desc: update viewport width and height. 
+
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+
+      - name: width
+        type: integer
+        desc: viewport width
+
+      - name: height
+        type: integer
+        desc: viewport height
+
+  - name: destroy
+    type: function
+    desc: destroy this world. Make sure to free the buffers first
+
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+
+  - name: get_no_slots
+    type: function
+    desc: Get the available slots in this world. You can use this to
+     create specific no of meshes.
+
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+
+  - name: request_buffers
+    type: function
+    desc: Get a table of slots. Sub table contain luaHBuffer buffer, matrix4 projection , luaHBuffer indices,
+      string slot_name, integer buffer_count, integer indices_count.
+      buffer is vertices. indices is model indices. projection is the projection matrix.
+      Use this data to create meshes. 
+
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+    return:
+      - name: slots_table
+        type: table
+        desc: 2d table
+
+  
+  - name: free_buffers
+    type: function
+    desc: Free the buffers created by get_buffers. Called before next get_buffers.
+     
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+
+  
+
+      
+

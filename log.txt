@@ -1,0 +1,36 @@
+INFO:DLIB: Writing log to: ./log.txt
+INFO:ENGINE: Loading data from: build/default
+INFO:DRAGONBONESEXT: Registered DragonBones extension
+
+INFO:SOUND: Mix format:
+INFO:SOUND:   wFormatTag:       fffe  IEEE_FLOAT/PCM/EXTENSIBLE: 3 / 1 / fffe
+INFO:SOUND:   nChannels:        2
+INFO:SOUND:   nSamplesPerSec:   48000
+INFO:SOUND:   nAvgBytesPerSec:  384000
+INFO:SOUND:   nBlockAlign:      8
+INFO:SOUND:   wBitsPerSample:   32
+INFO:SOUND:   -> Format:        3  IEEE_FLOAT/PCM/EXTENSIBLE: 3 / 1 / fffe
+INFO:SOUND:   DSP backend: Fallback
+INFO:SOUND: Sound
+INFO:SOUND:   nSamplesPerSec:   48000
+INFO:SOUND:        useThread:   1
+INFO:ENGINE: Initialised sound device 'default'
+INFO:DRAGONBONESEXT: projectionMatrix 0, 1: 0.000977, 0.000000
+INFO:DRAGONBONESEXT: DragonBones Initialized
+INFO:DRAGONBONESEXT: Skeleton no of bytes: 13409
+INFO:DRAGONBONESEXT: Atlas json no of bytes: 1898
+INFO:DRAGONBONESEXT: Buffering data from byte arrays...
+INFO:DRAGONBONESEXT: Data successfully buffered.
+INFO:DRAGONBONESEXT: Creating armature on GL thread...
+INFO:DRAGONBONESEXT: Armature 'YahKabisah' built at 00000296A3B454A0, instance is 00000296A3D4B1C0
+INFO:DRAGONBONESEXT: Armature building done.
+DEBUG:SCRIPT: No of slots	27
+DEBUG:SCRIPT: vmath.matrix4(0.00047007080866024, -0.00013210611359682, 0, -0.024654449895024, 0.00013210611359682, 0.00047007080866024, 0, -0.1747260838747, 0, 0, -1, 0, 0, 0, 0, 1)
+DEBUG:SCRIPT: -23	305
+DEBUG:SCRIPT: 23	305
+DEBUG:SCRIPT: -23	-305
+DEBUG:SCRIPT: 23	-305
+DEBUG:SCRIPT: 0	1	2
+DEBUG:SCRIPT: 1	3	2
+INFO:DLIB: SSDP: Started on address 10.61.67.99
+INFO:DLIB: SSDP: Done on address 10.61.67.99
