@@ -2,22 +2,35 @@
 
 attribute vec2 a_position;
 attribute vec2 a_texCoord;
-varying vec2 v_texCoord;
+out vec2 v_texCoord;
 
 uniform vs_uniforms
 {
-    mat4 u_mvpMatrix ; 
+    uniform mediump mat4 u_mvpMatrix ;
+    uniform mediump mat4 mtx_proj; 
+    uniform mediump mat4 mtx_worldview;
 };
 
 void main() {
-    //remove or set u_mvpMatrix to identity for debugging in editor
-    #ifdef EDITOR
-        //mat4 cannot be in material editor. let's use identity.
-        //to view mesh .buffer file in editor
-        gl_Position =  vec4(a_position, 0.0, 1.0);
-    #else
-        gl_Position = u_mvpMatrix * vec4(a_position, 0.0, 1.0);
-    #endif
     
+    vec4 p = mtx_worldview * vec4(a_position.xy, 0, 1.0);
+
+    // gl_Position = u_mvpMatrix * vec4(a_position, 0.0, 1.0);
+    mat4 proj1 = mat4(
+        0.0037605664692819, -0.0010568489087746, 0, -0.19723559916019,
+        0.0010568489087746, 0.0037605664692819, 0, -1.3978086709976, 
+        0, 0, -1, 0, 
+        0, 0, 0, 1
+    );
+
+    mat4 proj = mat4(
+         0.0037605664692819, 0.0010568489087746, 0, 0,
+        -0.0010568489087746, 0.0037605664692819, 0, 0,
+        0, 0, -1, 0, 
+        -0.19723559916019, -1.3978086709976, 0, 1
+    );
+    
+    //gl_Position = mtx_proj * p;
+    gl_Position = proj * p;
     v_texCoord  = a_texCoord;
 }

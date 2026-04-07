@@ -3,8 +3,12 @@ instances {
   id: "DragonModel"
   prototype: "/dragonbones/models/DragonModel.go"
   position {
-    x: 10.0
-    y: 10.0
+    x: 366.0
+    y: 368.0
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
   }
 }
 scale_along_z: 0

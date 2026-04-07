@@ -7,56 +7,28 @@
     :open-tabs [
       [
         [
-          "/game.project"
-          :cljfx-form-view
-        ]
-        [
           "/main/main.collection"
           :scene
         ]
         [
-          "/main/test.script"
+          "/dragonbones/material/dragonbones.buffer"
           :code
+        ]
+        [
+          "/dragonbones/material/dragonbones.material"
+          :cljfx-form-view
         ]
         [
           "/dragonbones/material/dragonbones.vp"
           :code
         ]
         [
-          "/dragonbones/material/dragonbones.fp"
-          :code
-        ]
-        [
-          "/dragonbones/material/dragonbones.buffer"
+          "/main/test.script"
           :code
         ]
       ]
     ]
     :recent-files [
-      [
-        "/dragonbones/src/opengl/OpenGLSlot.h"
-        :code
-      ]
-      [
-        "/dragonbones/src/dragonBones/parser/JSONDataParser.cpp"
-        :code
-      ]
-      [
-        "/dragonbones/src/dragonBones/parser/JSONDataParser.h"
-        :code
-      ]
-      [
-        "/dragonbones/src/dragonBones/factory/BaseFactory.h"
-        :code
-      ]
-      [
-        "/dragonbones/src/opengl/OpenGLSlot.cpp"
-        :code
-      ]
-      [
-        "/dragonbones/model/DragonModel.go"
-        :scene
-      ]
       [
         "/dragonbones/src/script_dragonbones.h"
         :code
@@ -83,10 +55,6 @@
       ]
       [
         "/dragonbones/api/dragonbones.script_api"
-        :code
-      ]
-      [
-        "/.gitignore"
         :code
       ]
       [
@@ -134,7 +102,11 @@
         :text
       ]
       [
-        "/dragonbones/material/dragonbones.material"
+        "/.gitignore"
+        :code
+      ]
+      [
+        "/dragonbones/material/dragonbones - Copy.material"
         :cljfx-form-view
       ]
       [
@@ -142,11 +114,39 @@
         :cljfx-form-view
       ]
       [
+        "/dragonbones/material/dragonbones_work.fp"
+        :code
+      ]
+      [
+        "/dragonbones/material/dragonbones_work.vp"
+        :code
+      ]
+      [
+        "/dragonbones/material/dragonbones_copy.buffer"
+        :code
+      ]
+      [
+        "/dragonbones/material/dragonbones.material"
+        :cljfx-form-view
+      ]
+      [
+        "/dragonbones/material/dragonbones.buffer"
+        :code
+      ]
+      [
+        "/dragonbones/material/test/dragonbones_copy.buffer"
+        :code
+      ]
+      [
+        "/dragonbones/material/work.material"
+        :cljfx-form-view
+      ]
+      [
         "/dragonbones/material/dragonbones.fp"
         :code
       ]
       [
-        "/dragonbones/material/dragonbones.buffer"
+        "/main/test.script"
         :code
       ]
       [
@@ -155,10 +155,6 @@
       ]
       [
         "/dragonbones/material/dragonbones.vp"
-        :code
-      ]
-      [
-        "/main/test.script"
         :code
       ]
     ]

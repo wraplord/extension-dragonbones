@@ -6,8 +6,17 @@
 
   - name: create
     type: function
-    desc: initialize dragonbones. Get instance object to be pass to all functions.
+    desc: initialize dragonbones with viewport width and height. Get instance object to be pass to all functions.
       called destroy to free this object.
+
+    parameters:
+      - name: viewportWidth
+        type: integer
+        desc: viewport width.
+
+      - name: viewportHeight
+        type: integer
+        desc: viewport height.
 
     return:
       - name: instance
@@ -78,7 +87,7 @@
 
   - name: request_buffers
     type: function
-    desc: Get a table of slots. Sub table contain luaHBuffer buffer, matrix4 projection , luaHBuffer indices,
+    desc: Get a table of slots. Sub table contain luaHBuffer buffer, matrix4 projection , luaHBuffer normals,
       string slot_name, integer buffer_count, integer indices_count.
       buffer is vertices. indices is model indices. projection is the projection matrix.
       Use this data to create meshes. 

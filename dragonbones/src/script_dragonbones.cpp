@@ -231,6 +231,9 @@ namespace dmDragonBones
     {
         DM_LUA_STACK_CHECK(L, 1);
 
+        float width = (float)luaL_checknumber(L, 1);
+        float height = (float)luaL_checknumber(L, 2);
+
         auto* instance = new JniBridgeInstance();
         if (!instance->factory) {
             instance->factory = new dragonBones::opengl::OpenGLFactory();
@@ -241,6 +244,8 @@ namespace dmDragonBones
             instance->factory->setDragonBones(instance->dragonBones);
         }
 
+        instance->viewportWidth = width;
+        instance->viewportHeight = height;
         createOrthographicMatrix(0.0f, instance->viewportWidth, 0.0f, instance->viewportHeight, -1.0f, 1.0f, instance->projectionMatrix);
 
         dmLogInfo("projectionMatrix 0, 1: %f, %f", instance->projectionMatrix[0], instance->projectionMatrix[1]);
@@ -464,6 +469,8 @@ namespace dmDragonBones
         JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
         //freeBuffers(instance);
         const auto& slots = instance->armature->getSlots();
+        auto aabb = instance->armature->getArmatureData()->aabb;
+        float aabb_array[6] = {aabb.x, aabb.y, -1, aabb.x + aabb.width, aabb.y + aabb.height, 1};
 
         //projection
         float viewMatrix[16], scaleM[16], transM[16];
@@ -484,6 +491,7 @@ namespace dmDragonBones
             const char* slot_name = slot->getName().c_str();
             auto slot_vertices = openglSlot->vertices;
             auto slot_indices = openglSlot->indices;
+            auto indices = slot_indices.data();
 
             //vertices
             dmBuffer::HBuffer buffer1 = 0x0;
@@ -493,32 +501,54 @@ namespace dmDragonBones
                 const dmBuffer::StreamDeclaration streams_decl[] = {
                     {dmHashString64("a_position"), dmBuffer::VALUE_TYPE_FLOAT32, 2},
                     {dmHashString64("a_texCoord"), dmBuffer::VALUE_TYPE_FLOAT32, 2},
+                    {dmHashString64("a_normal"),   dmBuffer::VALUE_TYPE_FLOAT32, 3},
                 };
             
-                dmBuffer::Result r = dmBuffer::Create(slot_vertices.size()/2, streams_decl, 2, &buffer1);
+                dmBuffer::Result r = dmBuffer::Create(slot_vertices.size()/4, streams_decl, 3, &buffer1);
             
                 if (r == dmBuffer::RESULT_OK) {
+                   
+                    dmBuffer::Result rm = dmBuffer::SetMetaData(buffer1, dmHashString32("AABB"), &aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
+                    if(rm != dmBuffer::RESULT_OK){
+                        dmLogInfo("Cannot set %s AABB", slot_name);
+                    }
+
                     float* positions = 0x0;
                     float* texCoord = 0x0;
+                    float* normals = 0x0;
 
                     uint32_t components = 0;
                     uint32_t components2 = 0;
+                    uint32_t components3 = 0;
+
                     uint32_t stride = 0;
                     uint32_t stride2 = 0;
+                    uint32_t stride3 = 0;
+
                     uint32_t count;
 
                     dmBuffer::Result r1 = dmBuffer::GetStream(buffer1, dmHashString64("a_position"), (void**)&positions, &count, &components,  &stride);
                     dmBuffer::Result r2 = dmBuffer::GetStream(buffer1, dmHashString64("a_texCoord"), (void**)&texCoord,  &count, &components2, &stride2);
+                    dmBuffer::Result r3 = dmBuffer::GetStream(buffer1, dmHashString64("a_normal"),   (void**)&normals,  &count, &components3, &stride3);
 
+                    dmLogInfo("Buffer Count, Components: %d, %d", count, components);
                     if (r1 == dmBuffer::RESULT_OK && r2 == dmBuffer::RESULT_OK) {
                         int offset = 0;
                         for(int i = 0; i < count; ++i){
                             for (int c = 0; c < components; ++c) {
-                                positions[c] = vertices[offset + c];
-                                texCoord[c]  = vertices[offset + c + 2] ;
+                                auto pos = vertices[offset + c];
+                                auto tex = vertices[offset + c + 2] ;
+
+                                positions[c] = c == 0 ? pos : -pos ; //y axis is up in defold
+                                texCoord[c]  = c == 0 ? tex : 1.0 - tex ; //flip tex coordinates
                             }
+
+                            normals[0] = 0; normals[1] = 0; normals[2] = 1;
+
                             positions += stride;
                             texCoord  += stride2;
+                            normals   += stride3;
+
                             offset += 4;
                             //dmLogInfo("vertices for %s values : %f, %f", slot_name, vertices[i]);
                         }
@@ -526,6 +556,61 @@ namespace dmDragonBones
                          dmLogInfo("Cannot get vertices' streams. ");
                     }
                    
+                    //normals
+                    /*
+                        // Compute Vertex Normals
+                        std::vector<dmVMath::Vector3> verticesNormal;
+                        verticesNormal.resize(slot_vertices.size()/2);
+
+                        for (int i = 0; i < slot_indices.size(); i += 3)
+                        {
+                            // Get the face normal y & x
+                            auto slot1 = indices[i+1] * 4;//3 * 4
+                            auto slot0 = indices[i] * 4; //1
+
+                            auto vector1_x = vertices[slot1] - vertices[slot0]; //xs
+                            auto vector1_y = vertices[slot1 + 1] - vertices[slot0 + 1];
+                            dmLogInfo("Normal for 1: %d, %d, %f, %f", vector1_x, vector1_y);
+
+                            auto slot2 = indices[i+2] * 4;
+
+                            auto vector2_x = vertices[slot2] - vertices[slot0];
+                            auto vector2_y = vertices[slot2 + 1] - vertices[slot0 + 1];
+
+                            auto faceNormal = dmVMath::Cross(dmVMath::Vector3(vector1_x, vector1_y,1), dmVMath::Vector3(vector2_x, vector2_y, 1));
+                            faceNormal = dmVMath::Normalize(faceNormal);
+                            dmLogInfo("Normal %f, %f", faceNormal.getX(), faceNormal.getY());
+
+                            // Add the face normal to the 3 vertices normal touching this face
+                            verticesNormal[indices[i]]   += faceNormal;
+                            verticesNormal[indices[i+1]] += faceNormal;
+                            verticesNormal[indices[i+2]] += faceNormal;
+                        }
+
+                        // Normalize vertices normal
+                        for (int i = 0; i < verticesNormal.size(); i++){
+                            verticesNormal[i] =  dmVMath::Normalize(verticesNormal[i]);
+                        }
+                        float* strm_normals = 0x0;
+                    
+                        uint32_t components3 = 0;
+                        uint32_t stride3 = 0;
+                        uint32_t count3;
+
+                        dmBuffer::Result r3 = dmBuffer::GetStream(buffer1, dmHashString64("a_normal"), (void**)&strm_normals, &count3, &components3, &stride3);
+                    
+                        if (r3 == dmBuffer::RESULT_OK ) {
+                            for(int i = 0; i < count; ++i){
+                                for (int c = 0; c < components; ++c) {
+                                    strm_normals[c] = c == 0 ? verticesNormal[i].getX() : verticesNormal[i].getY() ;
+                                }
+                                
+                                strm_normals += stride3;
+                            } 
+                        } else {
+                            dmLogInfo("Cannot get normals' streams.");
+                        }
+                    */
                 } else {
                     dmLogInfo("Cannot copy vertices");
                 }
@@ -546,25 +631,33 @@ namespace dmDragonBones
                 multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
                 //dmLogInfo("pvMatrix 0,1 : %f, %f", pvMatrix[0], pvMatrix[1]);
                 multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
-                //dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[1],  mvpMatrix[2], mvpMatrix[3]);
+                dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[1],  mvpMatrix[2], mvpMatrix[3]);
 
-                projection = {
+                /*projection = {
                     {mvpMatrix[0], mvpMatrix[1],mvpMatrix[2],mvpMatrix[3]},
                     {mvpMatrix[4], mvpMatrix[5],mvpMatrix[6],mvpMatrix[7]},
                     {mvpMatrix[8], mvpMatrix[9],mvpMatrix[10],mvpMatrix[11]},
                     {mvpMatrix[12], mvpMatrix[13],mvpMatrix[14],mvpMatrix[15]},
+                };*/
+                projection = {
+                    {mvpMatrix[0], mvpMatrix[4],mvpMatrix[8],mvpMatrix[12]},
+                    {mvpMatrix[1], mvpMatrix[5],mvpMatrix[9],mvpMatrix[13]},
+                    {mvpMatrix[2], mvpMatrix[6],mvpMatrix[10],mvpMatrix[14]},
+                    {mvpMatrix[3], mvpMatrix[7],mvpMatrix[11],mvpMatrix[15]},
                 };
                 
             }    
+            
+            
             
             //indices
             dmBuffer::HBuffer buffer3;
             {
                 const dmBuffer::StreamDeclaration streams_decl3[] = {
-                    {dmHashString64("indices"), dmBuffer::VALUE_TYPE_UINT16, 1},
+                   {dmHashString64("indices"), dmBuffer::VALUE_TYPE_UINT16, 1},
                 };
                 
-                auto indices = slot_indices.data();
+               
                 dmBuffer::Result r = dmBuffer::Create(slot_indices.size() / 1, streams_decl3, 1, &buffer3);
             
                 if (r == dmBuffer::RESULT_OK) {
@@ -589,12 +682,12 @@ namespace dmDragonBones
                     }
                     //instance->buffers.Push(luabuf3);
                 } else {
-                    dmLogInfo("Cannot copy indices");
+                    dmLogInfo("Cannot create indices.");
                     //continue
                 }
                 
-            }    
-
+            }   
+            
 
             lua_pushinteger(L, slot_index + 1); 
             // { 1 = {buffer=..., projection=..., indices=...},  2 = {buffer=..., projection=..., indices=...}}
@@ -622,7 +715,7 @@ namespace dmDragonBones
             lua_settable(L, -3);
 
             lua_pushstring(L,  "buffer_count");
-            lua_pushinteger(L,  slot_vertices.size()/2); //component count 2?
+            lua_pushinteger(L,  slot_vertices.size()/4); //component count 2, and two position and texCoord?
             lua_settable(L, -3);
 
             lua_pushstring(L,  "indices_count");
