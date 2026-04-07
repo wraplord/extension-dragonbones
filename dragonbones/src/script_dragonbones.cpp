@@ -246,7 +246,7 @@ namespace dmDragonBones
 
         instance->viewportWidth = width;
         instance->viewportHeight = height;
-        createOrthographicMatrix(0.0f, instance->viewportWidth, 0.0f, instance->viewportHeight, -1.0f, 1.0f, instance->projectionMatrix);
+        createOrthographicMatrix(0.0f, instance->viewportWidth, instance->viewportHeight, 0.0f, -1.0f, 1.0f, instance->projectionMatrix);
 
         dmLogInfo("projectionMatrix 0, 1: %f, %f", instance->projectionMatrix[0], instance->projectionMatrix[1]);
         dmLogInfo("DragonBones Initialized");
@@ -457,9 +457,11 @@ namespace dmDragonBones
     static int freeBuffers(lua_State* L){
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         //clear save buffers
-        for(int i = 0 ; i < instance->buffers.Size(); i++){
-            dmBuffer::Destroy(instance->buffers[i].m_Buffer);
-        }
+        //for(int i = 0 ; i < instance->buffers.Size(); i++){
+        //    dmBuffer::Destroy(instance->buffers[i].m_Buffer);
+        //}
+
+        //resources release handle by OWNER::RES
         return 1;
     }
     
@@ -482,7 +484,7 @@ namespace dmDragonBones
         
         lua_newtable(L);
         
-        instance->buffers.SetCapacity(slots.size() * 2);
+        //instance->buffers.SetCapacity(slots.size() * 2);
        
 
         for (int slot_index = 0; slot_index <slots.size(); slot_index++){
@@ -493,13 +495,39 @@ namespace dmDragonBones
             auto slot_indices = openglSlot->indices;
             auto indices = slot_indices.data();
 
+            if (!slot) {
+                dmLogInfo("onDrawFrame: Skipping null slot.");
+                continue;
+            }
+
+            if (!slot->getVisible()) {
+                dmLogInfo("onDrawFrame: Slot '%s' is not visible.", slot->getName().c_str());
+                continue;
+            }
+
+            if (!slot->getDisplay()) {
+                dmLogInfo("onDrawFrame: Slot '%s' has no display object.", slot->getName().c_str());
+                continue;
+            }
+                    
+            if (!openglSlot) {
+                dmLogInfo("onDrawFrame: Slot '%s' could not be cast to OpenGLSlot.", slot->getName().c_str());
+                continue;
+            }
+
+            if (openglSlot->vertices.empty() || openglSlot->indices.empty()) {
+                dmLogInfo("onDrawFrame: Skipping slot '%s' due to empty buffers or texture ID 0 (vertices: %d, indices: %d)",
+                    slot->getName().c_str(), openglSlot->vertices.size(), openglSlot->indices.size());
+                continue;
+            }
+
             //vertices
             dmBuffer::HBuffer buffer1 = 0x0;
             {
                 
                 auto* vertices = slot_vertices.data();
                 const dmBuffer::StreamDeclaration streams_decl[] = {
-                    {dmHashString64("a_position"), dmBuffer::VALUE_TYPE_FLOAT32, 2},
+                    {dmHashString64("a_position"), dmBuffer::VALUE_TYPE_FLOAT32, 3},
                     {dmHashString64("a_texCoord"), dmBuffer::VALUE_TYPE_FLOAT32, 2},
                     {dmHashString64("a_normal"),   dmBuffer::VALUE_TYPE_FLOAT32, 3},
                 };
@@ -531,17 +559,27 @@ namespace dmDragonBones
                     dmBuffer::Result r2 = dmBuffer::GetStream(buffer1, dmHashString64("a_texCoord"), (void**)&texCoord,  &count, &components2, &stride2);
                     dmBuffer::Result r3 = dmBuffer::GetStream(buffer1, dmHashString64("a_normal"),   (void**)&normals,  &count, &components3, &stride3);
 
-                    dmLogInfo("Buffer Count, Components: %d, %d", count, components);
+                    //dmLogInfo("Buffer Count, Components: %d, %d", count, components);
                     if (r1 == dmBuffer::RESULT_OK && r2 == dmBuffer::RESULT_OK) {
                         int offset = 0;
                         for(int i = 0; i < count; ++i){
-                            for (int c = 0; c < components; ++c) {
+                            /*for (int c = 0; c < components; ++c) {
                                 auto pos = vertices[offset + c];
                                 auto tex = vertices[offset + c + 2] ;
 
                                 positions[c] = c == 0 ? pos : -pos ; //y axis is up in defold
                                 texCoord[c]  = c == 0 ? tex : 1.0 - tex ; //flip tex coordinates
-                            }
+                            }*/
+
+                            //y axis is up in defold
+                            auto pos_x =  vertices[offset + 0];
+                            auto pos_y =  vertices[offset + 1];
+                            positions[0] =  pos_x ; positions[1] =  pos_y ; positions[2] = 0; //2 = z axis
+                            
+                            //flip y tex coordinates
+                            auto tex_x = vertices[offset + 0 + 2] ;
+                            auto tex_y = 1.0 - vertices[offset + 1 + 2] ;
+                            texCoord[0]  = tex_x ; texCoord[1]  = tex_y; 
 
                             normals[0] = 0; normals[1] = 0; normals[2] = 1;
 
@@ -631,20 +669,20 @@ namespace dmDragonBones
                 multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
                 //dmLogInfo("pvMatrix 0,1 : %f, %f", pvMatrix[0], pvMatrix[1]);
                 multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
-                dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[1],  mvpMatrix[2], mvpMatrix[3]);
+                dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
 
-                /*projection = {
-                    {mvpMatrix[0], mvpMatrix[1],mvpMatrix[2],mvpMatrix[3]},
-                    {mvpMatrix[4], mvpMatrix[5],mvpMatrix[6],mvpMatrix[7]},
-                    {mvpMatrix[8], mvpMatrix[9],mvpMatrix[10],mvpMatrix[11]},
-                    {mvpMatrix[12], mvpMatrix[13],mvpMatrix[14],mvpMatrix[15]},
-                };*/
                 projection = {
+                    {mvpMatrix[0],   mvpMatrix[1],  mvpMatrix[2],  mvpMatrix[3]},
+                    {mvpMatrix[4],   mvpMatrix[5],  mvpMatrix[6],  mvpMatrix[7]},
+                    {mvpMatrix[8],   mvpMatrix[9],  mvpMatrix[10], mvpMatrix[11]},
+                    {mvpMatrix[12],  mvpMatrix[13], mvpMatrix[14], mvpMatrix[15]},
+                };
+                /*projection = {
                     {mvpMatrix[0], mvpMatrix[4],mvpMatrix[8],mvpMatrix[12]},
                     {mvpMatrix[1], mvpMatrix[5],mvpMatrix[9],mvpMatrix[13]},
                     {mvpMatrix[2], mvpMatrix[6],mvpMatrix[10],mvpMatrix[14]},
                     {mvpMatrix[3], mvpMatrix[7],mvpMatrix[11],mvpMatrix[15]},
-                };
+                };*/
                 
             }    
             
@@ -695,8 +733,8 @@ namespace dmDragonBones
             lua_newtable(L);
 
             lua_pushstring(L, "buffer");
-            dmScript::LuaHBuffer luabuf1(buffer1, dmScript::OWNER_C);
-            instance->buffers.Push(luabuf1);
+            dmScript::LuaHBuffer luabuf1(buffer1, dmScript::OWNER_LUA);
+            //instance->buffers.Push(luabuf1);
             dmScript::PushBuffer(L, luabuf1);
             lua_settable(L, -3);
 
@@ -705,8 +743,8 @@ namespace dmDragonBones
             lua_settable(L, -3);
 
             lua_pushstring(L, "indices");
-            dmScript::LuaHBuffer luabuf3(buffer3, dmScript::OWNER_C);
-            instance->buffers.Push(luabuf3);
+            dmScript::LuaHBuffer luabuf3(buffer3, dmScript::OWNER_LUA);
+            //instance->buffers.Push(luabuf3);
             dmScript::PushBuffer(L, luabuf3);
             lua_settable(L, -3);
             
@@ -725,7 +763,6 @@ namespace dmDragonBones
             //table on top
             lua_settable(L, -3); //set table on table
 
-            break;
         }
 
         return 1;
@@ -735,6 +772,7 @@ namespace dmDragonBones
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if (instance && instance->dragonBones){
             instance->dragonBones->advanceTime(1.0f / 60.0f); //!!!!!!!!!!!!!!!!!!!!!!!!
+            instance->dragonBones->debugDraw = true;
             //IMPORTANT IMPORTANT
             
             /*
@@ -882,61 +920,14 @@ namespace dmDragonBones
             }
             
             */
+        } else {
+            dmLogInfo("Cannot advance time.");
         }
 
         return 1;
     }
 
     /*
-    JNIEXPORT jobjectArray JNICALL
-    Java_com_dragonbones_JniBridge_getAnimationNames(JNIEnv *env, jclass clazz) {
-        auto* instance = getInstance();
-        if (!instance || !instance->armature) {
-            return nullptr;
-        }
-
-        const auto& animationNames = instance->armature->getAnimation()->getAnimationNames();
-        if (animationNames.empty()) {
-            return nullptr;
-        }
-
-        jclass stringClass = env->FindClass("java/lang/String");
-        jobjectArray stringArray = env->NewObjectArray(animationNames.size(), stringClass, nullptr);
-
-        for (size_t i = 0; i < animationNames.size(); ++i) {
-            jstring javaString = env->NewStringUTF(animationNames[i].c_str());
-            env->SetObjectArrayElement(stringArray, i, javaString);
-            env->DeleteLocalRef(javaString);
-        }
-
-        return stringArray;
-    }
-
-    JNIEXPORT void JNICALL
-    Java_com_dragonbones_JniBridge_fadeInAnimation(JNIEnv *env, jclass clazz, jstring animation_name, jint layer, jint loop, jfloat fade_in_time) {
-        auto* instance = getInstance();
-        if (!instance || !instance->armature) {
-            return;
-        }
-
-        const char* nameChars = env->GetStringUTFChars(animation_name, nullptr);
-        std::string name(nameChars);
-        env->ReleaseStringUTFChars(animation_name, nameChars);
-
-        // playTimes: -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
-        // The `loop` parameter from Kotlin is: 0 for infinite, 1 for once, etc. This maps directly to playTimes.
-        int playTimes = (int)loop;
-
-        // Use fadeIn to enable blending and layering.
-        // Set fadeOutMode to None to prevent animations on different layers from stopping each other.
-        // Use SameLayerAndGroup if you want an animation to replace another on the same layer.
-        if(instance->armature->getAnimation()->fadeIn(name, (float)fade_in_time, playTimes, (int)layer, "", dragonBones::AnimationFadeOutMode::SameLayerAndGroup)) {
-            LOGI("Fading in animation: '%s' on layer %d, loop: %d, fade: %f", name.c_str(), (int)layer, playTimes, (float)fade_in_time);
-        } else {
-            LOGW("Animation not found: '%s'", name.c_str());
-        }
-    }
-
     JNIEXPORT jstring JNICALL
     Java_com_dragonbones_JniBridge_containsPoint(JNIEnv *env, jclass clazz, jfloat x, jfloat y) {
         auto* instance = getInstance();
@@ -1024,19 +1015,73 @@ namespace dmDragonBones
         instance->armature->getAnimation()->stop(name);
     }
     */
+   static int getAnimationNames(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if (!instance || !instance->armature) {
+            return 1;
+        }
 
+        const auto& animationNames = instance->armature->getAnimation()->getAnimationNames();
+        if (animationNames.empty()) {
+            return 1;
+        }
+
+        lua_newtable(L);
+
+        for (size_t i = 0; i < animationNames.size(); ++i) {
+            const char * anim_name = animationNames[i].c_str();
+            lua_pushinteger(L, i + 1);
+            lua_pushstring(L,  anim_name);
+            lua_settable(L, -3);
+
+        }
+
+        return 1;
+    }
+
+    static int fadeInAnimation(lua_State* L) {
+        //jstring animation_name, jint layer, jint loop, jfloat fade_in_time
+
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if (!instance || !instance->armature) {
+            dmLogInfo("FadeIn: No instance or armature.");
+            return 1;
+        }
+
+        const char* nameChars = luaL_checkstring(L, 2);
+        std::string name(nameChars);
+
+        // playTimes: -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
+        // The `loop` parameter from Kotlin is: 0 for infinite, 1 for once, etc. This maps directly to playTimes.
+        int layer        = (int)luaL_checknumber(L, 3);
+        int playTimes    = (int)luaL_checknumber(L, 4);
+        int fade_in_time = (int)luaL_checknumber(L, 5);
+        
+
+        // Use fadeIn to enable blending and layering.
+        // Set fadeOutMode to None to prevent animations on different layers from stopping each other.
+        // Use SameLayerAndGroup if you want an animation to replace another on the same layer.
+        if(instance->armature->getAnimation()->fadeIn(name, (float)fade_in_time, playTimes, (int)layer, "", dragonBones::AnimationFadeOutMode::SameLayerAndGroup)) {
+            dmLogInfo("Fading in animation: '%s' on layer %d, loop: %d, fade: %f", name.c_str(), (int)layer, playTimes, (float)fade_in_time);
+        } else {
+            dmLogInfo("Animation not found: '%s'", name.c_str());
+        }
+        return 1;
+    }
 
     static const luaL_reg DRAGONBONES_COMP_FUNCTIONS[] =
     {
            
-            {"create",          init           },
-            {"update",          update         },
-            {"resize",          resize         },
-            {"destroy",         destroy        },
-            {"load_data",       loadData2      },
-            {"get_no_slots",    getNoSlots     },
-            {"get_buffers",     getBuffers     },
-            {"free_buffers",    freeBuffers    },
+            {"create",               init           },
+            {"update",               update         },
+            {"resize",               resize         },
+            {"destroy",              destroy        },
+            {"load_data",            loadData2      },
+            {"get_no_slots",         getNoSlots     },
+            {"get_buffers",          getBuffers     },
+            {"free_buffers",         freeBuffers    },
+            {"fade_in_animation",    fadeInAnimation      },
+            {"get_anination_names",  getAnimationNames    },
             {0, 0}
     };
 

@@ -15,34 +15,200 @@ INFO:SOUND: Sound
 INFO:SOUND:   nSamplesPerSec:   48000
 INFO:SOUND:        useThread:   1
 INFO:ENGINE: Initialised sound device 'default'
-INFO:DRAGONBONESEXT: projectionMatrix 0, 1: 0.007812, 0.000000
+INFO:DRAGONBONESEXT: projectionMatrix 0, 1: 0.003906, 0.000000
 INFO:DRAGONBONESEXT: DragonBones Initialized
-INFO:DRAGONBONESEXT: Skeleton no of bytes: 13409
-INFO:DRAGONBONESEXT: Atlas json no of bytes: 1898
+INFO:DRAGONBONESEXT: Skeleton no of bytes: 1846
+INFO:DRAGONBONESEXT: Atlas json no of bytes: 269
 INFO:DRAGONBONESEXT: Buffering data from byte arrays...
 INFO:DRAGONBONESEXT: Data successfully buffered.
 INFO:DRAGONBONESEXT: Creating armature on GL thread...
-INFO:DRAGONBONESEXT: Armature 'YahKabisah' built at 0000023FCAB83960, instance is 0000023FCB417530
+INFO:DRAGONBONESEXT: Armature 'Armature' built at 000001FA1756FBA0, instance is 000001FA1799C160
 INFO:DRAGONBONESEXT: Armature building done.
-DEBUG:SCRIPT: No of slots	27
-INFO:DRAGONBONESEXT: Buffer Count, Components: 4, 2
-INFO:DRAGONBONESEXT: mvpMatrix for spear values 0,1,2, 3 : 0.003761, 0.001057, 0.000000, 0.000000
+DEBUG:SCRIPT: /j9l7g4bawrj2dqx9x2ub
 DEBUG:SCRIPT: 
-{ --[[0000023FD0EAF1F0]]
-  indices = buffer.buffer(count = 6, version = 0, handle = 327684, { hash("indices"), buffer.VALUE_TYPE_UINT16, 1 }),
-  indices_count = 6,
-  projection = vmath.matrix4(0.0037605664692819, 0.0010568489087746, 0, 0, -0.0010568489087746, 0.0037605664692819, 0, 0, 0, 0, -1, 0, -0.19723559916019, -1.3978086709976, 0, 1),
-  buffer = buffer.buffer(count = 4, version = 0, handle = 262147, { hash("a_position"), buffer.VALUE_TYPE_FLOAT32, 2 }, { hash("a_texCoord"), buffer.VALUE_TYPE_FLOAT32, 2 }, { hash("a_normal"), buffer.VALUE_TYPE_FLOAT32, 3 }),
-  buffer_count = 4,
-  name = "spear"
+{ --[[000001FA1DE03840]]
+  1 = "swing"
 }
-DEBUG:SCRIPT: vmath.matrix4(0.0037605664692819, 0.0010568489087746, 0, 0, -0.0010568489087746, 0.0037605664692819, 0, 0, 0, 0, -1, 0, -0.19723559916019, -1.3978086709976, 0, 1)
-DEBUG:SCRIPT: vmath.matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-DEBUG:SCRIPT: 1	0.3134765625	0.1513671875
-DEBUG:SCRIPT: 2	0.3583984375	0.1513671875
-DEBUG:SCRIPT: 3	0.3134765625	0.7470703125
-DEBUG:SCRIPT: 4	0.3583984375	0.7470703125
-DEBUG:SCRIPT: 0	1	2
-DEBUG:SCRIPT: 1	3	2
-INFO:DLIB: SSDP: Started on address 10.71.185.107
-INFO:DLIB: SSDP: Done on address 10.71.185.107
+INFO:DRAGONBONESEXT: Fading in animation: 'swing' on layer 0, loop: 0, fade: 0.000000
+INFO:DLIB: SSDP: Started on address 10.247.88.29
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001547, -0.001192, 0.000000, -0.292933
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001547, -0.001192, 0.000000, -0.212929
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001801, -0.000755, 0.000000, -0.074038
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001563, -0.001171, 0.000000, -0.288879
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001563, -0.001171, 0.000000, -0.210425
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001811, -0.000730, 0.000000, -0.072836
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001580, -0.001149, 0.000000, -0.284607
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001579, -0.001149, 0.000000, -0.207781
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001822, -0.000705, 0.000000, -0.071572
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001596, -0.001125, 0.000000, -0.280104
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001596, -0.001126, 0.000000, -0.204986
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001832, -0.000678, 0.000000, -0.070242
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001613, -0.001101, 0.000000, -0.275355
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001613, -0.001101, 0.000000, -0.202031
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001842, -0.000650, 0.000000, -0.068842
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001631, -0.001075, 0.000000, -0.270343
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001631, -0.001075, 0.000000, -0.198905
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001852, -0.000620, 0.000000, -0.067367
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001648, -0.001048, 0.000000, -0.265052
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001648, -0.001048, 0.000000, -0.195597
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001862, -0.000590, 0.000000, -0.065812
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001666, -0.001019, 0.000000, -0.259464
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001666, -0.001019, 0.000000, -0.192095
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001872, -0.000557, 0.000000, -0.064174
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001684, -0.000989, 0.000000, -0.253563
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001684, -0.000989, 0.000000, -0.188385
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001882, -0.000524, 0.000000, -0.062447
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001702, -0.000957, 0.000000, -0.247327
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001702, -0.000958, 0.000000, -0.184456
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001891, -0.000488, 0.000000, -0.060626
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001791, -0.000780, 0.000000, -0.212103
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001790, -0.000780, 0.000000, -0.162081
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001931, -0.000294, 0.000000, -0.050401
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001872, -0.000558, 0.000000, -0.167119
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001872, -0.000558, 0.000000, -0.133129
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001952, -0.000059, 0.000000, -0.037475
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001932, -0.000286, 0.000000, -0.110980
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001932, -0.000286, 0.000000, -0.096502
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001941, 0.000220, 0.000000, -0.021516
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001953, 0.000033, 0.000000, -0.044011
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001953, 0.000033, 0.000000, -0.052190
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001879, 0.000533, 0.000000, -0.002694
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001916, 0.000379, 0.000000, 0.030437
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001916, 0.000379, 0.000000, -0.002208
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001755, 0.000858, 0.000000, 0.017978
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001815, 0.000722, 0.000000, 0.105962
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001815, 0.000722, 0.000000, 0.049268
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001569, 0.001164, 0.000000, 0.038681
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001660, 0.001029, 0.000000, 0.175368
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001660, 0.001029, 0.000000, 0.097319
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001340, 0.001421, 0.000000, 0.057446
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001475, 0.001281, 0.000000, 0.233736
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001475, 0.001281, 0.000000, 0.138393
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001096, 0.001616, 0.000000, 0.072996
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001283, 0.001473, 0.000000, 0.279673
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001283, 0.001473, 0.000000, 0.171273
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.000862, 0.001753, 0.000000, 0.085041
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001531, -0.001212, 0.000000, -0.296782
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001531, -0.001212, 0.000000, -0.215300
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001791, -0.000779, 0.000000, -0.075181
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001547, -0.001192, 0.000000, -0.292933
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001547, -0.001192, 0.000000, -0.212929
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001801, -0.000755, 0.000000, -0.074038
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001563, -0.001171, 0.000000, -0.288879
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001563, -0.001171, 0.000000, -0.210425
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001811, -0.000731, 0.000000, -0.072836
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001580, -0.001149, 0.000000, -0.284608
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001579, -0.001149, 0.000000, -0.207781
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001822, -0.000705, 0.000000, -0.071572
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001596, -0.001125, 0.000000, -0.280104
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001596, -0.001126, 0.000000, -0.204986
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001832, -0.000678, 0.000000, -0.070242
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001613, -0.001101, 0.000000, -0.275355
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001613, -0.001101, 0.000000, -0.202031
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001842, -0.000650, 0.000000, -0.068842
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001631, -0.001075, 0.000000, -0.270343
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001631, -0.001075, 0.000000, -0.198905
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001852, -0.000620, 0.000000, -0.067367
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001648, -0.001048, 0.000000, -0.265052
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001648, -0.001048, 0.000000, -0.195597
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001862, -0.000590, 0.000000, -0.065812
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001666, -0.001019, 0.000000, -0.259465
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001666, -0.001019, 0.000000, -0.192095
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001872, -0.000557, 0.000000, -0.064174
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001684, -0.000989, 0.000000, -0.253563
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001684, -0.000989, 0.000000, -0.188385
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001882, -0.000524, 0.000000, -0.062447
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001702, -0.000957, 0.000000, -0.247326
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001702, -0.000958, 0.000000, -0.184456
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001891, -0.000488, 0.000000, -0.060626
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001791, -0.000780, 0.000000, -0.212102
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001790, -0.000780, 0.000000, -0.162081
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001931, -0.000294, 0.000000, -0.050401
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001872, -0.000558, 0.000000, -0.167119
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001872, -0.000558, 0.000000, -0.133129
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001952, -0.000059, 0.000000, -0.037475
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001932, -0.000286, 0.000000, -0.110979
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001932, -0.000286, 0.000000, -0.096502
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001941, 0.000220, 0.000000, -0.021516
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001953, 0.000033, 0.000000, -0.044010
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001953, 0.000033, 0.000000, -0.052190
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001879, 0.000533, 0.000000, -0.002694
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001916, 0.000379, 0.000000, 0.030438
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001916, 0.000379, 0.000000, -0.002208
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001755, 0.000858, 0.000000, 0.017978
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001815, 0.000722, 0.000000, 0.105962
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001815, 0.000722, 0.000000, 0.049268
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001569, 0.001164, 0.000000, 0.038681
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001660, 0.001029, 0.000000, 0.175368
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001660, 0.001029, 0.000000, 0.097319
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001340, 0.001421, 0.000000, 0.057446
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001475, 0.001281, 0.000000, 0.233736
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001475, 0.001281, 0.000000, 0.138393
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001096, 0.001616, 0.000000, 0.072996
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001283, 0.001473, 0.000000, 0.279673
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001283, 0.001473, 0.000000, 0.171273
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.000862, 0.001753, 0.000000, 0.085041
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001531, -0.001212, 0.000000, -0.296782
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001531, -0.001212, 0.000000, -0.215300
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001791, -0.000779, 0.000000, -0.075181
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001547, -0.001192, 0.000000, -0.292933
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001547, -0.001192, 0.000000, -0.212929
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001801, -0.000755, 0.000000, -0.074038
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001563, -0.001171, 0.000000, -0.288879
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001563, -0.001171, 0.000000, -0.210425
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001811, -0.000731, 0.000000, -0.072836
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001580, -0.001149, 0.000000, -0.284608
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001579, -0.001149, 0.000000, -0.207781
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001822, -0.000705, 0.000000, -0.071572
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001596, -0.001125, 0.000000, -0.280104
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001596, -0.001126, 0.000000, -0.204986
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001832, -0.000678, 0.000000, -0.070242
+DEBUG:SCRIPT: Updating  .........................................
+INFO:DRAGONBONESEXT: mvpMatrix for right foot values 0,1,2, 3 : 0.001613, -0.001101, 0.000000, -0.275355
+INFO:DRAGONBONESEXT: mvpMatrix for right lower leg values 0,1,2, 3 : 0.001613, -0.001101, 0.000000, -0.202031
+INFO:DRAGONBONESEXT: mvpMatrix for right upper leg values 0,1,2, 3 : 0.001842, -0.000650, 0.000000, -0.068842
+INFO:DLIB: SSDP: Done on address 10.247.88.29

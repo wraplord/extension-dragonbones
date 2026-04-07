@@ -20,3 +20,8 @@ minimum_log_level = 1
 [physics]
 debug = 1
 
+[render]
+clear_color_green = 0.5
+clear_color_blue = 0.5
+clear_color_alpha = 0.5
+

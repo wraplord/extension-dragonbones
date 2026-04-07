@@ -1,42 +1,46 @@
-local skeleton_json = resource.load("/custom_res/character1/YahKabisah_ske.json")
-local tex_json = resource.load("/custom_res/character1/YahKabisah_tex.json")
+local skeleton_json = resource.load("/custom_res/character3/Yah_ske.json")
+local tex_json = resource.load("/custom_res/character3/Yah_tex.json")
 
-function init(self)
-	msg.post(".", "acquire_input_focus")
+local function create_buffer_prefix_name()
+	math.random(os.clock())
+	for i = 1, 4 do math.random(1, 10) end
+	
+	local tbl = {}
+	local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
+	for i = 1, 20 do
+		local pos = math.random(1, string.len(alphabet))
+		table.insert(tbl, string.sub(alphabet, pos, pos))
+	end
+	return table.concat(tbl, "")
+end
 
-	--initiate dragon bones and upload json data
-	self.instance = dragonbones.create(256, 256)
-	dragonbones.load_data(self.instance, skeleton_json, tex_json)
-	print("No of slots", dragonbones.get_no_slots(self.instance))
+local function test(buffer_data)
+	local bt = buffer_data
+	--pass
+	--set projection matrix
+	print(bt.projection.c0)
+	print(bt.projection.c1)
+	print(bt.projection.c2)
+	print(bt.projection.c3)
 
-	--update animation and get buffers
-	dragonbones.update(self.instance)
-	local buffer_table = dragonbones.get_buffers(self.instance)
-	local bt =  buffer_table[1]
+	
 	pprint(bt)
 
 	--pass
-	--set projection matrix
-	print(bt.projection)
-	local proj = vmath.matrix4()
-	print(proj)
-
-	--pass
 	--Debugging: check positions, texCoord for reasonable data
-	local stream = buffer.get_stream(bt.buffer, hash("a_texCoord")) --hash("a_position"), hash("a_texCoord")
+	local stream = buffer.get_stream(bt.buffer, hash("a_position")) --hash("a_position"), hash("a_texCoord")
 	local offset = 1
 	for i = 1, bt.buffer_count do
-		print(i, stream[offset], stream[offset+1]) --, stream[offset+2])
+		print(i, stream[offset], stream[offset+1], stream[offset+2])
+		offset = offset + 3
+	end
+
+	stream = buffer.get_stream(bt.buffer, hash("a_texCoord")) --hash("a_position"), hash("a_texCoord")
+	offset = 1
+	for i = 1, bt.buffer_count do
+		print(i, stream[offset], stream[offset+1])
 		offset = offset + 2
 	end
-	
-	--set mesh vertices
-	--go.set("DragonModel#mesh", "u_mvpMatrix", bt.projection)
-	--[[
-	self.res = go.get("DragonModel#mesh", "vertices")
-	self.buffer = resource.get_buffer(self.res)
-	resource.set_buffer(self.res, bt.buffer)
-	--]]
 
 	--pass
 	--indices
@@ -44,5 +48,74 @@ function init(self)
 	for i = 1, bt.indices_count,3 do
 		print(indices[i], indices[i+1], indices[i+2])
 	end
+end
+
+
+local function spawn_mesh(no)
+	local z = -1 + 0.01 * no
+	local id = factory.create("#factory", vmath.vector3(0, 0, z))
+	return msg.url(nil, id, "mesh" )
+end
+
+local function set_mesh_data(self, mesh_no, buffer_data)
+	--pprint(buffer_data)
+	local mesh_id = self.meshes[mesh_no]
+	--print(mesh_id)
+	
+	go.set(mesh_id, hash("u_mvpMatrix"), buffer_data.projection)
+	local buffer_name = self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
+	
+	local my_buffer = resource.create_buffer(buffer_name, 
+		{ buffer = buffer_data.buffer })
+
+	go.set(mesh_id, hash("vertices"), my_buffer )
+	table.insert(self.buffers, my_buffer)
+end
+
+local function update_db_world(self)
+	--release previous buffers
+	for i = 1, #self.buffers do
+		--resource.release(self.buffers[i])
+		--resource.release(path)
+	end
+	
+	--update animation and get buffers
+	dragonbones.update(self.instance)
+	local buffer_table = dragonbones.get_buffers(self.instance)
+	
+	for k,v in ipairs(buffer_table) do
+		set_mesh_data(self, k, v)
+		--test(v)
+		--if k == 3 then break end
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	--initiate dragon bones and upload json data
+	self.instance = dragonbones.create(512, 512)
+	dragonbones.load_data(self.instance, skeleton_json, tex_json)
+
+	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
+	print(self.buffer_prefix_name)
+	self.buffers = {}
+	self.meshes  = {}
+	local no_slots = dragonbones.get_no_slots(self.instance)
+	for i = 1, no_slots do
+		local mesh_id = spawn_mesh(i)
+		table.insert(self.meshes, mesh_id)
+	end
+
+	local tbl_animations = dragonbones.get_anination_names(self.instance)
+	pprint(tbl_animations)
+	dragonbones.fade_in_animation(self.instance, tbl_animations[1], 0, 0, 0.3)
+
+	timer.delay(0.5, true, function()
+		print("Updating  .........................................")
+		self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
+		update_db_world(self)
+	end)
+	
 	
 end

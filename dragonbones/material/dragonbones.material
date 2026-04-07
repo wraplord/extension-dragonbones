@@ -1,5 +1,5 @@
 name: "dragonbones"
-tags: "model"
+tags: "tile"
 vertex_program: "/dragonbones/material/dragonbones.vp"
 fragment_program: "/dragonbones/material/dragonbones.fp"
 vertex_constants {

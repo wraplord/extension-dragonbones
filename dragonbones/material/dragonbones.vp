@@ -6,7 +6,7 @@ out vec2 v_texCoord;
 
 uniform vs_uniforms
 {
-    uniform mediump mat4 u_mvpMatrix ;
+    mat4 u_mvpMatrix ;
     uniform mediump mat4 mtx_proj; 
     uniform mediump mat4 mtx_worldview;
 };
@@ -14,23 +14,27 @@ uniform vs_uniforms
 void main() {
     
     vec4 p = mtx_worldview * vec4(a_position.xy, 0, 1.0);
+    //vec4 p = vec4(a_position.xy, 0, 1.0);
 
-    // gl_Position = u_mvpMatrix * vec4(a_position, 0.0, 1.0);
-    mat4 proj1 = mat4(
+    //row major, does not work.
+    mat4 proj_rm = mat4(
         0.0037605664692819, -0.0010568489087746, 0, -0.19723559916019,
         0.0010568489087746, 0.0037605664692819, 0, -1.3978086709976, 
         0, 0, -1, 0, 
         0, 0, 0, 1
     );
 
+    //column major, the correct one
     mat4 proj = mat4(
-         0.0037605664692819, 0.0010568489087746, 0, 0,
-        -0.0010568489087746, 0.0037605664692819, 0, 0,
-        0, 0, -1, 0, 
-        -0.19723559916019, -1.3978086709976, 0, 1
+        0.001952,    0.00007864,  0, 0, 
+        0.00007864, -0.001952,    0, 0, 
+        0,           0,          -1, 0, 
+        0.05252,     0.2633,      0, 1
     );
+
+    gl_Position =  u_mvpMatrix * p;
+    //gl_Position = mtx_proj  * p;
+    //gl_Position =  proj  * p;
     
-    //gl_Position = mtx_proj * p;
-    gl_Position = proj * p;
     v_texCoord  = a_texCoord;
 }

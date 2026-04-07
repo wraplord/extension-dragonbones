@@ -111,6 +111,37 @@
         type: userdata
         desc: dragobones instance.
 
+  - name: get_anination_names
+    type: function
+    desc: Get a list of animations defined.
+     
+    parameters:
+      - name: instance
+        type: userdata
+        desc: dragobones instance.
+    return:
+      - name: list
+        type: table
+        desc: a lua table of available animations to be use in fade_in_animation
+
+  - name: fade_in_animation
+    type: function
+    desc: Play the specify animation
+
+    parameters:
+        - name : animation_name
+          type : string
+        
+        - name: layer
+          type : int
+        
+        - name: loop
+          type: integer
+          desc : -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
+        
+        - name: fade_in_time
+          type: integer
+          desc: fadeIn to enable blending and layering.
   
 
       

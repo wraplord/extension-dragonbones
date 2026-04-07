@@ -1,16 +1,4 @@
 name: "main"
-instances {
-  id: "DragonModel"
-  prototype: "/dragonbones/models/DragonModel.go"
-  position {
-    x: 366.0
-    y: 368.0
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
-}
 scale_along_z: 0
 embedded_instances {
   id: "go"
@@ -19,23 +7,10 @@ embedded_instances {
   "  component: \"/main/test.script\"\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"anim\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
-  "}\\n"
+  "  id: \"factory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/dragonbones/models/DragonModel.go\\\"\\n"
   "\"\n"
-  "  position {\n"
-  "    x: 140.0\n"
-  "    y: 80.0\n"
-  "  }\n"
-  "  scale {\n"
-  "    x: 5.0\n"
-  "    y: 5.0\n"
-  "  }\n"
   "}\n"
   ""
 }
