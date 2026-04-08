@@ -1,36 +1,20 @@
 name: "main"
+instances {
+  id: "DragonModelTrilist"
+  prototype: "/dragonbones/models/DragonModel.go"
+}
 scale_along_z: 0
 embedded_instances {
   id: "go"
   data: "components {\n"
   "  id: \"test\"\n"
-  "  component: \"/main/test.script\"\n"
+  "  component: \"/main/db_test.script\"\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"factory\"\n"
   "  type: \"factory\"\n"
-  "  data: \"prototype: \\\"/dragonbones/models/DragonModelTrilist.go\\\"\\n"
+  "  data: \"prototype: \\\"/dragonbones/models/DragonModel.go\\\"\\n"
   "\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"anim\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 200.0\n"
-  "    y: 200.0\n"
-  "    z: 1.0\n"
-  "  }\n"
   "}\n"
   ""
-  position {
-    x: 100.0
-    y: 100.0
-  }
 }

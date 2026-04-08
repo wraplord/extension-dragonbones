@@ -1,10 +1,10 @@
-local skeleton_json = resource.load("/custom_res/character4/Bicycle_ske.json")
-local tex_json = resource.load("/custom_res/character4/Bicycle_tex.json")
+go.property("viewportWidth",  800)
+go.property("viewportHeight", 600)
 
 local function create_buffer_prefix_name()
 	math.random(os.clock())
 	for i = 1, 4 do math.random(1, 10) end
-	
+
 	local tbl = {}
 	local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 	for i = 1, 20 do
@@ -58,26 +58,29 @@ local function test(buffer_data)
 			end
 		end
 	end
-	
+
 end
 
 
 local function spawn_mesh(no)
 	local z = -1 + 0.01 * no
 	local id = factory.create("#factory", vmath.vector3(0, 0, z), nil, nil, vmath.vector3(1, 1, 1))
-	return msg.url(nil, id, "mesh" )
+	local mesh_id =  msg.url(nil, id, "mesh" )
+	go.set(mesh_id, hash("u_texture"),  self.tex_png)
+	return mesh_id
 end
 
 local function set_mesh_data(self, mesh_no, buffer_data)
 	--pprint(buffer_data.mtx_model)
 	local mesh_id = self.meshes[mesh_no]
 	--print(mesh_id)
+
 	
 	go.set(mesh_id, hash("u_mtx_mvp"),     buffer_data.mtx_mvp)
 	--go.set(mesh_id, hash("u_mtx_model"),   buffer_data.mtx_model)
 	--go.set(mesh_id, hash("u_mtx_view"),    buffer_data.mtx_view)
 	local buffer_name = self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
-	
+
 	--local my_buffer = resource.create_buffer(buffer_name, 
 	--{ buffer = buffer_data.buffer }) --triangles_list
 
@@ -96,10 +99,10 @@ end
 
 local function update_db_world(self)
 	--release previous buffers
-	
-	
+
+
 	--update animation and get buffers
-	dragonbones.update(self.instance, 1/30.0)
+	dragonbones.update(self.instance, self.dt)
 	local buffer_table = dragonbones.get_buffers(self.instance)
 	--test(buffer_table)
 
@@ -114,16 +117,22 @@ local function update_db_world(self)
 	collectgarbage("collect")
 end
 
-function init(self)
-	msg.post(".", "acquire_input_focus")
+local function load_world(self)
+	--"/custom_res/character4/Bicycle_ske.json"
+	--"/custom_res/character4/Bicycle_tex.json"
 
-	profiler.enable_ui(true)
-	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+	local skeleton_json = resource.load(self.skeleton_json)
+	local tex_json      = resource.load(self.tex_json)
+
+	--profiler.enable_ui(true)
+	--profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
 
 	--initiate dragon bones and upload json data
-	self.instance = dragonbones.create(1600, 1200)
+	self.dt = 1/30.0
+
+	self.instance = dragonbones.create(self.viewportWidth, self.viewportHeight)
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
-	
+
 
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	self.current_buffers = {}
@@ -142,13 +151,25 @@ function init(self)
 
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	update_db_world(self)
-	--[
-	timer.delay(1/30, true, function()
-		--print("Updating  .........................................")
-		self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
-		update_db_world(self)
-	end)
-	--]]
-	
-	
+
+end
+
+local function update_world(self)
+	--print("Updating  .........................................")
+	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
+	update_db_world(self)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("load") then
+		self.skeleton_json = message.skeleton_json
+		self.tex_json = message.tex_json
+		self.tex_png = message.tex_png
+		load_world(self)
+	elseif message_id == hash("instance") then
+		msg.post(sender, "instance", self.instance)
+	elseif message_id == hash("update") then
+		self.dt = message.dt or self.dt
+		update_world(self)
+	end
 end

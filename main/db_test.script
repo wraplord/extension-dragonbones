@@ -1,0 +1,19 @@
+local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
+local tex_json = "/custom_res/character4/Bicycle_tex.json"
+local tex_png = "/custom_res/character4/Bicycle_tex.png"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	local tbl = {
+		skeleton_json = skeleton_json, 
+		tex_json = tex_json,
+		tex_png = tex_png
+	}
+	
+	msg.post("/DragonModelTrilist", hash("load"), tbl)
+
+	timer.delay(1/30.0, true, function()
+		local tbl2 = { dt = 1/30.0 }
+		msg.post("/DragonModelTrilist", hash("load"), tbl2)
+	end)
+end

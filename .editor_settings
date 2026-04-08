@@ -11,40 +11,24 @@
           :scene
         ]
         [
-          "/main/test.script"
-          :code
-        ]
-        [
-          "/dragonbones/material/dragonbones.vp"
-          :code
-        ]
-        [
-          "/dragonbones/material/dragonbones.material"
-          :cljfx-form-view
-        ]
-        [
           "/dragonbones/models/DragonModelTrilist.go"
+          :scene
+        ]
+        [
+          "/dragonbones/models/DragonModel.script"
+          :code
+        ]
+        [
+          "/main/DragonModel_test.script"
+          :code
+        ]
+        [
+          "/dragonbones/models/DragonMeshFactory.go"
           :scene
         ]
       ]
     ]
     :recent-files [
-      [
-        "/builtins/assets/meshes/cube.dae"
-        :scene
-      ]
-      [
-        "/builtins/materials/model.vp"
-        :code
-      ]
-      [
-        "/dragonbones/material/dragonbones.material"
-        :text
-      ]
-      [
-        "/.gitignore"
-        :code
-      ]
       [
         "/dragonbones/material/dragonbones - Copy.material"
         :cljfx-form-view
@@ -138,8 +122,8 @@
         :code
       ]
       [
-        "/main/main.collection"
-        :scene
+        "/main/test.script"
+        :code
       ]
       [
         "/dragonbones/material/dragonbones.vp"
@@ -150,11 +134,27 @@
         :cljfx-form-view
       ]
       [
+        "/main/DragonModel_test.script"
+        :code
+      ]
+      [
+        "/dragonbones/models/PrivateDragonMesh.go"
+        :scene
+      ]
+      [
+        "/dragonbones/models/test/DragonModel.go"
+        :scene
+      ]
+      [
         "/dragonbones/models/DragonModelTrilist.go"
         :scene
       ]
       [
-        "/main/test.script"
+        "/main/main.collection"
+        :scene
+      ]
+      [
+        "/dragonbones/models/DragonModel.script"
         :code
       ]
     ]
