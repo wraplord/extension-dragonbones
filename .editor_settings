@@ -134,10 +134,6 @@
         :cljfx-form-view
       ]
       [
-        "/main/DragonModel_test.script"
-        :code
-      ]
-      [
         "/dragonbones/models/PrivateDragonMesh.go"
         :scene
       ]
@@ -155,6 +151,10 @@
       ]
       [
         "/dragonbones/models/DragonModel.script"
+        :code
+      ]
+      [
+        "/main/DragonModel_test.script"
         :code
       ]
     ]

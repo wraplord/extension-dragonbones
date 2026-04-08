@@ -10,10 +10,19 @@ function init(self)
 		tex_png = tex_png
 	}
 	
-	msg.post("/DragonModelTrilist", hash("load"), tbl)
+	msg.post("/DragonModel", hash("load"), tbl)
+	msg.post("/DragonModel", hash("instance"), tbl)
 
 	timer.delay(1/30.0, true, function()
-		local tbl2 = { dt = 1/30.0 }
-		msg.post("/DragonModelTrilist", hash("load"), tbl2)
+		if self.instance then --loaded
+			msg.post("/DragonModel", hash("update"), { dt = 1/30.0 })
+		end
 	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("instance") then   
+		self.instance = message.instance
+		dragonbones.set_world_translation(self.instance, 0, 100)
+	end
 end

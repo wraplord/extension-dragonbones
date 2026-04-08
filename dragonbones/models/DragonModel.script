@@ -170,6 +170,8 @@ function on_message(self, message_id, message, sender)
 		msg.post(sender, "instance", self.instance)
 	elseif message_id == hash("update") then
 		self.dt = message.dt or self.dt
-		update_world(self)
+		if self.instance then
+			update_world(self)
+		end
 	end
 end
