@@ -19,36 +19,16 @@
           :code
         ]
         [
-          "/dragonbones/models/DragonModel.go"
-          :scene
-        ]
-        [
-          "/todo.txt"
-          :code
-        ]
-        [
-          "/game.project"
+          "/dragonbones/material/dragonbones.material"
           :cljfx-form-view
         ]
         [
-          "/dragonbones/material/dragonbones.fp"
-          :code
+          "/dragonbones/models/DragonModelTrilist.go"
+          :scene
         ]
       ]
     ]
     :recent-files [
-      [
-        "/liveupdate.settings"
-        :cljfx-form-view
-      ]
-      [
-        "/custom_res/character1/YahKabisah_tex.json"
-        :code
-      ]
-      [
-        "/custom_res/character1/YahKabisah_ske.json"
-        :code
-      ]
       [
         "/builtins/assets/meshes/quad.dae"
         :scene
@@ -102,12 +82,20 @@
         :code
       ]
       [
-        "/builtins/materials/sprite.vp"
+        "/builtins/materials/sprite.fp"
         :code
       ]
       [
-        "/builtins/materials/sprite.fp"
+        "/builtins/materials/model.material"
+        :cljfx-form-view
+      ]
+      [
+        "/custom_res/character3/Yah_tex.json"
         :code
+      ]
+      [
+        "/builtins/render/default.display_profiles"
+        :cljfx-form-view
       ]
       [
         "/dragonbones/material/test/dragonbones2.buffer"
@@ -118,23 +106,39 @@
         :code
       ]
       [
-        "/builtins/materials/sprite.material"
-        :cljfx-form-view
-      ]
-      [
-        "/builtins/materials/model.material"
-        :cljfx-form-view
-      ]
-      [
         "/dragonbones/material/dragonbones.buffer"
         :code
       ]
       [
-        "/custom_res/character3/Yah_tex.json"
+        "/builtins/materials/sprite.material"
+        :cljfx-form-view
+      ]
+      [
+        "/dragonbones/models/DragonModel.go"
+        :scene
+      ]
+      [
+        "/dragonbones/material/dragonbones.fp"
         :code
       ]
       [
-        "/main/main.collection"
+        "/builtins/materials/sprite.vp"
+        :code
+      ]
+      [
+        "/dragonbones/material/dragonbones.material"
+        :cljfx-form-view
+      ]
+      [
+        "/todo.txt"
+        :code
+      ]
+      [
+        "/dragonbones/material/test/experiments.go"
+        :scene
+      ]
+      [
+        "/dragonbones/models/DragonModelTrilist.go"
         :scene
       ]
       [
@@ -142,27 +146,15 @@
         :code
       ]
       [
-        "/dragonbones/models/DragonModel.go"
-        :scene
-      ]
-      [
-        "/dragonbones/material/dragonbones.material"
-        :cljfx-form-view
-      ]
-      [
-        "/main/test.script"
-        :code
-      ]
-      [
-        "/todo.txt"
-        :code
-      ]
-      [
         "/game.project"
         :cljfx-form-view
       ]
       [
-        "/dragonbones/material/dragonbones.fp"
+        "/main/main.collection"
+        :scene
+      ]
+      [
+        "/main/test.script"
         :code
       ]
     ]

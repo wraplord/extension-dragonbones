@@ -384,40 +384,6 @@ namespace dmDragonBones
        
     }
 
-   /*
-    static void FillRenderObject(JniBridgeInstance*  world,
-        dmRender::HRenderContext                   render_context,
-        dmRender::RenderObject&                    ro,
-        dmGameSystem::HComponentRenderConstants    constants,
-        dmGraphics::HTexture                       texture,
-        dmRender::HMaterial                        material,
-        uint32_t                                   vertex_start,
-        uint32_t                                   vertex_count)
-    {
-        ro.Init();
-        ro.m_VertexDeclaration = world->m_VertexDeclaration;
-        ro.m_VertexBuffer      = world->m_VertexBuffer;
-        ro.m_PrimitiveType     = dmGraphics::PRIMITIVE_TRIANGLES;
-        ro.m_VertexStart       = vertex_start;
-        ro.m_VertexCount       = vertex_count;
-        ro.m_Textures[0]       = texture;
-        ro.m_Material          = material;
-
-        if (constants)
-        {
-            dmGameSystem::EnableRenderObjectConstants(&ro, constants);
-        }
-
-        ro.m_SetBlendFactors = 1;
-
-        ro.m_SourceBlendFactor = dmGraphics::BLEND_FACTOR_ONE;
-        ro.m_DestinationBlendFactor = dmGraphics::BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-        //ro.m_SetStencilTest =
-        
-           
-        dmRender::AddToRender(render_context, &ro);
-    }
-    */
 
     //creating the meshes
     static int getNoSlots(lua_State* L){
@@ -499,6 +465,7 @@ namespace dmDragonBones
             {
                 
                 auto* vertices = slot_vertices.data();
+
                 const dmBuffer::StreamDeclaration streams_decl[] = {
                     {dmHashString64("a_position"), dmBuffer::VALUE_TYPE_FLOAT32, 3},
                     {dmHashString64("a_texCoord"), dmBuffer::VALUE_TYPE_FLOAT32, 2},
@@ -628,9 +595,99 @@ namespace dmDragonBones
                 
             }
 
+            //vertices
+            dmBuffer::HBuffer buffer_trilist = 0x0;
+            std::vector<float> trilist;
+            {
+                
+                auto* vertices1 = slot_vertices.data(); 
+                trilist.resize(slot_indices.size() * 4); //positions(x,y):2 and texture(u,v):2 , position.z = 1
+                int trilist_offset = 0;
+                for (int i = 0; i < slot_indices.size() ; i++){
+                    unsigned short index = slot_indices[i];
+                    int sno = index * 4;
+                    float vx = vertices1[sno + 0]; float vy = vertices1[sno + 1]; //positions
+                    float tx = vertices1[sno + 2]; float ty = vertices1[sno + 3]; //texture coord
+                    trilist[trilist_offset + 0] = vx; trilist[trilist_offset + 1] = vy; 
+                    trilist[trilist_offset + 2] = tx; trilist[trilist_offset + 3] = ty; 
+
+                    trilist_offset += 4;
+                }
+
+                const dmBuffer::StreamDeclaration streams_decl[] = {
+                    {dmHashString64("a_position"), dmBuffer::VALUE_TYPE_FLOAT32, 3},
+                    {dmHashString64("a_texCoord"), dmBuffer::VALUE_TYPE_FLOAT32, 2},
+                    {dmHashString64("a_normal"),   dmBuffer::VALUE_TYPE_FLOAT32, 3},
+                };
+            
+                dmBuffer::Result r = dmBuffer::Create(trilist.size()/4, streams_decl, 3, &buffer_trilist);
+            
+                if (r == dmBuffer::RESULT_OK) {
+                   
+                    dmBuffer::Result rm = dmBuffer::SetMetaData(buffer_trilist, dmHashString32("AABB"), instance->aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
+                    if(rm != dmBuffer::RESULT_OK){
+                        dmLogInfo("Cannot set %s AABB", slot_name);
+                    }
+
+                    float* positions = 0x0;
+                    float* texCoord = 0x0;
+                    float* normals = 0x0;
+
+                    uint32_t components = 0;
+                    uint32_t components2 = 0;
+                    uint32_t components3 = 0;
+
+                    uint32_t stride = 0;
+                    uint32_t stride2 = 0;
+                    uint32_t stride3 = 0;
+
+                    uint32_t count;
+
+                    dmBuffer::Result r1 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_position"), (void**)&positions, &count, &components,  &stride);
+                    dmBuffer::Result r2 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_texCoord"), (void**)&texCoord,  &count, &components2, &stride2);
+                    dmBuffer::Result r3 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_normal"),   (void**)&normals,  &count, &components3, &stride3);
+
+                    //dmLogInfo("Buffer Count, Components: %d, %d", count, components);
+                    if (r1 == dmBuffer::RESULT_OK && r2 == dmBuffer::RESULT_OK) {
+                        int offset = 0;
+                        for(int i = 0; i < count; ++i){
+                           
+
+                            //y axis is up in defold
+                            auto pos_x =  trilist[offset + 0];
+                            auto pos_y =  trilist[offset + 1];
+                            positions[0] =  pos_x ; positions[1] =  pos_y ; positions[2] = 0; //2 = z axis
+                            
+                            //flip y tex coordinates
+                            auto tex_x = trilist[offset + 0 + 2] ;
+                            auto tex_y = 1.0 - trilist[offset + 1 + 2] ;
+                            texCoord[0]  = tex_x ; texCoord[1]  = tex_y; 
+
+                            normals[0] = 0; normals[1] = 0; normals[2] = 1;
+
+                            positions += stride;
+                            texCoord  += stride2;
+                            normals   += stride3;
+
+                            offset += 4;
+                            //dmLogInfo("vertices for %s values : %f, %f", slot_name, vertices[i]);
+                        }
+                    } else {
+                         dmLogInfo("Cannot get trilist vertices' streams. ");
+                    }
+                   
+                   
+                } else {
+                    dmLogInfo("Cannot copy trilist vertices");
+                }
+                
+            }
+
             
             //dmBuffer::HBuffer buffer2;
-            dmVMath::Matrix4 projection;
+            dmVMath::Matrix4 mvp;
+            dmVMath::Matrix4 model;
+            dmVMath::Matrix4 view;
             {
                 float slotModelMatrix[16];
                 if (openglSlot->isSkinned){
@@ -644,11 +701,25 @@ namespace dmDragonBones
                 multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
                 //dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
 
-                projection = {
+                mvp = {
                     {mvpMatrix[0],   mvpMatrix[1],  mvpMatrix[2],  mvpMatrix[3]},
                     {mvpMatrix[4],   mvpMatrix[5],  mvpMatrix[6],  mvpMatrix[7]},
                     {mvpMatrix[8],   mvpMatrix[9],  mvpMatrix[10], mvpMatrix[11]},
                     {mvpMatrix[12],  mvpMatrix[13], mvpMatrix[14], mvpMatrix[15]},
+                };
+
+                model = {
+                    {slotModelMatrix[0],   slotModelMatrix[1],  slotModelMatrix[2],  slotModelMatrix[3]},
+                    {slotModelMatrix[4],   slotModelMatrix[5],  slotModelMatrix[6],  slotModelMatrix[7]},
+                    {slotModelMatrix[8],   slotModelMatrix[9],  slotModelMatrix[10], slotModelMatrix[11]},
+                    {slotModelMatrix[12],  slotModelMatrix[13], slotModelMatrix[14], slotModelMatrix[15]},
+                };
+
+                view = {
+                    {viewMatrix[0],   viewMatrix[1],  viewMatrix[2],  viewMatrix[3]},
+                    {viewMatrix[4],   viewMatrix[5],  viewMatrix[6],  viewMatrix[7]},
+                    {viewMatrix[8],   viewMatrix[9],  viewMatrix[10], viewMatrix[11]},
+                    {viewMatrix[12],  viewMatrix[13], viewMatrix[14], viewMatrix[15]},
                 };
                
                 
@@ -657,7 +728,7 @@ namespace dmDragonBones
             
             
             //indices NOT USE!!!!
-            /*
+            
             dmBuffer::HBuffer buffer3;
             {
                 const dmBuffer::StreamDeclaration streams_decl3[] = {
@@ -695,7 +766,7 @@ namespace dmDragonBones
                 
             }   
             
-            */
+            
 
             lua_pushinteger(L, slot_index + 1); 
             // { 1 = {buffer=..., projection=..., indices=...},  2 = {buffer=..., projection=..., indices=...}}
@@ -708,17 +779,31 @@ namespace dmDragonBones
             dmScript::PushBuffer(L, luabuf1);
             lua_settable(L, -3);
 
-            lua_pushstring(L, "projection");
-            dmScript::PushMatrix4(L, projection);
+            lua_pushstring(L, "buffer_trilist");
+            dmScript::LuaHBuffer luabuf2(buffer_trilist, dmScript::OWNER_LUA);
+            //instance->buffers.Push(luabuf2);
+            dmScript::PushBuffer(L, luabuf2);
             lua_settable(L, -3);
 
-            /*//No use
+            lua_pushstring(L, "mtx_mvp");
+            dmScript::PushMatrix4(L, mvp);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "mtx_model");
+            dmScript::PushMatrix4(L, model);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "mtx_view");
+            dmScript::PushMatrix4(L, view);
+            lua_settable(L, -3);
+
+            //No use
             lua_pushstring(L, "indices");
             dmScript::LuaHBuffer luabuf3(buffer3, dmScript::OWNER_LUA);
             //instance->buffers.Push(luabuf3);
             dmScript::PushBuffer(L, luabuf3);
             lua_settable(L, -3);
-            */
+            
             
             lua_pushstring(L, "name");
             lua_pushstring(L,  slot_name);
@@ -728,11 +813,16 @@ namespace dmDragonBones
             lua_pushinteger(L,  slot_vertices.size()/4); //component count 2, and two position and texCoord?
             lua_settable(L, -3);
 
-            /*
+            lua_pushstring(L,  "trilist_count");
+            lua_pushinteger(L,  trilist.size()/4);
+            lua_settable(L, -3);
+
+
+            
             lua_pushstring(L,  "indices_count");
             lua_pushinteger(L,  slot_indices.size() * 1); //component count 1?
             lua_settable(L, -3);
-            */
+            
 
             //table on top
             lua_settable(L, -3); //set table on table
@@ -742,13 +832,26 @@ namespace dmDragonBones
         return 1;
     }
 
+    static int debugDraw(lua_State* L){
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        bool debug = luaL_checknumber(L, 2) == 1;
+
+        if (instance && instance->dragonBones){
+            instance->dragonBones->debugDraw = debug;
+        } else {
+            dmLogInfo("Cannot debug. No dragonbones instance.");
+        }
+
+        return 1;
+        
+    }
+
     static int update(lua_State* L){
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if (instance && instance->dragonBones){
             
 
             instance->dragonBones->advanceTime(1.0f / 60.0f); //!!!!!!!!!!!!!!!!!!!!!!!!
-            instance->dragonBones->debugDraw = true;
             //IMPORTANT IMPORTANT
             
           
@@ -765,8 +868,8 @@ namespace dmDragonBones
             return 0;
         }
 
-        float x = (float)luaL_checknumber(L, 1);
-        float y = (float)luaL_checknumber(L, 2);
+        float x = (float)luaL_checknumber(L, 2);
+        float y = (float)luaL_checknumber(L, 3);
 
         // Convert screen coordinates to armature space coordinates
         const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
@@ -784,7 +887,7 @@ namespace dmDragonBones
 
     static int setWorldScale(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        float scale = (float)luaL_checknumber(L, 1);
+        float scale = (float)luaL_checknumber(L, 2);
         if (instance) {
             instance->worldScale = scale;
         }
@@ -793,8 +896,8 @@ namespace dmDragonBones
 
     static int setWorldTranslation(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        float x = (float)luaL_checknumber(L, 1);
-        float y = (float)luaL_checknumber(L, 2);
+        float x = (float)luaL_checknumber(L, 2);
+        float y = (float)luaL_checknumber(L, 3);
         if (instance) {
             instance->worldTranslateX = x;
             instance->worldTranslateY = y;
@@ -804,9 +907,9 @@ namespace dmDragonBones
 
     static int overrideBonePosition(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        const char* boneNameChars = luaL_checkstring(L, 1);
-        float x = (float)luaL_checknumber(L, 2);
-        float y = (float)luaL_checknumber(L, 3);
+        const char* boneNameChars = luaL_checkstring(L, 2);
+        float x = (float)luaL_checknumber(L, 3);
+        float y = (float)luaL_checknumber(L, 4);
 
         auto* bone = instance->armature->getBone(boneNameChars);
         if (bone) {
@@ -824,7 +927,7 @@ namespace dmDragonBones
 
     static int resetBone(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        const char* boneNameChars = luaL_checkstring(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 2);
 
         auto* bone = instance->armature->getBone(boneNameChars);
         if (bone) {
@@ -836,7 +939,7 @@ namespace dmDragonBones
 
     static int stopAnimation(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        const char* nameChars = luaL_checkstring(L, 1);
+        const char* nameChars = luaL_checkstring(L, 2);
 
         if (!instance || !instance->armature || !instance->armature->getAnimation()) {
             return 0;
@@ -923,6 +1026,7 @@ namespace dmDragonBones
             {"override_bone_position",  overrideBonePosition },
             {"reset_bone",              resetBone            },
             {"stop_animation",          stopAnimation        },
+            {"debug_draw",              debugDraw            },
             {0, 0}
     };
 

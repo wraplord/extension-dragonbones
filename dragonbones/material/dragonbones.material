@@ -3,7 +3,19 @@ tags: "tile"
 vertex_program: "/dragonbones/material/dragonbones.vp"
 fragment_program: "/dragonbones/material/dragonbones.fp"
 vertex_constants {
-  name: "u_mvpMatrix"
+  name: "u_mtx_mvp"
+  type: CONSTANT_TYPE_USER_MATRIX4
+  value {
+  }
+}
+vertex_constants {
+  name: "u_mtx_view"
+  type: CONSTANT_TYPE_USER_MATRIX4
+  value {
+  }
+}
+vertex_constants {
+  name: "u_mtx_model"
   type: CONSTANT_TYPE_USER_MATRIX4
   value {
   }
@@ -13,8 +25,8 @@ vertex_constants {
   type: CONSTANT_TYPE_PROJECTION
 }
 vertex_constants {
-  name: "mtx_worldview"
-  type: CONSTANT_TYPE_WORLDVIEW
+  name: "mtx_view"
+  type: CONSTANT_TYPE_WORLDVIEWPROJ
 }
 fragment_constants {
   name: "tint"

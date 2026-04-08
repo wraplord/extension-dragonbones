@@ -15,20 +15,18 @@ INFO:SOUND: Sound
 INFO:SOUND:   nSamplesPerSec:   48000
 INFO:SOUND:        useThread:   1
 INFO:ENGINE: Initialised sound device 'default'
-WARNING:GAMESYS: Material /dragonbones/material/dragonbones.materialc has specified a fragment constant named 'tint', but it does not exist or isn't used in any of the shaders.
 INFO:DRAGONBONESEXT: DragonBones Initialized
-INFO:DRAGONBONESEXT: Skeleton no of bytes: 1846
-INFO:DRAGONBONESEXT: Atlas json no of bytes: 269
+INFO:DRAGONBONESEXT: Skeleton no of bytes: 34667
+INFO:DRAGONBONESEXT: Atlas json no of bytes: 1381
 INFO:DRAGONBONESEXT: Buffering data from byte arrays...
 INFO:DRAGONBONESEXT: Data successfully buffered.
 INFO:DRAGONBONESEXT: Creating armature on GL thread...
-INFO:DRAGONBONESEXT: Armature 'Armature' built at 000001A6DFF61F90, instance is 000001A6E041CC10
+INFO:DRAGONBONESEXT: Armature 'Bicycle' built at 00000162A248FE10, instance is 00000162A2917E00
 INFO:DRAGONBONESEXT: Armature building done.
-DEBUG:SCRIPT: /j9l7g4bawrj2dqx9x2ub
-DEBUG:SCRIPT: 
-{ --[[000001A6E6753970]]
-  1 = "swing"
-}
-INFO:DRAGONBONESEXT: Fading in animation: 'swing' on layer 0, loop: 0, fade: 0.300000
+ERROR:SCRIPT: main/test.script:121: bad argument #1 to 'release' (hash or string expected expected, got userdata)
+stack traceback:
+  [C]:-1: in function release
+  main/test.script:121: in function <main/test.script:113>
+
 INFO:DLIB: SSDP: Started on address 10.179.150.1
 INFO:DLIB: SSDP: Done on address 10.179.150.1

@@ -85,11 +85,11 @@
         type: userdata
         desc: dragobones instance.
 
-  - name: request_buffers
+  - name: get_buffers
     type: function
-    desc: Get a table of slots. Sub table contain luaHBuffer buffer, matrix4 projection , luaHBuffer normals,
-      string slot_name, integer buffer_count, integer indices_count.
-      buffer is vertices. indices is model indices. projection is the projection matrix.
+    desc: Get a table of slots. Sub table contain luaHBuffer buffer(a_position|a_texCoord|a_normal), 
+      matrix4 mtx_mvp , matrix4 mtx_model, matrix4 mtx_view,  string slot_name, integer buffer_count.
+      buffer is vertices. mtx_mvp is the complete matrix. model is the slot matrix.
       Use this data to create meshes. 
 
     parameters:
@@ -101,7 +101,6 @@
         type: table
         desc: 2d table
 
-  
   - name: free_buffers
     type: function
     desc: Free the buffers created by get_buffers. Called before next get_buffers.
@@ -129,6 +128,10 @@
     desc: Play the specify animation
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
         - name : animation_name
           type : string
         
@@ -148,6 +151,10 @@
     desc: Return the slot name for the given x,y otherwise return nil
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
         - name : x
           type : integer
         
@@ -163,6 +170,10 @@
     desc: set world scale
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
         - name : scale
           type : number
 
@@ -171,6 +182,10 @@
     desc: set world translation
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
         - name : x
           type : number
 
@@ -182,6 +197,10 @@
     desc: set bone position manually
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
         - name : bone_name
           type : string
 
@@ -196,6 +215,10 @@
     desc: reset bone transforms
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
         - name : bone_name
           type : string
   
@@ -204,10 +227,24 @@
     desc: stop the given animation
 
     parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
         - name : animation_name
           type : string
 
-        
+  - name: debug_draw
+    type: function
+    desc: Show debug lines
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
+        - name : debug
+          type : bool
 
 
       

@@ -1,40 +1,28 @@
 #version 140
 
 attribute vec2 a_position;
-attribute vec2 a_texCoord;
-out vec2 v_texCoord;
+attribute mediump vec2 a_texCoord;
+out mediump vec2 v_texCoord;
 
 uniform vs_uniforms
 {
-    uniform mediump mat4 u_mvpMatrix ;
+    //user
+    uniform mediump mat4 u_mtx_mvp ;
+    uniform mediump mat4 u_mtx_view ;
+    uniform mediump mat4 u_mtx_model ;
+
+    //system
     uniform mediump mat4 mtx_proj; 
-    uniform mediump mat4 mtx_worldview;
+    uniform mediump mat4 mtx_view;
 };
 
 void main() {
     
-    //vec4 p = mtx_worldview * vec4(a_position.xy, 0, 1.0);
     vec4 p = vec4(a_position.xy, 0, 1.0);
+    //vec4 p = vec4(a_position.xy, 0, 1.0);
 
-    //row major, does not work.
-    mat4 proj_rm = mat4(
-        0.0037605664692819, -0.0010568489087746, 0, -0.19723559916019,
-        0.0010568489087746, 0.0037605664692819, 0, -1.3978086709976, 
-        0, 0, -1, 0, 
-        0, 0, 0, 1
-    );
-
-    //column major, the correct one
-    mat4 proj = mat4(
-        0.001952,    0.00007864,  0, 0, 
-        0.00007864, -0.001952,    0, 0, 
-        0,           0,          -1, 0, 
-        0.05252,     0.2633,      0, 1
-    );
-
-    gl_Position =  u_mvpMatrix * p;
-    //gl_Position = mtx_proj  * p;
-    //gl_Position =  proj  * p;
+    gl_Position =  u_mtx_mvp * p;
+    //gl_Position =  mtx_view  * p; //for testing in editor
     
     v_texCoord  = a_texCoord;
 }
