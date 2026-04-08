@@ -41,13 +41,6 @@ local function test(buffer_data)
 		print(i, stream[offset], stream[offset+1])
 		offset = offset + 2
 	end
-
-	--pass
-	--indices
-	local indices = buffer.get_stream(bt.indices, hash("indices"))
-	for i = 1, bt.indices_count,3 do
-		print(indices[i], indices[i+1], indices[i+2])
-	end
 end
 
 
@@ -69,15 +62,12 @@ local function set_mesh_data(self, mesh_no, buffer_data)
 		{ buffer = buffer_data.buffer })
 
 	go.set(mesh_id, hash("vertices"), my_buffer )
-	table.insert(self.buffers, my_buffer)
+	table.insert(self.current_buffers, my_buffer)
 end
 
 local function update_db_world(self)
 	--release previous buffers
-	for i = 1, #self.buffers do
-		--resource.release(self.buffers[i])
-		--resource.release(path)
-	end
+	
 	
 	--update animation and get buffers
 	dragonbones.update(self.instance)
@@ -88,18 +78,28 @@ local function update_db_world(self)
 		--test(v)
 		--if k == 3 then break end
 	end
+
+	for i = 1, #self.previous_buffers do
+		resource.release(self.previous_buffers[i])
+		--resource.release(path)
+	end
+	collectgarbage("collect")
 end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
+	--profiler.enable_ui(true)
+
 	--initiate dragon bones and upload json data
-	self.instance = dragonbones.create(512, 512)
+	self.instance = dragonbones.create(800, 600)
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
 
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	print(self.buffer_prefix_name)
-	self.buffers = {}
+	self.current_buffers = {}
+	self.previous_buffers = {}
+	
 	self.meshes  = {}
 	local no_slots = dragonbones.get_no_slots(self.instance)
 	for i = 1, no_slots do
@@ -111,11 +111,17 @@ function init(self)
 	pprint(tbl_animations)
 	dragonbones.fade_in_animation(self.instance, tbl_animations[1], 0, 0, 0.3)
 
-	timer.delay(0.5, true, function()
+	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
+	update_db_world(self)
+	--[[
+	timer.delay(2, true, function()
 		print("Updating  .........................................")
+		self.previous_buffers = self.current_buffers
+		self.current_buffers  = {}
 		self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 		update_db_world(self)
 	end)
+	--]]
 	
 	
 end

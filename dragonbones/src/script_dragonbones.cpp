@@ -29,30 +29,19 @@ namespace dmDragonBones
     struct JniBridgeInstance {
         dmGameObject::HComponent m_component = nullptr;
 
-
         dragonBones::DragonBones* dragonBones = nullptr;
         dragonBones::Armature* armature = nullptr;
         dragonBones::opengl::OpenGLFactory* factory = nullptr;
-        
-        // OpenGL ES 2.0 rendering variables
-        /*GLuint programId = 0; 
-        GLint positionLocation = -1;
-        GLint texCoordLocation = -1;
-        GLint mvpMatrixLocation = -1;
-        GLint textureLocation = -1; */
-
+       
         //GLfloat
         float projectionMatrix[16];
     
-        float viewportWidth  = 2048.0f;
-        float viewportHeight = 2048.0f;
+        float viewportWidth  = 800.0f;
+        float viewportHeight = 600.0f;
 
-       /*
-           instance->positionLocation = glGetAttribLocation(instance->programId, "a_position");
-            instance->texCoordLocation = glGetAttribLocation(instance->programId, "a_texCoord");
-            instance->mvpMatrixLocation = glGetUniformLocation(instance->programId, "u_mvpMatrix");
-            instance->textureLocation = glGetUniformLocation(instance->programId, "u_texture");
-       */
+        float aabb_array[6];
+
+      
 
         // Armature transform
         float worldScale = 0.5f;
@@ -104,14 +93,15 @@ namespace dmDragonBones
         matrix[6] = 0.0f;
         matrix[7] = 0.0f;
         
-        matrix[8] = 0.0f;
-        matrix[9] = 0.0f;
+        matrix[8]  = 0.0f;
+        matrix[9]  = 0.0f;
         matrix[10] = -2.0f / (_far - _near);
-        matrix[11] = 0.0f;
+        matrix[11] =  0.0f;
         
         matrix[12] = -(right + left) / (right - left);
         matrix[13] = -(top + bottom) / (top - bottom);
         matrix[14] = -(_far + _near) / (_far - _near);
+
         matrix[15] = 1.0f;
     }
     
@@ -218,6 +208,14 @@ namespace dmDragonBones
 
             armatureObject->getAnimation()->reset();
             dmLogInfo("Armature building done.");
+
+            auto aabb = instance->armature->getArmatureData()->aabb;
+            instance->aabb_array[0] = aabb.x;
+            instance->aabb_array[1] = aabb.y; 
+            instance->aabb_array[2] = -1;
+            instance->aabb_array[3] = aabb.x + aabb.width;
+            instance->aabb_array[4] = aabb.y + aabb.height;
+            instance->aabb_array[5] = 1;
         } else {
             dmLogError("Failed to build armature '%s'.", armatureNameToBuild.c_str());
         }
@@ -248,33 +246,8 @@ namespace dmDragonBones
         instance->viewportHeight = height;
         createOrthographicMatrix(0.0f, instance->viewportWidth, instance->viewportHeight, 0.0f, -1.0f, 1.0f, instance->projectionMatrix);
 
-        dmLogInfo("projectionMatrix 0, 1: %f, %f", instance->projectionMatrix[0], instance->projectionMatrix[1]);
+        
         dmLogInfo("DragonBones Initialized");
-
-        /*
-        dmGraphics::HContext context = dmGraphics::GetInstalledContext();
-        instance->m_GraphicsContext = context ; // ->m_Contexts.Get(dmHashString64("graphics"));
-        //instance->m_RenderContext   = context  ->m_Contexts.Get(dmHashString64("render"));
-
-        dmGraphics::HVertexStreamDeclaration stream_declaration = dmGraphics::NewVertexStreamDeclaration(instance->m_GraphicsContext);
-        dmGraphics::AddVertexStream(stream_declaration, "u_mvpMatrix", 4, dmGraphics::TYPE_FLOAT, true);
-        dmGraphics::AddVertexStream(stream_declaration, "a_position", 2, dmGraphics::TYPE_FLOAT, false);
-        dmGraphics::AddVertexStream(stream_declaration, "a_texCoord", 2, dmGraphics::TYPE_FLOAT, true);
-
-        //provided by material
-        //dmGraphics::AddVertexStream(stream_declaration, "u_texture", 1, dmGraphics::TYPE_FLOAT, false);
-
-        instance->m_VertexDeclaration = dmGraphics::NewVertexDeclaration(instance->m_GraphicsContext, stream_declaration, 4 * sizeof(float));
-        instance->m_VertexBuffer = dmGraphics::NewVertexBuffer(instance->m_GraphicsContext, 0, 0x0, dmGraphics::BUFFER_USAGE_DYNAMIC_DRAW);
-
-        dmGraphics::DeleteVertexStreamDeclaration(stream_declaration);
-
-        dmGraphics::HIndexBuffer indexBuffer = dmGraphics::NewIndexBuffer(instance->m_GraphicsContext, 0, 0x0, dmGraphics::BUFFER_USAGE_DYNAMIC_DRAW);
-        instance->m_IndexBuffer = indexBuffer;
-
-        instance->m_component = component;
-        instance->m_RenderObjects.SetCapacity(4); //minimum slots
-        */
 
         lua_pushlightuserdata(L, instance);
         return 1;
@@ -471,8 +444,7 @@ namespace dmDragonBones
         JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
         //freeBuffers(instance);
         const auto& slots = instance->armature->getSlots();
-        auto aabb = instance->armature->getArmatureData()->aabb;
-        float aabb_array[6] = {aabb.x, aabb.y, -1, aabb.x + aabb.width, aabb.y + aabb.height, 1};
+        
 
         //projection
         float viewMatrix[16], scaleM[16], transM[16];
@@ -521,6 +493,7 @@ namespace dmDragonBones
                 continue;
             }
 
+
             //vertices
             dmBuffer::HBuffer buffer1 = 0x0;
             {
@@ -536,7 +509,7 @@ namespace dmDragonBones
             
                 if (r == dmBuffer::RESULT_OK) {
                    
-                    dmBuffer::Result rm = dmBuffer::SetMetaData(buffer1, dmHashString32("AABB"), &aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
+                    dmBuffer::Result rm = dmBuffer::SetMetaData(buffer1, dmHashString32("AABB"), instance->aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
                     if(rm != dmBuffer::RESULT_OK){
                         dmLogInfo("Cannot set %s AABB", slot_name);
                     }
@@ -669,7 +642,7 @@ namespace dmDragonBones
                 multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
                 //dmLogInfo("pvMatrix 0,1 : %f, %f", pvMatrix[0], pvMatrix[1]);
                 multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
-                dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
+                //dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
 
                 projection = {
                     {mvpMatrix[0],   mvpMatrix[1],  mvpMatrix[2],  mvpMatrix[3]},
@@ -677,18 +650,14 @@ namespace dmDragonBones
                     {mvpMatrix[8],   mvpMatrix[9],  mvpMatrix[10], mvpMatrix[11]},
                     {mvpMatrix[12],  mvpMatrix[13], mvpMatrix[14], mvpMatrix[15]},
                 };
-                /*projection = {
-                    {mvpMatrix[0], mvpMatrix[4],mvpMatrix[8],mvpMatrix[12]},
-                    {mvpMatrix[1], mvpMatrix[5],mvpMatrix[9],mvpMatrix[13]},
-                    {mvpMatrix[2], mvpMatrix[6],mvpMatrix[10],mvpMatrix[14]},
-                    {mvpMatrix[3], mvpMatrix[7],mvpMatrix[11],mvpMatrix[15]},
-                };*/
+               
                 
             }    
             
             
             
-            //indices
+            //indices NOT USE!!!!
+            /*
             dmBuffer::HBuffer buffer3;
             {
                 const dmBuffer::StreamDeclaration streams_decl3[] = {
@@ -726,6 +695,7 @@ namespace dmDragonBones
                 
             }   
             
+            */
 
             lua_pushinteger(L, slot_index + 1); 
             // { 1 = {buffer=..., projection=..., indices=...},  2 = {buffer=..., projection=..., indices=...}}
@@ -742,11 +712,13 @@ namespace dmDragonBones
             dmScript::PushMatrix4(L, projection);
             lua_settable(L, -3);
 
+            /*//No use
             lua_pushstring(L, "indices");
             dmScript::LuaHBuffer luabuf3(buffer3, dmScript::OWNER_LUA);
             //instance->buffers.Push(luabuf3);
             dmScript::PushBuffer(L, luabuf3);
             lua_settable(L, -3);
+            */
             
             lua_pushstring(L, "name");
             lua_pushstring(L,  slot_name);
@@ -756,9 +728,11 @@ namespace dmDragonBones
             lua_pushinteger(L,  slot_vertices.size()/4); //component count 2, and two position and texCoord?
             lua_settable(L, -3);
 
+            /*
             lua_pushstring(L,  "indices_count");
             lua_pushinteger(L,  slot_indices.size() * 1); //component count 1?
             lua_settable(L, -3);
+            */
 
             //table on top
             lua_settable(L, -3); //set table on table
@@ -771,155 +745,13 @@ namespace dmDragonBones
     static int update(lua_State* L){
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if (instance && instance->dragonBones){
+            
+
             instance->dragonBones->advanceTime(1.0f / 60.0f); //!!!!!!!!!!!!!!!!!!!!!!!!
             instance->dragonBones->debugDraw = true;
             //IMPORTANT IMPORTANT
             
-            /*
-            if (instance->armature) {
-                // 1. Clear the screen
-                //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //see rendered object below
-
-               
-
-                // 2. Setup the rendering program and global GL state
-                //glUseProgram(instance->programId);
-                //glEnableVertexAttribArray(instance->positionLocation);
-                //glEnableVertexAttribArray(instance->texCoordLocation);
-                
-                //glActiveTexture(GL_TEXTURE0);
-                //glUniform1i(instance->textureLocation, 0);
-                
-                // 3. Create a "view" matrix to scale and center the entire armature
-                float viewMatrix[16], scaleM[16], transM[16];
-                createScaleMatrix(scaleM, instance->worldScale, instance->worldScale, 1.0f);
-                createTranslateMatrix(transM, (instance->viewportWidth / 2.0f) + instance->worldTranslateX, (instance->viewportHeight / 2.0f) + instance->worldTranslateY, 0.0f);
-                multiplyMatrices(transM, scaleM, viewMatrix);
-                
-                // 4. Render each slot
-                const auto& slots = instance->armature->getSlots();
-                instance->m_RenderObjects.SetCapacity(slots.size());
-
-                int renderedSlots = 0;
-                for (int slot_index = 0; slot_index < slots.size(); slot_index++) {
-                    const auto& slot  = slots[slot_index];
-                    dmRender::RenderObject& ro = instance->m_RenderObjects[slot_index];
-                    
-                    if (!slot) {
-                        dmLogDebug("onDrawFrame: Skipping null slot.");
-                        continue;
-                    }
-
-                    if (!slot->getVisible()) {
-                        dmLogDebug("onDrawFrame: Slot '%s' is not visible.", slot->getName().c_str());
-                        continue;
-                    }
-
-                    if (!slot->getDisplay()) {
-                        // LOGW("onDrawFrame: Slot '%s' has no display object.", slot->getName().c_str());
-                        continue;
-                    }
-                    
-                    auto* openglSlot = static_cast<dragonBones::opengl::OpenGLSlot*>(slot);
-                    if (!openglSlot) {
-                        dmLogDebug("onDrawFrame: Slot '%s' could not be cast to OpenGLSlot.", slot->getName().c_str());
-                        continue;
-                    }
-
-                    if (openglSlot->vertices.empty() || openglSlot->indices.empty() || openglSlot->textureID == 0) {
-                        dmLogDebug("onDrawFrame: Skipping slot '%s' due to empty buffers or texture ID 0 (vertices: %zu, indices: %zu, textureID: %u)",
-                            slot->getName().c_str(), openglSlot->vertices.size(), openglSlot->indices.size(), openglSlot->textureID);
-                        continue;
-                    }
-
-                    // A. Get this slot's unique transformation matrix
-                    float slotModelMatrix[16];
-                    if (openglSlot->isSkinned)
-                    {
-                        createIdentityMatrix(slotModelMatrix);
-                    }
-                    else
-                    {
-                        convertDBMatrixToGL(slot->globalTransformMatrix, slotModelMatrix);
-                    }
-
-                    // B. Create the final MVP matrix: MVP = Projection * View * SlotModel
-                    float pvMatrix[16], mvpMatrix[16];
-                    multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
-                    multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
-                    
-                    // C. Pass the final matrix to the shader
-                    //glUniformMatrix4fv(, 1, GL_FALSE, mvpMatrix);
-                    dmGraphics::SetVertexBufferData(instance->m_VertexBuffer, 4,  
-                        mvpMatrix, dmGraphics::BufferUsage::BUFFER_USAGE_DYNAMIC_DRAW );
-                    
-                    // D. Bind the texture and draw :: done by material
-                    //glBindTexture(GL_TEXTURE_2D, openglSlot->textureID);
-                    
-                    //glVertexAttribPointer(instance->positionLocation, 2, GL_FLOAT, GL_FALSE, stride, openglSlot->vertices.data());
-                    //glVertexAttribPointer(instance->texCoordLocation, 2, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(openglSlot->vertices.data() + 2));
-                    
-                    //const GLsizei stride = 4 * sizeof(float); set in stream
-                    dmGraphics::SetVertexBufferData(instance->m_VertexBuffer, openglSlot->vertices.size(),  
-                        openglSlot->vertices.data(), dmGraphics::BufferUsage::BUFFER_USAGE_DYNAMIC_DRAW );
-                    dmGraphics::SetVertexBufferData(instance->m_VertexBuffer, openglSlot->vertices.size(),  
-                        (const void*)(openglSlot->vertices.data() + 2), dmGraphics::BufferUsage::BUFFER_USAGE_DYNAMIC_DRAW );
-                    
-                    //see struct RenderObject in render.h
-                    /
-                    
-                    //Render objects represent an actual draw call
-                    //@struct
-                    //@name RenderObject
-    
-
-                    //          dmGraphics::HTexture texture = GetSpineScene(first)->m_TextureSet->m_Texture->m_Texture; // spine - texture set resource - texture resource - texture
-                    //                   get from dragonbones loaded textureID ??? or from model component???
-                    //          dmRender::HMaterial material = GetMaterial(first);
-
-                    // vertex buffer
-                    //         HVertexBuffer NewVertexBuffer(HContext context, uint32_t size, const void* data, BufferUsage buffer_usage);
-                    //vertex declaration
-                    //         HVertexDeclaration NewVertexDeclaration(HContext context, HVertexStreamDeclaration stream_declaration, uint32_t stride);
-                    //         void AddVertexStream(HVertexStreamDeclaration stream_declaration, const char* name, uint32_t size, Type type, bool normalize);
-
-                    // Result AddToRender(HRenderContext context, RenderObject* ro);
-                    
-
-                    //instance->positionLocation === 
-                    // instance->positionLocation = glGetAttribLocation(instance->programId, "a_position");
-                    // instance->texCoordLocation = glGetAttribLocation(instance->programId, "a_texCoord");
-                    // instance->mvpMatrixLocation = glGetUniformLocation(instance->programId, "u_mvpMatrix");
-                    // instance->textureLocation = glGetUniformLocation(instance->programId, "u_texture");
-                    
-
-                    //a_position, a_texCoord etc will be AddVertexStream :: const char* name ????
-
-                    
-                    
-                    //will be m_IndexBuffer??
-                    //HIndexBuffer NewIndexBuffer(HContext context, uint32_t size, const void* data, BufferUsage buffer_usage);
-                    dmGraphics::SetIndexBufferData(instance->m_IndexBuffer, openglSlot->indices.size(),openglSlot->indices.data(), 
-                        dmGraphics::BufferUsage::BUFFER_USAGE_DYNAMIC_DRAW );
-                    
-                    //glDrawElements(GL_TRIANGLES, openglSlot->indices.size(), GL_UNSIGNED_SHORT, openglSlot->indices.data());
-                    
-                    // 
-                    //FillRenderObject(instance, render_context, ro, NULL, texture, material, 0, openglSlot->vertices.size());
-                    //render script ?
-                    renderedSlots++;
-                }
-                
-                if (renderedSlots == 0 && !slots.empty()) {
-                    dmLogDebug("onDrawFrame: Rendered 0 slots out of %zu.", slots.size());
-                }
-                
-                // 5. Cleanup
-                //glDisableVertexAttribArray(instance->positionLocation);
-                //glDisableVertexAttribArray(instance->texCoordLocation);
-            }
-            
-            */
+          
         } else {
             dmLogInfo("Cannot advance time.");
         }
@@ -927,103 +759,105 @@ namespace dmDragonBones
         return 1;
     }
 
-    /*
-    JNIEXPORT jstring JNICALL
-    Java_com_dragonbones_JniBridge_containsPoint(JNIEnv *env, jclass clazz, jfloat x, jfloat y) {
-        auto* instance = getInstance();
+    static int containsPoint(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if (!instance || !instance->armature) {
-            return nullptr;
+            return 0;
         }
 
+        float x = (float)luaL_checknumber(L, 1);
+        float y = (float)luaL_checknumber(L, 2);
+
         // Convert screen coordinates to armature space coordinates
-        const float armatureX = (x - (viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
-        const float armatureY = (y - (viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
+        const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
+        const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
 
         auto* slot = instance->armature->containsPoint(armatureX, armatureY);
         if (slot) {
-            return env->NewStringUTF(slot->getName().c_str());
+            lua_pushstring(L, slot->getName().c_str());
+        } else {
+            lua_pushnil(L);
         }
 
-        return nullptr;
+        return 1;
     }
 
-    JNIEXPORT void JNICALL
-    Java_com_dragonbones_JniBridge_setWorldScale(JNIEnv *env, jclass clazz, jfloat scale) {
-        auto* instance = getInstance();
+    static int setWorldScale(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        float scale = (float)luaL_checknumber(L, 1);
         if (instance) {
             instance->worldScale = scale;
         }
+        return 1;
     }
 
-    JNIEXPORT void JNICALL
-    Java_com_dragonbones_JniBridge_setWorldTranslation(JNIEnv *env, jclass clazz, jfloat x, jfloat y) {
-        auto* instance = getInstance();
+    static int setWorldTranslation(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        float x = (float)luaL_checknumber(L, 1);
+        float y = (float)luaL_checknumber(L, 2);
         if (instance) {
             instance->worldTranslateX = x;
             instance->worldTranslateY = y;
         }
+        return 1;
     }
 
-    JNIEXPORT void JNICALL
-    Java_com_dragonbones_JniBridge_overrideBonePosition(JNIEnv *env, jclass clazz, jstring bone_name, jfloat x, jfloat y) {
-        auto* instance = getInstance();
-        if (!instance || !instance->armature) return;
+    static int overrideBonePosition(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 1);
+        float x = (float)luaL_checknumber(L, 2);
+        float y = (float)luaL_checknumber(L, 3);
 
-        const char* boneNameChars = env->GetStringUTFChars(bone_name, nullptr);
         auto* bone = instance->armature->getBone(boneNameChars);
-        env->ReleaseStringUTFChars(bone_name, boneNameChars);
-
         if (bone) {
             // Convert screen coordinates to armature space
-            const float armatureX = (x - (viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
-            const float armatureY = (y - (viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
+            const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
+            const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
 
             bone->offsetMode = dragonBones::OffsetMode::Override;
             bone->offset.x = armatureX;
             bone->offset.y = armatureY;
             bone->invalidUpdate();
         }
+        return 1;
     }
 
-    JNIEXPORT void JNICALL
-    Java_com_dragonbones_JniBridge_resetBone(JNIEnv *env, jclass clazz, jstring bone_name) {
-        auto* instance = getInstance();
-        if (!instance || !instance->armature) return;
+    static int resetBone(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 1);
 
-        const char* boneNameChars = env->GetStringUTFChars(bone_name, nullptr);
         auto* bone = instance->armature->getBone(boneNameChars);
-        env->ReleaseStringUTFChars(bone_name, boneNameChars);
-
         if (bone) {
             bone->offsetMode = dragonBones::OffsetMode::None;
             bone->invalidUpdate();
         }
+        return 1;
     }
 
-    JNIEXPORT void JNICALL
-    Java_com_dragonbones_JniBridge_stopAnimation(JNIEnv *env, jclass clazz, jstring animation_name) {
-        auto* instance = getInstance();
+    static int stopAnimation(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* nameChars = luaL_checkstring(L, 1);
+
         if (!instance || !instance->armature || !instance->armature->getAnimation()) {
-            return;
+            return 0;
         }
 
-        const char* nameChars = env->GetStringUTFChars(animation_name, nullptr);
         std::string name(nameChars);
-        env->ReleaseStringUTFChars(animation_name, nameChars);
 
-        LOGI("Stopping animation: '%s' via JNI call.", name.c_str());
+        dmLogInfo("Stopping animation: '%s'.", name.c_str());
         instance->armature->getAnimation()->stop(name);
+        return 1;
     }
-    */
-   static int getAnimationNames(lua_State* L) {
+    
+    static int getAnimationNames(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if (!instance || !instance->armature) {
-            return 1;
+            return 0;
         }
 
         const auto& animationNames = instance->armature->getAnimation()->getAnimationNames();
         if (animationNames.empty()) {
-            return 1;
+            return 0;
         }
 
         lua_newtable(L);
@@ -1053,9 +887,9 @@ namespace dmDragonBones
 
         // playTimes: -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
         // The `loop` parameter from Kotlin is: 0 for infinite, 1 for once, etc. This maps directly to playTimes.
-        int layer        = (int)luaL_checknumber(L, 3);
-        int playTimes    = (int)luaL_checknumber(L, 4);
-        int fade_in_time = (int)luaL_checknumber(L, 5);
+        int layer          = (int)luaL_checknumber(L, 3);
+        int playTimes      = (int)luaL_checknumber(L, 4);
+        float fade_in_time = (float)luaL_checknumber(L, 5);
         
 
         // Use fadeIn to enable blending and layering.
@@ -1069,19 +903,26 @@ namespace dmDragonBones
         return 1;
     }
 
+
     static const luaL_reg DRAGONBONES_COMP_FUNCTIONS[] =
     {
            
             {"create",               init           },
             {"update",               update         },
-            {"resize",               resize         },
+            {"update_viewport",      resize         },
             {"destroy",              destroy        },
             {"load_data",            loadData2      },
             {"get_no_slots",         getNoSlots     },
             {"get_buffers",          getBuffers     },
             {"free_buffers",         freeBuffers    },
-            {"fade_in_animation",    fadeInAnimation      },
-            {"get_anination_names",  getAnimationNames    },
+            {"fade_in_animation",       fadeInAnimation      },
+            {"get_anination_names",     getAnimationNames    },
+            {"contains_point",          containsPoint        },
+            {"set_world_scale",         setWorldScale        },
+            {"set_world_translation",   setWorldTranslation  },
+            {"override_bone_position",  overrideBonePosition },
+            {"reset_bone",              resetBone            },
+            {"stop_animation",          stopAnimation        },
             {0, 0}
     };
 

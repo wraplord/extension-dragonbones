@@ -1,1 +1,1 @@
-{"width":256,"SubTexture":[{"width":103,"y":129,"height":94,"name":"right foot","x":1},{"width":80,"y":1,"height":140,"name":"right lower leg","x":117},{"width":114,"y":1,"height":126,"name":"right upper leg","x":1}],"height":256,"name":"Yah","imagePath":"Yah_tex.png"}
+{"width":256,"SubTexture":[{"width":103,"y":132,"height":94,"name":"right foot","x":2},{"width":80,"y":2,"height":140,"name":"right lower leg","x":120},{"width":114,"y":2,"height":126,"name":"right upper leg","x":2}],"height":256,"name":"Yah","imagePath":"Yah_tex.png"}

@@ -142,7 +142,73 @@
         - name: fade_in_time
           type: integer
           desc: fadeIn to enable blending and layering.
+
+  - name: contains_point
+    type: function
+    desc: Return the slot name for the given x,y otherwise return nil
+
+    parameters:
+        - name : x
+          type : integer
+        
+        - name: y
+          type : integer
+        
+    return:
+        - name : slot_name
+          type : string
+
+  - name: set_world_scale
+    type: function
+    desc: set world scale
+
+    parameters:
+        - name : scale
+          type : number
+
+  - name: set_world_translation
+    type: function
+    desc: set world translation
+
+    parameters:
+        - name : x
+          type : number
+
+        - name : y
+          type : number
+
+  - name: override_bone_position
+    type: function
+    desc: set bone position manually
+
+    parameters:
+        - name : bone_name
+          type : string
+
+        - name : x
+          type : number
+
+        - name : y
+          type : number
+
+  - name: reset_bone
+    type: function
+    desc: reset bone transforms
+
+    parameters:
+        - name : bone_name
+          type : string
   
+  - name: stop_animation
+    type: function
+    desc: stop the given animation
+
+    parameters:
+        - name : animation_name
+          type : string
+
+        
+
 
       
 

@@ -23,20 +23,20 @@
           :scene
         ]
         [
-          "/dragonbones/material/dragonbones.buffer"
+          "/todo.txt"
+          :code
+        ]
+        [
+          "/game.project"
+          :cljfx-form-view
+        ]
+        [
+          "/dragonbones/material/dragonbones.fp"
           :code
         ]
       ]
     ]
     :recent-files [
-      [
-        "/dragonbones/api/dragonbones.script_api"
-        :code
-      ]
-      [
-        "/dragonbones/models/db.script"
-        :code
-      ]
       [
         "/liveupdate.settings"
         :cljfx-form-view
@@ -56,10 +56,6 @@
       [
         "/builtins/assets/meshes/cube.dae"
         :scene
-      ]
-      [
-        "/builtins/materials/model.material"
-        :cljfx-form-view
       ]
       [
         "/builtins/materials/model.vp"
@@ -106,24 +102,12 @@
         :code
       ]
       [
-        "/game.project"
-        :cljfx-form-view
-      ]
-      [
-        "/dragonbones/material/dragonbones.fp"
-        :code
-      ]
-      [
         "/builtins/materials/sprite.vp"
         :code
       ]
       [
         "/builtins/materials/sprite.fp"
         :code
-      ]
-      [
-        "/builtins/materials/sprite.material"
-        :cljfx-form-view
       ]
       [
         "/dragonbones/material/test/dragonbones2.buffer"
@@ -134,15 +118,19 @@
         :code
       ]
       [
-        "/dragonbones/material/dragonbones.material"
+        "/builtins/materials/sprite.material"
         :cljfx-form-view
       ]
       [
-        "/dragonbones/models/DragonModel.go"
-        :scene
+        "/builtins/materials/model.material"
+        :cljfx-form-view
       ]
       [
         "/dragonbones/material/dragonbones.buffer"
+        :code
+      ]
+      [
+        "/custom_res/character3/Yah_tex.json"
         :code
       ]
       [
@@ -154,7 +142,27 @@
         :code
       ]
       [
+        "/dragonbones/models/DragonModel.go"
+        :scene
+      ]
+      [
+        "/dragonbones/material/dragonbones.material"
+        :cljfx-form-view
+      ]
+      [
         "/main/test.script"
+        :code
+      ]
+      [
+        "/todo.txt"
+        :code
+      ]
+      [
+        "/game.project"
+        :cljfx-form-view
+      ]
+      [
+        "/dragonbones/material/dragonbones.fp"
         :code
       ]
     ]
