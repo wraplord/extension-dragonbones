@@ -21,12 +21,8 @@ INFO:DRAGONBONESEXT: Atlas json no of bytes: 1381
 INFO:DRAGONBONESEXT: Buffering data from byte arrays...
 INFO:DRAGONBONESEXT: Data successfully buffered.
 INFO:DRAGONBONESEXT: Creating armature on GL thread...
-INFO:DRAGONBONESEXT: Armature 'Bicycle' built at 00000162A248FE10, instance is 00000162A2917E00
+INFO:DRAGONBONESEXT: Armature 'Bicycle' built at 00000222BE979F60, instance is 00000222BEF49450
 INFO:DRAGONBONESEXT: Armature building done.
-ERROR:SCRIPT: main/test.script:121: bad argument #1 to 'release' (hash or string expected expected, got userdata)
-stack traceback:
-  [C]:-1: in function release
-  main/test.script:121: in function <main/test.script:113>
-
-INFO:DLIB: SSDP: Started on address 10.179.150.1
-INFO:DLIB: SSDP: Done on address 10.179.150.1
+INFO:DRAGONBONESEXT: Fading in animation: 'bicycle' on layer 0, loop: 0, fade: 0.000000
+INFO:DLIB: SSDP: Started on address 192.168.1.143
+INFO:DLIB: SSDP: Done on address 192.168.1.143

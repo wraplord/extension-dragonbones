@@ -30,10 +30,6 @@
     ]
     :recent-files [
       [
-        "/builtins/assets/meshes/quad.dae"
-        :scene
-      ]
-      [
         "/builtins/assets/meshes/cube.dae"
         :scene
       ]
@@ -126,10 +122,6 @@
         :code
       ]
       [
-        "/dragonbones/material/dragonbones.material"
-        :cljfx-form-view
-      ]
-      [
         "/todo.txt"
         :code
       ]
@@ -138,7 +130,15 @@
         :scene
       ]
       [
-        "/dragonbones/models/DragonModelTrilist.go"
+        "/game.project"
+        :cljfx-form-view
+      ]
+      [
+        "/dragonbones/models/db.script"
+        :code
+      ]
+      [
+        "/main/main.collection"
         :scene
       ]
       [
@@ -146,11 +146,11 @@
         :code
       ]
       [
-        "/game.project"
+        "/dragonbones/material/dragonbones.material"
         :cljfx-form-view
       ]
       [
-        "/main/main.collection"
+        "/dragonbones/models/DragonModelTrilist.go"
         :scene
       ]
       [

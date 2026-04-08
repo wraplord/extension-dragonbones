@@ -42,12 +42,16 @@
   
   - name: update
     type: function
-    desc: advance dragobones world by 1/60f.
+    desc: advance dragobones world by the given time delta.
 
     parameters:
       - name: instance
         type: userdata
         desc: dragobones instance.
+
+      - name: dt
+        type: number
+        desc: 1/fps, typically 1/60.0
 
   - name: resize
     type: function
@@ -87,9 +91,9 @@
 
   - name: get_buffers
     type: function
-    desc: Get a table of slots. Sub table contain luaHBuffer buffer(a_position|a_texCoord|a_normal), 
-      matrix4 mtx_mvp , matrix4 mtx_model, matrix4 mtx_view,  string slot_name, integer buffer_count.
-      buffer is vertices. mtx_mvp is the complete matrix. model is the slot matrix.
+    desc: Get a table of slots. Sub table contain luaHBuffer buffer_trilist(a_position|a_texCoord|a_normal), 
+      matrix4 mtx_mvp ,  string slot_name, integer trilisit_count.
+      buffer is vertices. mtx_mvp is the complete matrix. 
       Use this data to create meshes. 
 
     parameters:

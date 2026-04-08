@@ -81,11 +81,17 @@ local function set_mesh_data(self, mesh_no, buffer_data)
 	--local my_buffer = resource.create_buffer(buffer_name, 
 	--{ buffer = buffer_data.buffer }) --triangles_list
 
-	local my_buffer = resource.create_buffer(buffer_name, 
-	{ buffer = buffer_data.buffer_trilist }) --triangles
+	local my_buffer
+	if self.current_buffers[mesh_no] then
+		my_buffer = self.current_buffers[mesh_no]
+		resource.set_buffer(my_buffer, buffer_data.buffer_trilist)
+	else
+		my_buffer = resource.create_buffer(buffer_name, { buffer = buffer_data.buffer_trilist }) 
+		--triangles resource.
+	end
 
 	go.set(mesh_id, hash("vertices"), my_buffer )
-	table.insert(self.current_buffers, my_buffer)
+	self.current_buffers[mesh_no] = my_buffer
 end
 
 local function update_db_world(self)
@@ -93,20 +99,18 @@ local function update_db_world(self)
 	
 	
 	--update animation and get buffers
-	dragonbones.update(self.instance)
+	dragonbones.update(self.instance, 1/30.0)
 	local buffer_table = dragonbones.get_buffers(self.instance)
 	--test(buffer_table)
-	
+
+	--Set mesh vertices and vertex constants
 	for k,v in ipairs(buffer_table) do
 		set_mesh_data(self, k, v)
 		--test(v)
 		--if k == 3 then break end
 	end
 
-	for i = 1, #self.previous_buffers do
-		resource.release(self.previous_buffers[i])
-		--resource.release(path)
-	end
+	--free resources, IMPORTANT!
 	collectgarbage("collect")
 end
 
@@ -114,6 +118,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	profiler.enable_ui(true)
+	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
 
 	--initiate dragon bones and upload json data
 	self.instance = dragonbones.create(1600, 1200)
@@ -122,9 +127,8 @@ function init(self)
 
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	self.current_buffers = {}
-	self.previous_buffers = {}
-	
 	self.meshes  = {}
+
 	local no_slots = dragonbones.get_no_slots(self.instance)
 	for i = 1, no_slots do
 		local mesh_id = spawn_mesh(i)
@@ -139,10 +143,8 @@ function init(self)
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	update_db_world(self)
 	--[
-	timer.delay(1/60, true, function()
+	timer.delay(1/30, true, function()
 		--print("Updating  .........................................")
-		self.previous_buffers = self.current_buffers
-		self.current_buffers  = {}
 		self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 		update_db_world(self)
 	end)

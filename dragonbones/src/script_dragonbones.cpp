@@ -394,7 +394,7 @@ namespace dmDragonBones
     }
 
     static int freeBuffers(lua_State* L){
-        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        //JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         //clear save buffers
         //for(int i = 0 ; i < instance->buffers.Size(); i++){
         //    dmBuffer::Destroy(instance->buffers[i].m_Buffer);
@@ -461,6 +461,7 @@ namespace dmDragonBones
 
 
             //vertices
+            /*
             dmBuffer::HBuffer buffer1 = 0x0;
             {
                 
@@ -509,7 +510,7 @@ namespace dmDragonBones
 
                                 positions[c] = c == 0 ? pos : -pos ; //y axis is up in defold
                                 texCoord[c]  = c == 0 ? tex : 1.0 - tex ; //flip tex coordinates
-                            }*/
+                            }/
 
                             //y axis is up in defold
                             auto pos_x =  vertices[offset + 0];
@@ -588,12 +589,13 @@ namespace dmDragonBones
                         } else {
                             dmLogInfo("Cannot get normals' streams.");
                         }
-                    */
+                    /*
                 } else {
                     dmLogInfo("Cannot copy vertices");
                 }
                 
             }
+            */
 
             //vertices
             dmBuffer::HBuffer buffer_trilist = 0x0;
@@ -686,8 +688,8 @@ namespace dmDragonBones
             
             //dmBuffer::HBuffer buffer2;
             dmVMath::Matrix4 mvp;
-            dmVMath::Matrix4 model;
-            dmVMath::Matrix4 view;
+            //dmVMath::Matrix4 model;
+            //dmVMath::Matrix4 view;
             {
                 float slotModelMatrix[16];
                 if (openglSlot->isSkinned){
@@ -708,6 +710,7 @@ namespace dmDragonBones
                     {mvpMatrix[12],  mvpMatrix[13], mvpMatrix[14], mvpMatrix[15]},
                 };
 
+                /*
                 model = {
                     {slotModelMatrix[0],   slotModelMatrix[1],  slotModelMatrix[2],  slotModelMatrix[3]},
                     {slotModelMatrix[4],   slotModelMatrix[5],  slotModelMatrix[6],  slotModelMatrix[7]},
@@ -720,7 +723,7 @@ namespace dmDragonBones
                     {viewMatrix[4],   viewMatrix[5],  viewMatrix[6],  viewMatrix[7]},
                     {viewMatrix[8],   viewMatrix[9],  viewMatrix[10], viewMatrix[11]},
                     {viewMatrix[12],  viewMatrix[13], viewMatrix[14], viewMatrix[15]},
-                };
+                };*/
                
                 
             }    
@@ -728,7 +731,7 @@ namespace dmDragonBones
             
             
             //indices NOT USE!!!!
-            
+            /*
             dmBuffer::HBuffer buffer3;
             {
                 const dmBuffer::StreamDeclaration streams_decl3[] = {
@@ -765,7 +768,7 @@ namespace dmDragonBones
                 }
                 
             }   
-            
+            */
             
 
             lua_pushinteger(L, slot_index + 1); 
@@ -773,11 +776,11 @@ namespace dmDragonBones
 
             lua_newtable(L);
 
-            lua_pushstring(L, "buffer");
-            dmScript::LuaHBuffer luabuf1(buffer1, dmScript::OWNER_LUA);
+            //lua_pushstring(L, "buffer");
+            //dmScript::LuaHBuffer luabuf1(buffer1, dmScript::OWNER_LUA);
             //instance->buffers.Push(luabuf1);
-            dmScript::PushBuffer(L, luabuf1);
-            lua_settable(L, -3);
+            //dmScript::PushBuffer(L, luabuf1);
+            //lua_settable(L, -3);
 
             lua_pushstring(L, "buffer_trilist");
             dmScript::LuaHBuffer luabuf2(buffer_trilist, dmScript::OWNER_LUA);
@@ -789,29 +792,29 @@ namespace dmDragonBones
             dmScript::PushMatrix4(L, mvp);
             lua_settable(L, -3);
 
-            lua_pushstring(L, "mtx_model");
-            dmScript::PushMatrix4(L, model);
-            lua_settable(L, -3);
+            //lua_pushstring(L, "mtx_model");
+            //dmScript::PushMatrix4(L, model);
+            //lua_settable(L, -3);
 
-            lua_pushstring(L, "mtx_view");
-            dmScript::PushMatrix4(L, view);
-            lua_settable(L, -3);
+            //lua_pushstring(L, "mtx_view");
+            //dmScript::PushMatrix4(L, view);
+            //lua_settable(L, -3);
 
             //No use
-            lua_pushstring(L, "indices");
-            dmScript::LuaHBuffer luabuf3(buffer3, dmScript::OWNER_LUA);
+            //lua_pushstring(L, "indices");
+            //dmScript::LuaHBuffer luabuf3(buffer3, dmScript::OWNER_LUA);
             //instance->buffers.Push(luabuf3);
-            dmScript::PushBuffer(L, luabuf3);
-            lua_settable(L, -3);
+            //dmScript::PushBuffer(L, luabuf3);
+            //lua_settable(L, -3);
             
             
             lua_pushstring(L, "name");
             lua_pushstring(L,  slot_name);
             lua_settable(L, -3);
 
-            lua_pushstring(L,  "buffer_count");
-            lua_pushinteger(L,  slot_vertices.size()/4); //component count 2, and two position and texCoord?
-            lua_settable(L, -3);
+            //lua_pushstring(L,  "buffer_count");
+            //lua_pushinteger(L,  slot_vertices.size()/4); //component count 2, and two position and texCoord?
+            //lua_settable(L, -3);
 
             lua_pushstring(L,  "trilist_count");
             lua_pushinteger(L,  trilist.size()/4);
@@ -819,9 +822,9 @@ namespace dmDragonBones
 
 
             
-            lua_pushstring(L,  "indices_count");
-            lua_pushinteger(L,  slot_indices.size() * 1); //component count 1?
-            lua_settable(L, -3);
+            //lua_pushstring(L,  "indices_count");
+            //lua_pushinteger(L,  slot_indices.size() * 1); //component count 1?
+            //lua_settable(L, -3);
             
 
             //table on top
@@ -848,13 +851,9 @@ namespace dmDragonBones
 
     static int update(lua_State* L){
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        float dt = (float)luaL_checknumber(L, 2);
         if (instance && instance->dragonBones){
-            
-
-            instance->dragonBones->advanceTime(1.0f / 60.0f); //!!!!!!!!!!!!!!!!!!!!!!!!
-            //IMPORTANT IMPORTANT
-            
-          
+            instance->dragonBones->advanceTime(dt); 
         } else {
             dmLogInfo("Cannot advance time.");
         }
