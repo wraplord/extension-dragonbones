@@ -47,6 +47,8 @@ Use editor scripts to auto link
 
 **Notes**
 
+The DragonBones Editor can be obtained from [Dragon Bones Editor](https://web.archive.org/web/20211013162034/http://tool.egret-labs.org/DragonBonesPro/DragonBonesPro-v5.6.3.exe)
+
 Dont call dragonbones.update or dragonbones.init directly. Send messages instead. Other dragonbones.* methods can be used directly.
 
 

@@ -11,7 +11,7 @@ function init(self)
 	}
 	
 	msg.post("/DragonModel", hash("load"), tbl)
-	msg.post("/DragonModel", hash("instance"), tbl)
+	msg.post("/DragonModel", hash("instance"))
 
 	timer.delay(1/30.0, true, function()
 		if self.instance then --loaded
