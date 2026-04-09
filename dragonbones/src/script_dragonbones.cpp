@@ -39,7 +39,7 @@ namespace dmDragonBones
         float viewportWidth  = 800.0f;
         float viewportHeight = 600.0f;
 
-        float aabb_array[6];
+       
 
       
 
@@ -209,13 +209,7 @@ namespace dmDragonBones
             armatureObject->getAnimation()->reset();
             dmLogInfo("Armature building done.");
 
-            auto aabb = instance->armature->getArmatureData()->aabb;
-            instance->aabb_array[0] = aabb.x;
-            instance->aabb_array[1] = aabb.y; 
-            instance->aabb_array[2] = -1;
-            instance->aabb_array[3] = aabb.x + aabb.width;
-            instance->aabb_array[4] = aabb.y + aabb.height;
-            instance->aabb_array[5] = 1;
+           
         } else {
             dmLogError("Failed to build armature '%s'.", armatureNameToBuild.c_str());
         }
@@ -419,7 +413,14 @@ namespace dmDragonBones
         multiplyMatrices(transM, scaleM, viewMatrix);
 
         //dmLogInfo("View matrix 0,1 : %f, %f", viewMatrix[0], viewMatrix[1])
+        auto aabb = instance->armature->getArmatureData()->aabb;
+        float x = instance->worldTranslateX -  aabb.x;
+        float y = instance->worldTranslateY -  aabb.y;
+        float aabb_array[6] = {
+           x, y, -1, x + aabb.width, y + aabb.height, 1
+        };
         
+        //dmLogInfo("AABB: %f, %f, %f, %f", aabb_array[0], aabb_array[1], aabb_array[3], aabb_array[4]);
         lua_newtable(L);
         
         //instance->buffers.SetCapacity(slots.size() * 2);
@@ -625,8 +626,10 @@ namespace dmDragonBones
                 dmBuffer::Result r = dmBuffer::Create(trilist.size()/4, streams_decl, 3, &buffer_trilist);
             
                 if (r == dmBuffer::RESULT_OK) {
-                   
-                    dmBuffer::Result rm = dmBuffer::SetMetaData(buffer_trilist, dmHashString32("AABB"), instance->aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
+                    
+                      
+
+                    dmBuffer::Result rm = dmBuffer::SetMetaData(buffer_trilist, dmHashString32("AABB"), &aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
                     if(rm != dmBuffer::RESULT_OK){
                         dmLogInfo("Cannot set %s AABB", slot_name);
                     }

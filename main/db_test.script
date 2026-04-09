@@ -1,28 +1,40 @@
+local module_instance = require("dragonbones.models.instance")
+
 local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
 local tex_json = "/custom_res/character4/Bicycle_tex.json"
-local tex_png = "/custom_res/character4/Bicycle_tex.png"
 
 function init(self)
+	profiler.enable_ui(true)
+	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+	
 	msg.post(".", "acquire_input_focus")
 	local tbl = {
 		skeleton_json = skeleton_json, 
 		tex_json = tex_json,
-		tex_png = tex_png
 	}
 	
 	msg.post("/DragonModel", hash("load"), tbl)
-	msg.post("/DragonModel", hash("instance"))
 
+	
+end
+
+local function update_world(self)
 	timer.delay(1/30.0, true, function()
-		if self.instance then --loaded
-			msg.post("/DragonModel", hash("update"), { dt = 1/30.0 })
-		end
+		msg.post("/DragonModel", hash("update"), { dt = 1/30.0 })
 	end)
 end
 
-function on_message(self, message_id, message, sender)
-	if message_id == hash("instance") then   
-		self.instance = message.instance
-		dragonbones.set_world_translation(self.instance, 0, 100)
+function on_message(self, message_id, message)
+	if message_id == hash("loaded") then
+		update_world(self)
+		if module_instance.instance then
+			local x = 100
+			timer.delay(1/30, true, function()
+				x = x - 5
+				dragonbones.set_world_translation(module_instance.instance, x, 100)
+			end) --test culling
+			
+		end
 	end
 end
+

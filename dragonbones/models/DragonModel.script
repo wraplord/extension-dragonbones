@@ -1,5 +1,8 @@
 go.property("viewportWidth",  800)
 go.property("viewportHeight", 600)
+go.property("u_texture", resource.atlas())
+
+local module_instance = require("dragonbones.models.instance")
 
 local function create_buffer_prefix_name()
 	math.random(os.clock())
@@ -62,11 +65,14 @@ local function test(buffer_data)
 end
 
 
-local function spawn_mesh(no)
+local function spawn_mesh(self, no)
 	local z = -1 + 0.01 * no
 	local id = factory.create("#factory", vmath.vector3(0, 0, z), nil, nil, vmath.vector3(1, 1, 1))
 	local mesh_id =  msg.url(nil, id, "mesh" )
-	go.set(mesh_id, hash("u_texture"),  self.tex_png)
+
+
+	local atlas = resource.get_atlas(self.u_texture)
+	go.set(mesh_id, "texture0",  hash(atlas.texture))
 	return mesh_id
 end
 
@@ -77,10 +83,15 @@ local function set_mesh_data(self, mesh_no, buffer_data)
 
 	
 	go.set(mesh_id, hash("u_mtx_mvp"),     buffer_data.mtx_mvp)
+
+	--todo
+	-- perform transform on defold
 	--go.set(mesh_id, hash("u_mtx_model"),   buffer_data.mtx_model)
 	--go.set(mesh_id, hash("u_mtx_view"),    buffer_data.mtx_view)
+	
 	local buffer_name = self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
 
+	--old
 	--local my_buffer = resource.create_buffer(buffer_name, 
 	--{ buffer = buffer_data.buffer }) --triangles_list
 
@@ -131,6 +142,7 @@ local function load_world(self)
 	self.dt = 1/30.0
 
 	self.instance = dragonbones.create(self.viewportWidth, self.viewportHeight)
+	module_instance.instance = self.instance
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
 
 
@@ -140,7 +152,7 @@ local function load_world(self)
 
 	local no_slots = dragonbones.get_no_slots(self.instance)
 	for i = 1, no_slots do
-		local mesh_id = spawn_mesh(i)
+		local mesh_id = spawn_mesh(self, i)
 		table.insert(self.meshes, mesh_id)
 	end
 
@@ -155,7 +167,6 @@ local function load_world(self)
 end
 
 local function update_world(self)
-	--print("Updating  .........................................")
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	update_db_world(self)
 end
@@ -164,10 +175,9 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("load") then
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
-		self.tex_png = message.tex_png
+
 		load_world(self)
-	elseif message_id == hash("instance") then
-		msg.post(sender, "instance", self.instance)
+		msg.post(sender, "loaded")
 	elseif message_id == hash("update") then
 		self.dt = message.dt or self.dt
 		if self.instance then

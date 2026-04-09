@@ -1,7 +1,25 @@
 name: "main"
 instances {
-  id: "DragonModelTrilist"
+  id: "DragonModel"
   prototype: "/dragonbones/models/DragonModel.go"
+  component_properties {
+    id: "DragonModel"
+    properties {
+      id: "viewportWidth"
+      value: "1600.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "viewportHeight"
+      value: "1200.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "u_texture"
+      value: "/custom_res/character4/Bicycle_tex.atlas"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
 }
 scale_along_z: 0
 embedded_instances {
@@ -9,12 +27,6 @@ embedded_instances {
   data: "components {\n"
   "  id: \"test\"\n"
   "  component: \"/main/db_test.script\"\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"factory\"\n"
-  "  type: \"factory\"\n"
-  "  data: \"prototype: \\\"/dragonbones/models/DragonModel.go\\\"\\n"
-  "\"\n"
   "}\n"
   ""
 }

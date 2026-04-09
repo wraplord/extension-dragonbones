@@ -21,7 +21,7 @@ INFO:DRAGONBONESEXT: Atlas json no of bytes: 1381
 INFO:DRAGONBONESEXT: Buffering data from byte arrays...
 INFO:DRAGONBONESEXT: Data successfully buffered.
 INFO:DRAGONBONESEXT: Creating armature on GL thread...
-INFO:DRAGONBONESEXT: Armature 'Bicycle' built at 00000222BE979F60, instance is 00000222BEF49450
+INFO:DRAGONBONESEXT: Armature 'Bicycle' built at 000001D9F9B9C690, instance is 000001D9FA32F2E0
 INFO:DRAGONBONESEXT: Armature building done.
 INFO:DRAGONBONESEXT: Fading in animation: 'bicycle' on layer 0, loop: 0, fade: 0.000000
 INFO:DLIB: SSDP: Started on address 192.168.1.143

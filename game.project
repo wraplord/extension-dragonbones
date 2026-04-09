@@ -1,5 +1,6 @@
 [bootstrap]
 main_collection = /main/main.collectionc
+render = /builtins/render/default.renderc
 
 [script]
 shared_state = 1
@@ -24,4 +25,7 @@ debug = 1
 [render]
 clear_color_green = 0.5
 clear_color_blue = 0.5
+
+[library]
+include_dirs = dragonbones
 
