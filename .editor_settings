@@ -133,14 +133,6 @@
         :cljfx-form-view
       ]
       [
-        "/dragonbones/models/DragonModel.go"
-        :scene
-      ]
-      [
-        "/dragonbones/models/DragonMeshFactory.go"
-        :scene
-      ]
-      [
         "/.gitignore"
         :code
       ]
@@ -155,6 +147,14 @@
       [
         "/dragonbones/models/DragonModel.script"
         :code
+      ]
+      [
+        "/dragonbones/models/DragonModel.go"
+        :scene
+      ]
+      [
+        "/dragonbones/models/DragonMeshFactory.go"
+        :scene
       ]
     ]
   }

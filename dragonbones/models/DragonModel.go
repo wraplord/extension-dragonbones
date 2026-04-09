@@ -3,7 +3,7 @@ components {
   component: "/dragonbones/models/DragonModel.script"
   properties {
     id: "u_texture"
-    value: "/custom_res/character4/Bicycle_tex.atlas"
+    value: "/builtins/graphics/particle_blob.tilesource"
     type: PROPERTY_TYPE_HASH
   }
 }
