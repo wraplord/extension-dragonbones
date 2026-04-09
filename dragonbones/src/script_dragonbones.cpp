@@ -375,7 +375,7 @@ namespace dmDragonBones
         instance->viewportHeight = (float)luaL_checknumber(L, 3);
             // Create the projection matrix to map pixel coordinates to screen space
         createOrthographicMatrix(0.0f, (float)instance->viewportWidth, (float)instance->viewportHeight, 0.0f, -1.0f, 1.0f, instance->projectionMatrix);
-       
+        return 1;
     }
 
 
@@ -455,7 +455,7 @@ namespace dmDragonBones
             }
 
             if (openglSlot->vertices.empty() || openglSlot->indices.empty()) {
-                dmLogInfo("onDrawFrame: Skipping slot '%s' due to empty buffers or texture ID 0 (vertices: %d, indices: %d)",
+                dmLogInfo("onDrawFrame: Skipping slot '%s' due to empty buffers or texture ID 0 (vertices: %zu, indices: %zu)",
                     slot->getName().c_str(), openglSlot->vertices.size(), openglSlot->indices.size());
                 continue;
             }
@@ -933,8 +933,11 @@ namespace dmDragonBones
 
         auto* bone = instance->armature->getBone(boneNameChars);
         if (bone) {
+            #undef None
             bone->offsetMode = dragonBones::OffsetMode::None;
             bone->invalidUpdate();
+            #define None                 0L /* universal null resource or null atom */
+            //in case stuff break;
         }
         return 1;
     }

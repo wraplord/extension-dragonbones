@@ -1,4 +1,17 @@
 {
+  :bundle {
+    :last-bundle-command :project.bundle-linux
+    :linux {
+      :build_report false
+      :contentless false
+      :liveupdate false
+      :platform "x86_64-linux"
+      :texture_compression "enabled"
+      :variant "debug"
+      :with_symbols true
+    }
+    :output-directory "C:\\Users\\admin\\Desktop\\MustDragon\\linux"
+  }
   :code {
     :breakpoints [
     ]
@@ -133,20 +146,20 @@
         :cljfx-form-view
       ]
       [
-        "/main/main.collection"
-        :scene
-      ]
-      [
         "/dragonbones/models/DragonMeshFactory.go"
-        :scene
-      ]
-      [
-        "/dragonbones/models/DragonModel.go"
         :scene
       ]
       [
         "/dragonbones/models/DragonModel.script"
         :code
+      ]
+      [
+        "/main/main.collection"
+        :scene
+      ]
+      [
+        "/dragonbones/models/DragonModel.go"
+        :scene
       ]
       [
         "/dragonbones/ext.manifest"
