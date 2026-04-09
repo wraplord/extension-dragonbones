@@ -154,16 +154,16 @@
         :code
       ]
       [
-        "/main/main.collection"
-        :scene
-      ]
-      [
         "/dragonbones/models/DragonModel.go"
         :scene
       ]
       [
         "/dragonbones/ext.manifest"
         :code
+      ]
+      [
+        "/main/main.collection"
+        :scene
       ]
     ]
   }

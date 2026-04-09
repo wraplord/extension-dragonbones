@@ -8,5 +8,5 @@ Thumbs.db
 .project
 .cproject
 builtins
-/.editor_settings
+.editor_settings
 *.txt
