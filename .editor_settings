@@ -21,10 +21,6 @@
           "/dragonbones/models/DragonModel.go"
           :scene
         ]
-        [
-          "/dragonbones/models/DragonModel.script"
-          :code
-        ]
       ]
     ]
     :recent-files [
@@ -141,10 +137,6 @@
         :scene
       ]
       [
-        "/dragonbones/ext.manifest"
-        :code
-      ]
-      [
         "/dragonbones/models/DragonMeshFactory.go"
         :scene
       ]
@@ -154,6 +146,10 @@
       ]
       [
         "/dragonbones/models/DragonModel.script"
+        :code
+      ]
+      [
+        "/dragonbones/ext.manifest"
         :code
       ]
     ]
