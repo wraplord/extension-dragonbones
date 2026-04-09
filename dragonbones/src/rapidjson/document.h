@@ -322,7 +322,10 @@ struct GenericStringRef {
     operator const Ch *() const { return s; }
 
     const Ch* const s; //!< plain CharType pointer
-    const SizeType length; //!< length of the string (excluding the trailing NULL terminator)
+    //const SizeType length; //!< length of the string (excluding the trailing NULL terminator)
+    
+    SizeType length; //!< length of the string (excluding the trailing NULL terminator)
+    //REMOVE CONST! ISSUE -> https://github.com/Tencent/rapidjson/issues/2347
 
 private:
     //! Disallow construction from non-const array

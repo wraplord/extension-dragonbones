@@ -1,1 +1,6 @@
 name: DragonBonesExt
+
+platforms:
+    web:
+        context:
+            flags:      ["-frtti"]

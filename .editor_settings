@@ -14,24 +14,20 @@
           :scene
         ]
         [
-          "/dragonbones/material/dragonbones.material"
-          :cljfx-form-view
+          "/dragonbones/ext.manifest"
+          :code
         ]
         [
           "/dragonbones/models/DragonModel.go"
           :scene
         ]
         [
-          "/dragonbones/models/DragonMeshFactory.go"
-          :scene
+          "/dragonbones/models/DragonModel.script"
+          :code
         ]
       ]
     ]
     :recent-files [
-      [
-        "/builtins/materials/model.material"
-        :cljfx-form-view
-      ]
       [
         "/custom_res/character3/Yah_tex.json"
         :code
@@ -125,14 +121,6 @@
         :scene
       ]
       [
-        "/main/main.collection"
-        :scene
-      ]
-      [
-        "/dragonbones/material/dragonbones.material"
-        :cljfx-form-view
-      ]
-      [
         "/.gitignore"
         :code
       ]
@@ -145,16 +133,28 @@
         :cljfx-form-view
       ]
       [
-        "/dragonbones/models/DragonModel.script"
+        "/dragonbones/material/dragonbones.material"
+        :cljfx-form-view
+      ]
+      [
+        "/main/main.collection"
+        :scene
+      ]
+      [
+        "/dragonbones/ext.manifest"
         :code
+      ]
+      [
+        "/dragonbones/models/DragonMeshFactory.go"
+        :scene
       ]
       [
         "/dragonbones/models/DragonModel.go"
         :scene
       ]
       [
-        "/dragonbones/models/DragonMeshFactory.go"
-        :scene
+        "/dragonbones/models/DragonModel.script"
+        :code
       ]
     ]
   }
