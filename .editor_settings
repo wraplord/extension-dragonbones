@@ -25,6 +25,10 @@
           "/game.project"
           :cljfx-form-view
         ]
+        [
+          "/dragonbones/models/DragonModel.script"
+          :code
+        ]
       ]
     ]
     :recent-files [
@@ -113,10 +117,6 @@
         :scene
       ]
       [
-        "/dragonbones/models/DragonModel.script"
-        :code
-      ]
-      [
         "/dragonbones/material/dragonbones.material"
         :cljfx-form-view
       ]
@@ -145,16 +145,20 @@
         :scene
       ]
       [
-        "/main/db_test.script"
-        :code
+        "/game.project"
+        :cljfx-form-view
       ]
       [
         "/main/main.collection"
         :scene
       ]
       [
-        "/game.project"
-        :cljfx-form-view
+        "/main/db_test.script"
+        :code
+      ]
+      [
+        "/dragonbones/models/DragonModel.script"
+        :code
       ]
     ]
   }

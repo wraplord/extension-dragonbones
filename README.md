@@ -73,7 +73,7 @@ function resize(instance, viewportWidth, viewportHeight)
     update viewport width and height. 
 
 function destroy(instance)
-    destroy this world. Make sure to free the buffers first
+    destroy this world. 
 
   
 function get_no_slots(instance)

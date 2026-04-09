@@ -185,3 +185,10 @@ function on_message(self, message_id, message, sender)
 		end
 	end
 end
+
+function final(self)
+	for i = 1, #self.current_buffers do
+		resource.release(self.current_buffers[i])
+	end
+	dragonbones.destroy(self.instance)
+end
