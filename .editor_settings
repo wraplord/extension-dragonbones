@@ -14,20 +14,16 @@
           :scene
         ]
         [
-          "/main/db_test.script"
-          :code
-        ]
-        [
-          "/.gitignore"
-          :code
-        ]
-        [
-          "/game.project"
+          "/dragonbones/material/dragonbones.material"
           :cljfx-form-view
         ]
         [
-          "/dragonbones/models/DragonModel.script"
-          :code
+          "/dragonbones/models/DragonModel.go"
+          :scene
+        ]
+        [
+          "/dragonbones/models/DragonMeshFactory.go"
+          :scene
         ]
       ]
     ]
@@ -105,23 +101,7 @@
         :code
       ]
       [
-        "/dragonbones/models/DragonModel.go"
-        :scene
-      ]
-      [
         "/custom_res/character4/Bicycle_tex.json"
-        :code
-      ]
-      [
-        "/dragonbones/models/DragonMeshFactory.go"
-        :scene
-      ]
-      [
-        "/dragonbones/material/dragonbones.material"
-        :cljfx-form-view
-      ]
-      [
-        "/.gitignore"
         :code
       ]
       [
@@ -145,16 +125,32 @@
         :scene
       ]
       [
-        "/game.project"
-        :cljfx-form-view
-      ]
-      [
         "/main/main.collection"
         :scene
       ]
       [
+        "/dragonbones/material/dragonbones.material"
+        :cljfx-form-view
+      ]
+      [
+        "/dragonbones/models/DragonModel.go"
+        :scene
+      ]
+      [
+        "/dragonbones/models/DragonMeshFactory.go"
+        :scene
+      ]
+      [
+        "/.gitignore"
+        :code
+      ]
+      [
         "/main/db_test.script"
         :code
+      ]
+      [
+        "/game.project"
+        :cljfx-form-view
       ]
       [
         "/dragonbones/models/DragonModel.script"
