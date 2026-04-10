@@ -31,7 +31,7 @@ function on_message(self, message_id, message)
 		update_world(self)
 		self.instance = module_instance.instances[message.instance_no]
 		if self.instance then
-			dragonbones.set_world_translation(self.instance, 0, 200)
+			dragonbones.move(self.instance, 0, 200)
 			--local x = 100
 			--timer.delay(1/30, true, function()
 			--	x = x - 5
