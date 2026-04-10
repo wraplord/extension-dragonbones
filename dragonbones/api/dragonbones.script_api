@@ -180,10 +180,37 @@
 
         - name : scale
           type : number
+  
+  - name: scale
+    type: function
+    desc: alias for set_world_scale
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+        - name : scale
+          type : number
 
   - name: set_world_translation
     type: function
     desc: set world translation
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
+        - name : x
+          type : number
+
+        - name : y
+          type : number
+
+  - name: move
+    type: function
+    desc: alias for set_world_translation
 
     parameters:
         - name: instance
