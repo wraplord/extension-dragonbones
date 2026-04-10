@@ -2,13 +2,13 @@
     -- THE ISSUES IS VIEWPORT SIZE! Use the correct viewport width and height! 
        The viewport height maybe different from viewport width.
 
--- fix texture bleeding - ?
+-- fix texture bleeding - ? DONE
 
 -- add the rest of dragonbones interfaces -- DONE
 
 -- fix resources releases either on c/lua side. :: IMPORTANT!!! - DONE
      -- use previous and current buffers to implement
 
--- test on Bicycle character
+-- test on Bicycle character DONE
 
 -- publish

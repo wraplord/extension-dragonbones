@@ -2,8 +2,8 @@
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
 In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORTANT.  
 
-- Add DragonModel.go to your collection. 
-    - Modify #DragonModel properties such as    
+- Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples.
+    - Modify #DragonModel.script or #BatchDragonModel.script properties such as    
         - viewport -> set dimensions  
         - u_texture -> set to the created atlas 
 
@@ -27,6 +27,7 @@ In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORT
                 tex_json = tex_json,
             }
             
+            --set the correct url, for batch /BatchDragonModel
             msg.post("/DragonModel", hash("load"), tbl)
 
             
@@ -34,6 +35,7 @@ In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORT
 
         local function update_world(self)
             timer.delay(1/30.0, true, function()
+                --set the correct url, for batch /BatchDragonModel
                 msg.post("/DragonModel", hash("update"), { dt = 1/30.0 })
             end)
         end
@@ -57,39 +59,25 @@ In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORT
     ```
 
 
-
 - Build
 
 
-**Todo**
-
-Use editor scripts to auto link
-
-
+**Todo**  
+   Use editor scripts to auto link
 
 **Notes**
 
 The DragonBones Editor can be obtained from [Dragon Bones Editor](https://web.archive.org/web/20211013162034/http://tool.egret-labs.org/DragonBonesPro/DragonBonesPro-v5.6.3.exe)
 
-Dont call dragonbones.update or dragonbones.create directly. Send messages instead. Other dragonbones.* methods can be used directly.
+Dont call dragonbones.update or dragonbones.create directly. Send messages instead.  
+Other dragonbones.* methods can be used directly.
 
 
-A lot of meshes and resources are created per each character. This leads to a lot of draw calls. See [DragonModel.script](/dragonbones/models/DragonModel.scripttest.script)
-Todo batch all the slots vertices and use vertex attributes for slot transform instead of vertex constant per slot
 
 **Documentation**
 <pre>
 function resize(instance, viewportWidth, viewportHeight)
     update viewport width and height. 
-
-function destroy(instance)
-    destroy this world. 
-
-  
-function get_no_slots(instance)
-    Get the available slots in this world. You can use this to
-    create specific no of meshes.
-
 
 function get_anination_names(instance)
     Get a table of animations defined.
