@@ -1,6 +1,7 @@
 **USAGE**
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
 
+
 - Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples.
     - Modify #DragonModel.script or #BatchDragonModel.script properties  
         - viewport -> set dimensions  
@@ -74,6 +75,7 @@ Other dragonbones.* methods can be used directly.
 
 
 **Documentation**
+
 <pre>
 function resize(instance, viewportWidth, viewportHeight)
     update viewport width and height. 
@@ -117,7 +119,3 @@ function debug_draw(instance, debug?)
     Show debug lines
 </pre>
     
-
-
-      
-
