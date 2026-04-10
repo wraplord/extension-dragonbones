@@ -2,7 +2,6 @@ go.property("viewportWidth",  800)
 go.property("viewportHeight", 600)
 go.property("u_texture", resource.texture())
 
-
 local module_instance = require("dragonbones.shared.instance")
 
 local function create_buffer_prefix_name()
@@ -19,7 +18,7 @@ local function create_buffer_prefix_name()
 end
 
 local function spawn_mesh(self, no)
-	local z = -1 + 0.01 * no
+	local z = 0 + 0.01 * no
 	local id = factory.create("#factory", vmath.vector3(0, 0, z), nil, nil, vmath.vector3(1, 1, 1))
 	local mesh_id =  msg.url(nil, id, "mesh" )
 
@@ -48,7 +47,6 @@ local function update_db_world(self)
 	dragonbones.update(self.instance, self.dt)
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
 	--pprint(buffer_table)
-	--test(buffer_table)
 
 	set_mesh_data(self, 1, buffer_table)
 
@@ -72,16 +70,13 @@ local function load_world(self)
 	self.current_buffers = {}
 	self.meshes  = {}
 
-	local no_slots = 1 --dragonbones.get_no_slots(self.instance)
-	for i = 1, no_slots do
-		local mesh_id = spawn_mesh(self, i)
-		table.insert(self.meshes, mesh_id)
-	end
+	--dragonbones.get_no_slots(self.instance)
+	local mesh_id = spawn_mesh(self, 1)
+	table.insert(self.meshes, mesh_id)
 
 	local tbl_animations = dragonbones.get_anination_names(self.instance)
 	--pprint(tbl_animations)
 	dragonbones.fade_in_animation(self.instance, tbl_animations[1], 0, 0, 0)
-	dragonbones.set_world_translation(self.instance, 0, 200)
 
 	update_db_world(self)
 end
