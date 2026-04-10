@@ -1,11 +1,6 @@
 components {
   id: "BatchDragonModel"
   component: "/dragonbones/batch_models/BatchDragonModel.script"
-  properties {
-    id: "u_texture"
-    value: "/builtins/graphics/particle_blob.tilesource"
-    type: PROPERTY_TYPE_HASH
-  }
 }
 embedded_components {
   id: "factory"

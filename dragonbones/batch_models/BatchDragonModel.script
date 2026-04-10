@@ -1,6 +1,7 @@
 go.property("viewportWidth",  800)
 go.property("viewportHeight", 600)
-go.property("u_texture", resource.atlas())
+go.property("u_texture", resource.texture())
+
 
 local module_instance = require("dragonbones.shared.instance")
 
@@ -17,62 +18,12 @@ local function create_buffer_prefix_name()
 	return table.concat(tbl, "")
 end
 
-local function test(buffer_data)
-	--local bt = buffer_data
-	--pass
-	--pprint(bt)
-
-	--pass
-	--Debugging: check positions, texCoord for reasonable data
-	--[[local stream = buffer.get_stream(bt.buffer, hash("a_position")) --hash("a_position"), hash("a_texCoord")
-	local offset = 1
-	for i = 1, bt.buffer_count do
-		print(i, stream[offset], stream[offset+1], stream[offset+2])
-		offset = offset + 3
-	end
-
-	stream = buffer.get_stream(bt.buffer, hash("a_texCoord")) --hash("a_position"), hash("a_texCoord")
-	offset = 1
-	for i = 1, bt.buffer_count do
-		print(i, stream[offset], stream[offset+1])
-		offset = offset + 2
-	end
-	--]]
-
-	for i, bt in ipairs(buffer_data) do
-		if bt.name == "leg_upper" then
-			local stream = buffer.get_stream(bt.indices, hash("indices")) 
-			for j = 1, bt.indices_count ,3 do
-				print(stream[j], stream[j+1], stream[j+2])
-			end
-			print("----------------------------------")
-			stream = buffer.get_stream(bt.buffer_trilist, hash("a_position")) --hash("a_position"), hash("a_texCoord")
-			local offset = 1
-			for j = 1, bt.trilist_count do
-				print(j, stream[offset], ",", stream[offset+1], ",", stream[offset+2], ",")
-				offset = offset + 3
-			end
-			print("----------------------------------")
-			stream = buffer.get_stream(bt.buffer_trilist, hash("a_texCoord")) --hash("a_position"), hash("a_texCoord")
-			offset = 1
-			for j = 1, bt.trilist_count do
-				print(j, stream[offset], ",", stream[offset+1], ",")
-				offset = offset + 2
-			end
-		end
-	end
-
-end
-
-
 local function spawn_mesh(self, no)
 	local z = -1 + 0.01 * no
 	local id = factory.create("#factory", vmath.vector3(0, 0, z), nil, nil, vmath.vector3(1, 1, 1))
 	local mesh_id =  msg.url(nil, id, "mesh" )
 
-
-	local atlas = resource.get_atlas(self.u_texture)
-	go.set(mesh_id, "texture0",  hash(atlas.texture))
+	go.set(mesh_id, "texture0",  hash(self.u_texture))
 	return mesh_id
 end
 
@@ -113,6 +64,8 @@ local function load_world(self)
 	self.dt = 1/30.0
 	self.instance = dragonbones.create(self.viewportWidth, self.viewportHeight)
 	table.insert(module_instance.instances , self.instance)
+	self.instance_no = #module_instance.instances
+	
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
 
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
@@ -131,7 +84,6 @@ local function load_world(self)
 	dragonbones.set_world_translation(self.instance, 0, 200)
 
 	update_db_world(self)
-	return #module_instance.instances
 end
 
 local function update_world(self)
@@ -144,8 +96,8 @@ function on_message(self, message_id, message, sender)
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
 
-		local instance_no = load_world(self)
-		msg.post(sender, "loaded", {instance_no = instance_no})
+		load_world(self)
+		msg.post(sender, "loaded", {instance_no = self.instance_no})
 	elseif message_id == hash("update") then
 		self.dt = message.dt or self.dt
 		if self.instance then
@@ -159,4 +111,5 @@ function final(self)
 		resource.release(self.current_buffers[i])
 	end
 	dragonbones.destroy(self.instance)
+	module_instance.instances[self.instance_no] = nil
 end

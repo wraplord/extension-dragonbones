@@ -156,7 +156,7 @@ namespace dmDragonBones
             return;
         }
 
-        dmLogInfo("Creating armature on GL thread...");
+        //dmLogInfo("Creating armature on GL thread...");
         
         // The factory might have old data, clear it before parsing new data.
         instance->factory->clear();
@@ -207,7 +207,7 @@ namespace dmDragonBones
             // which can cause rendering issues for some models.
 
             armatureObject->getAnimation()->reset();
-            dmLogInfo("Armature building done.");
+            //dmLogInfo("Armature building done.");
 
            
         } else {
@@ -260,24 +260,10 @@ namespace dmDragonBones
     /*#
       Load armatures and textures. The parameters are as follows
       1. is the instance return from init.
-      2,3. are skeleton json, texture atlas json loaded with data1 = resource.load("/path")
-      make sure to set texture in mesh component
-      '''
-        instance = dragonbones.init()
-        skeleton = resource.load('/path')
-        ...
-        dragonbones.loadData(instance, skeleton, atlas)
-        dragonbones.update()
-
-        --dragonbones.get_buffers()
-        --for each buffer
-          --go.set("#mesh", "vertices", )
-          --go.set("#mesh", "vertices", )
-      '''
+      2,3. are skeleton and texture json
+ 
     */
     static int loadData2(lua_State* L) {
-        //char* skeleton_data, size_t skeleton_len, char* texture_json_data, int texture_json_len, char* texture_png_data, int texture_png_len
-        
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
 
         
@@ -285,13 +271,13 @@ namespace dmDragonBones
         uint8_t* skeleton_bytes = 0x0;
         uint32_t skeleton_len   = 0;
         dmBuffer::GetBytes(skeleton_data_buffer, (void**)&skeleton_bytes, &skeleton_len);
-        dmLogInfo("Skeleton no of bytes: %d", skeleton_len);
+        //dmLogInfo("Skeleton no of bytes: %d", skeleton_len);
 
         dmBuffer::HBuffer texture_json_buffer =  dmScript::CheckBufferUnpack(L, 3);
         uint8_t* texture_json_bytes = 0x0;
         uint32_t texture_json_len   = 0;
         dmBuffer::GetBytes(texture_json_buffer, (void**)&texture_json_bytes, &texture_json_len);
-        dmLogInfo("Atlas json no of bytes: %d", texture_json_len);
+        //dmLogInfo("Atlas json no of bytes: %d", texture_json_len);
 
         
         //texture is set in mesh component
@@ -323,7 +309,7 @@ namespace dmDragonBones
         instance->textureJsonBuffer.clear();
         instance->texturePngDataBuffer.clear();
 
-        dmLogInfo("Buffering data from byte arrays...");
+        //dmLogInfo("Buffering data from byte arrays...");
 
         
         // Skeleton data
@@ -359,7 +345,7 @@ namespace dmDragonBones
             dmLogError("Failed to copy one or more byte arrays.");
             instance->isDataLoaded = false;
         } else {
-            dmLogInfo("Data successfully buffered.");
+            //dmLogInfo("Data successfully buffered.");
             instance->isDataLoaded = true;
             _tryBuildArmature(instance);
         }
@@ -387,6 +373,7 @@ namespace dmDragonBones
         return 1;
     }
 
+    //handle by lua gc
     static int freeBuffers(lua_State* L){
         //JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         //clear save buffers
@@ -1267,7 +1254,6 @@ namespace dmDragonBones
         return 1;
     }
 
-
     static const luaL_reg DRAGONBONES_COMP_FUNCTIONS[] =
     {
            
@@ -1283,7 +1269,9 @@ namespace dmDragonBones
             {"get_anination_names",     getAnimationNames    },
             {"contains_point",          containsPoint        },
             {"set_world_scale",         setWorldScale        },
+            {"scale",                   setWorldScale        },
             {"set_world_translation",   setWorldTranslation  },
+            {"move",                    setWorldTranslation  },
             {"override_bone_position",  overrideBonePosition },
             {"reset_bone",              resetBone            },
             {"stop_animation",          stopAnimation        },

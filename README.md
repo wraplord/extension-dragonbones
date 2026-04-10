@@ -1,14 +1,13 @@
 **USAGE**
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
-In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORTANT.  
 
 - Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples.
-    - Modify #DragonModel.script or #BatchDragonModel.script properties such as    
+    - Modify #DragonModel.script or #BatchDragonModel.script properties  
         - viewport -> set dimensions  
-        - u_texture -> set to the created atlas 
+        - u_texture -> pick the png texture
 
 
-- In your .script file
+- In your .script file modify the paths to point to the correct custom resource folder.
    ```
         local module_instance = require("dragonbones.models.instance")
 
@@ -96,9 +95,14 @@ function contains_point(instance, x, y)
 function set_world_scale(instance, scale)
     Set world scale. Use this function and set_world_translation to manage world transform
 
+function scale(instance, scale)
+    alias for set_world_scale
 
 function set_world_translation(instance, x, y)
     set world translation
+
+function move(instance, x, y)
+    alias for set_world_translation
 
 function override_bone_position(instance, bone_name, x, y)
     set bone position manually, for IK?

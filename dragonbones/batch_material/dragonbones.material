@@ -2,14 +2,6 @@ name: "dragonbones"
 tags: "tile"
 vertex_program: "/dragonbones/batch_material/dragonbones.vp"
 fragment_program: "/dragonbones/batch_material/dragonbones.fp"
-vertex_constants {
-  name: "mtx_proj"
-  type: CONSTANT_TYPE_PROJECTION
-}
-vertex_constants {
-  name: "mtx_view"
-  type: CONSTANT_TYPE_WORLDVIEWPROJ
-}
 fragment_constants {
   name: "tint"
   type: CONSTANT_TYPE_USER
