@@ -1,3 +1,3 @@
 local M = {}
-M.instance = nil
+M.instances = {}
 return M

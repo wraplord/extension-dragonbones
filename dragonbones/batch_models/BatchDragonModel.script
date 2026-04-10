@@ -2,7 +2,7 @@ go.property("viewportWidth",  800)
 go.property("viewportHeight", 600)
 go.property("u_texture", resource.atlas())
 
-local module_instance = require("dragonbones.models.instance")
+local module_instance = require("dragonbones.shared.instance")
 
 local function create_buffer_prefix_name()
 	math.randomseed(os.clock())
@@ -77,31 +77,15 @@ local function spawn_mesh(self, no)
 end
 
 local function set_mesh_data(self, mesh_no, buffer_data)
-	--pprint(buffer_data.mtx_model)
 	local mesh_id = self.meshes[mesh_no]
-	--print(mesh_id)
-
-	
-	go.set(mesh_id, hash("u_mtx_mvp"),     buffer_data.mtx_mvp)
-
-	--todo
-	-- perform transform on defold
-	--go.set(mesh_id, hash("u_mtx_model"),   buffer_data.mtx_model)
-	--go.set(mesh_id, hash("u_mtx_view"),    buffer_data.mtx_view)
-	
 	local buffer_name = self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
-
-	--old
-	--local my_buffer = resource.create_buffer(buffer_name, 
-	--{ buffer = buffer_data.buffer }) --triangles_list
 
 	local my_buffer
 	if self.current_buffers[mesh_no] then
 		my_buffer = self.current_buffers[mesh_no]
-		resource.set_buffer(my_buffer, buffer_data.buffer_trilist)
+		resource.set_buffer(my_buffer, buffer_data.batch_buffer)
 	else
-		my_buffer = resource.create_buffer(buffer_name, { buffer = buffer_data.buffer_trilist }) 
-		--triangles resource.
+		my_buffer = resource.create_buffer(buffer_name, { buffer = buffer_data.batch_buffer }) 
 	end
 
 	go.set(mesh_id, hash("vertices"), my_buffer )
@@ -109,48 +93,33 @@ local function set_mesh_data(self, mesh_no, buffer_data)
 end
 
 local function update_db_world(self)
-	--release previous buffers
-
-
 	--update animation and get buffers
 	dragonbones.update(self.instance, self.dt)
-	local buffer_table = dragonbones.get_buffers(self.instance)
+	local buffer_table = dragonbones.get_batch_buffer(self.instance)
+	--pprint(buffer_table)
 	--test(buffer_table)
 
-	--Set mesh vertices and vertex constants
-	for k,v in ipairs(buffer_table) do
-		set_mesh_data(self, k, v)
-		--test(v)
-		--if k == 3 then break end
-	end
+	set_mesh_data(self, 1, buffer_table)
 
 	--free resources, IMPORTANT!
-	collectgarbage("collect")
+	collectgarbage("step", 1)
 end
 
 local function load_world(self)
-	--"/custom_res/character4/Bicycle_ske.json"
-	--"/custom_res/character4/Bicycle_tex.json"
-
 	local skeleton_json = resource.load(self.skeleton_json)
 	local tex_json      = resource.load(self.tex_json)
 
-	--profiler.enable_ui(true)
-	--profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
-
 	--initiate dragon bones and upload json data
 	self.dt = 1/30.0
-
 	self.instance = dragonbones.create(self.viewportWidth, self.viewportHeight)
 	table.insert(module_instance.instances , self.instance)
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
-
 
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	self.current_buffers = {}
 	self.meshes  = {}
 
-	local no_slots = dragonbones.get_no_slots(self.instance)
+	local no_slots = 1 --dragonbones.get_no_slots(self.instance)
 	for i = 1, no_slots do
 		local mesh_id = spawn_mesh(self, i)
 		table.insert(self.meshes, mesh_id)
@@ -161,7 +130,6 @@ local function load_world(self)
 	dragonbones.fade_in_animation(self.instance, tbl_animations[1], 0, 0, 0)
 	dragonbones.set_world_translation(self.instance, 0, 200)
 
-	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	update_db_world(self)
 	return #module_instance.instances
 end

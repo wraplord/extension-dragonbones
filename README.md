@@ -12,13 +12,16 @@ In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORT
    ```
         local module_instance = require("dragonbones.models.instance")
 
-        --your exported data
-        --Really should be in #DragonModel properties, Defold does not support string properties. VOTE FOR THIS.
         local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
         local tex_json = "/custom_res/character4/Bicycle_tex.json"
 
         function init(self)
+            profiler.enable_ui(true)
+            profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+            
             msg.post(".", "acquire_input_focus")
+
+            self.instance = nil
             local tbl = {
                 skeleton_json = skeleton_json, 
                 tex_json = tex_json,
@@ -26,6 +29,7 @@ In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORT
             
             msg.post("/DragonModel", hash("load"), tbl)
 
+            
         end
 
         local function update_world(self)
@@ -37,13 +41,19 @@ In Defold create an atlas with *_tex.png. Set atlas Extrude borders to 0. IMPORT
         function on_message(self, message_id, message)
             if message_id == hash("loaded") then
                 update_world(self)
-
-                --called dragonbones functions
-                if module_instance.instance then
-                    dragonbones.set_world_translation(module_instance.instance, 0, 100)
+                self.instance = module_instance.instances[message.instance_no]
+                if self.instance then
+                    local x = 100
+                    timer.delay(1/30, true, function()
+                        x = x - 5
+                        dragonbones.set_world_translation(module_instance.instance, x, 100)
+                    end) --test culling
+                    
                 end
             end
         end
+
+
     ```
 
 
@@ -108,12 +118,8 @@ function override_bone_position(instance, bone_name, x, y)
 function reset_bone(instance, bone_name)
     reset bone transforms
 
-   
-  
 function stop_animation(instance, animation_name)
     stop the given running animation
-
-   
 
 function debug_draw(instance, debug?)  
     Show debug lines

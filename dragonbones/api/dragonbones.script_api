@@ -250,6 +250,24 @@
         - name : debug
           type : bool
 
+  - name: get_batch_buffer
+    type: function
+    desc: Instead of a lot of buffers, get one big merged buffer
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
+    return:
+        - name: batch_buffer
+          type: userdata
+          desc: Defold buffer object
+
+        - name: batch_buffer_count
+          type: integer
+          desc: size of batch_buffer
+          
 
       
 

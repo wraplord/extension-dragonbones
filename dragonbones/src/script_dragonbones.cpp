@@ -838,6 +838,262 @@ namespace dmDragonBones
         return 1;
     }
 
+
+    static int getBatchBuffer(lua_State* L){
+        //DM_LUA_STACK_CHECK( L, 1);
+        JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
+        //freeBuffers(instance);
+        const auto& slots = instance->armature->getSlots();
+        
+
+        //projection
+        float viewMatrix[16], scaleM[16], transM[16];
+        createScaleMatrix(scaleM, instance->worldScale, instance->worldScale, 1.0f);
+        createTranslateMatrix(transM, (instance->viewportWidth / 2.0f) + instance->worldTranslateX, (instance->viewportHeight / 2.0f) + instance->worldTranslateY, 0.0f);
+        multiplyMatrices(transM, scaleM, viewMatrix);
+
+        //dmLogInfo("View matrix 0,1 : %f, %f", viewMatrix[0], viewMatrix[1])
+        auto aabb = instance->armature->getArmatureData()->aabb;
+        float x = instance->worldTranslateX -  aabb.x;
+        float y = instance->worldTranslateY -  aabb.y;
+        float aabb_array[6] = {
+           x, y, -1, x + aabb.width, y + aabb.height, 1
+        };
+        
+        //dmLogInfo("AABB: %f, %f, %f, %f", aabb_array[0], aabb_array[1], aabb_array[3], aabb_array[4]);
+        
+        //instance->buffers.SetCapacity(slots.size() * 2);
+        std::vector<float> batch_trilist;
+        uint32_t total_len = 0;
+        for (int slot_index = 0; slot_index <slots.size(); slot_index++){
+            auto& slot  = slots[slot_index];
+            auto* openglSlot = static_cast<dragonBones::opengl::OpenGLSlot*>(slot);
+            auto slot_indices = openglSlot->indices;
+            if (!slot) {
+                continue;
+            }
+
+            if (!slot->getVisible()) {
+                continue;
+            }
+
+            if (!slot->getDisplay()) {
+                continue;
+            }
+                    
+            if (!openglSlot) {
+                continue;
+            }
+
+            if (openglSlot->vertices.empty() || openglSlot->indices.empty()) {
+                continue;
+            }
+
+            total_len += slot_indices.size() * 4;
+        }
+        batch_trilist.resize(total_len * 20);
+        
+       
+        int offset_trilist = 0;
+        for (int slot_index = 0; slot_index <slots.size(); slot_index++){
+                auto& slot  = slots[slot_index];
+                auto* openglSlot = static_cast<dragonBones::opengl::OpenGLSlot*>(slot);
+
+                if (!slot) {
+                    continue;
+                }
+
+                if (!slot->getVisible()) {
+                    continue;
+                }
+
+                if (!slot->getDisplay()) {
+                    continue;
+                }
+                        
+                if (!openglSlot) {
+                    continue;
+                }
+
+                if (openglSlot->vertices.empty() || openglSlot->indices.empty()) {
+                    continue;
+                }
+
+                const char* slot_name = slot->getName().c_str();
+                auto slot_vertices = openglSlot->vertices;
+                auto slot_indices = openglSlot->indices;
+                //auto indices = slot_indices.data();
+
+                float slotModelMatrix[16];
+                if (openglSlot->isSkinned){
+                    createIdentityMatrix(slotModelMatrix);
+                } else {
+                    convertDBMatrixToGL(slot->globalTransformMatrix, slotModelMatrix);
+                }
+                float pvMatrix[16], mvpMatrix[16];
+                multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
+                //dmLogInfo("pvMatrix 0,1 : %f, %f", pvMatrix[0], pvMatrix[1]);
+                multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
+                //dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
+
+
+                //vertices
+                {
+                    
+                    auto* vertices1 = slot_vertices.data(); 
+                    for (int i = 0; i < slot_indices.size() ; i++){
+                        unsigned short index = slot_indices[i];
+                        int sno = index * 4;
+                        float vx = vertices1[sno + 0]; float vy = vertices1[sno + 1]; //positions
+                        float tx = vertices1[sno + 2]; float ty = vertices1[sno + 3]; //texture coord
+
+                        batch_trilist[offset_trilist + 0] = vx; 
+                        batch_trilist[offset_trilist + 1] = vy; 
+                        batch_trilist[offset_trilist + 2] = tx; 
+                        batch_trilist[offset_trilist + 3] = ty; 
+
+                        batch_trilist[offset_trilist + 4] = mvpMatrix[0]; 
+                        batch_trilist[offset_trilist + 5] = mvpMatrix[1]; 
+                        batch_trilist[offset_trilist + 6] = mvpMatrix[2]; 
+                        batch_trilist[offset_trilist + 7] = mvpMatrix[3]; 
+
+                        batch_trilist[offset_trilist + 8] = mvpMatrix[4]; 
+                        batch_trilist[offset_trilist + 9] = mvpMatrix[5]; 
+                        batch_trilist[offset_trilist + 10] = mvpMatrix[6]; 
+                        batch_trilist[offset_trilist + 11] = mvpMatrix[7]; 
+
+                        batch_trilist[offset_trilist + 12] = mvpMatrix[8]; 
+                        batch_trilist[offset_trilist + 13] = mvpMatrix[9]; 
+                        batch_trilist[offset_trilist + 14] = mvpMatrix[10]; 
+                        batch_trilist[offset_trilist + 15] = mvpMatrix[11]; 
+
+                        batch_trilist[offset_trilist + 16] = mvpMatrix[12]; 
+                        batch_trilist[offset_trilist + 17] = mvpMatrix[13]; 
+                        batch_trilist[offset_trilist + 18] = mvpMatrix[14]; 
+                        batch_trilist[offset_trilist + 19] = mvpMatrix[15]; 
+                         
+                        
+                        offset_trilist += 20;
+                    }
+
+                    
+                }
+        }
+
+         
+        dmBuffer::HBuffer buffer_trilist = 0x0;
+        const dmBuffer::StreamDeclaration streams_decl[] = {
+            {dmHashString64("a_position"), dmBuffer::VALUE_TYPE_FLOAT32,   3},
+            {dmHashString64("a_texCoord"), dmBuffer::VALUE_TYPE_FLOAT32,   2},
+            {dmHashString64("a_normal"),   dmBuffer::VALUE_TYPE_FLOAT32,   3},
+            {dmHashString64("a_mat"),      dmBuffer::VALUE_TYPE_FLOAT32,  16},
+        };
+    
+        dmBuffer::Result r = dmBuffer::Create(total_len, streams_decl, 4, &buffer_trilist);
+    
+        if (r == dmBuffer::RESULT_OK) {
+            
+            dmBuffer::Result rm = dmBuffer::SetMetaData(buffer_trilist, dmHashString32("AABB"), &aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
+            if(rm != dmBuffer::RESULT_OK){
+                dmLogInfo("Cannot set AABB");
+            }
+
+            float* positions = 0x0;
+            float* texCoord = 0x0;
+            float* normals = 0x0;
+            float* mat = 0x0;
+
+            uint32_t components1 = 0;
+            uint32_t components2 = 0;
+            uint32_t components3 = 0;
+            uint32_t components4 = 0;
+
+            uint32_t stride1 = 0;
+            uint32_t stride2 = 0;
+            uint32_t stride3 = 0;
+            uint32_t stride4 = 0;
+
+            uint32_t count;
+
+            dmBuffer::Result r1 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_position"), (void**)&positions, &count, &components1,  &stride1);
+            dmBuffer::Result r2 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_texCoord"), (void**)&texCoord,  &count, &components2,  &stride2);
+            dmBuffer::Result r3 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_normal"),   (void**)&normals,   &count, &components3,  &stride3);
+            dmBuffer::Result r4 = dmBuffer::GetStream(buffer_trilist, dmHashString64("a_mat"),      (void**)&mat,       &count, &components4,  &stride4);
+
+            //dmLogInfo("Buffer Count, Components: %d, %d", count, components);
+            if (r1 == dmBuffer::RESULT_OK && r2 == dmBuffer::RESULT_OK && r4 == dmBuffer::RESULT_OK ) {
+                int batch_offset = 0;
+                float z = -1;
+                for(int i = 0; i < count; ++i){
+                    
+                    //y axis is up in defold
+                    auto pos_x =  batch_trilist[batch_offset + 0];
+                    auto pos_y =  batch_trilist[batch_offset + 1];
+                    positions[0] =  pos_x ; 
+                    positions[1] =  pos_y ; 
+                    positions[2] =  z;
+                    z += 0.01;
+                    
+                    //flip y tex coordinates
+                    auto tex_x =       batch_trilist[batch_offset + 2];
+                    auto tex_y = 1.0 - batch_trilist[batch_offset + 3];
+                    texCoord[0]  = tex_x; 
+                    texCoord[1]  = tex_y; 
+
+                    normals[0] = 0; 
+                    normals[1] = 0; 
+                    normals[2] = 1;
+
+                    mat[0] = batch_trilist[batch_offset + 4];
+                    mat[1] = batch_trilist[batch_offset + 5];
+                    mat[2] = batch_trilist[batch_offset + 6];
+                    mat[3] = batch_trilist[batch_offset + 7];
+                    mat[4] = batch_trilist[batch_offset + 8];
+                    mat[5] = batch_trilist[batch_offset + 9];
+                    mat[6] = batch_trilist[batch_offset + 10];
+                    mat[7] = batch_trilist[batch_offset + 11];
+                    mat[8] = batch_trilist[batch_offset + 12];
+                    mat[9] = batch_trilist[batch_offset + 13];
+                    mat[10] = batch_trilist[batch_offset + 14];
+                    mat[11] = batch_trilist[batch_offset + 15];
+                    mat[12] = batch_trilist[batch_offset + 16];
+                    mat[13] = batch_trilist[batch_offset + 17];
+                    mat[14] = batch_trilist[batch_offset + 18];
+                    mat[15] = batch_trilist[batch_offset + 19];
+
+                    positions += stride1;
+                    texCoord  += stride2;
+                    normals   += stride3;
+                    mat       += stride4;
+
+                    batch_offset += 20;
+                    //dmLogInfo("vertices for %s values : %f, %f", slot_name, vertices[i]);
+                }
+            } else {
+                dmLogInfo("Cannot get trilist vertices' streams. ");
+            }
+            
+        } else {
+            dmLogInfo("Cannot copy trilist vertices");
+        }
+
+
+        lua_newtable(L);
+
+        lua_pushstring(L, "batch_buffer");
+        dmScript::LuaHBuffer luabuf2(buffer_trilist, dmScript::OWNER_LUA);
+        //instance->buffers.Push(luabuf2);
+        dmScript::PushBuffer(L, luabuf2);
+        lua_settable(L, -3);
+        
+        lua_pushstring(L,  "batch_buffer_count");
+        lua_pushinteger(L,  total_len);
+        lua_settable(L, -3);
+
+        return 1;
+    }
+
+
     static int debugDraw(lua_State* L){
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         bool debug = luaL_checknumber(L, 2) == 1;
@@ -1032,6 +1288,7 @@ namespace dmDragonBones
             {"reset_bone",              resetBone            },
             {"stop_animation",          stopAnimation        },
             {"debug_draw",              debugDraw            },
+            {"get_batch_buffer",        getBatchBuffer       },
             {0, 0}
     };
 

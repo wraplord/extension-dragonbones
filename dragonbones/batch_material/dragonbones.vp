@@ -1,0 +1,25 @@
+#version 140
+
+attribute vec2 a_position;
+attribute mediump vec2 a_texCoord;
+attribute mediump mat4 a_mat;
+
+out mediump vec2 v_texCoord;
+
+uniform vs_uniforms
+{
+    //system
+    uniform mediump mat4 mtx_proj; 
+    uniform mediump mat4 mtx_view;
+};
+
+void main() {
+    
+    vec4 p = vec4(a_position.xy, 0, 1.0);
+    //vec4 p = vec4(a_position.xy, 0, 1.0);
+
+    gl_Position =  a_mat * p;
+    //gl_Position =  mtx_view  * p; //for testing in editor
+    
+    v_texCoord  = a_texCoord;
+}
