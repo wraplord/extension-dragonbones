@@ -1510,10 +1510,11 @@ namespace dmDragonBones
             {"debug_draw",              debugDraw            },
             {"get_batch_buffer",        getBatchBuffer       },
             {"set_slot_visibility",     setSlotVisibility    },
-            {"set_flip_x",              setFlipX             },
-            {"set_flip_y",              setFlipY             },
-            {"add_event_callback",      addEventListener     },
-            {"remove_event_callback",   removeEventListener  },
+            {"set_slot_display_index",     setSlotDisplayIndex  },
+            {"set_flip_x",                 setFlipX             },
+            {"set_flip_y",                 setFlipY             },
+            {"add_event_callback",         addEventListener     },
+            {"remove_event_callback",      removeEventListener  },
             //{"replace_skin",            replaceSkin          },
             {0, 0}
     };

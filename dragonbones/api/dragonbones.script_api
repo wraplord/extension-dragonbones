@@ -225,7 +225,7 @@
 
   - name: set_bone_position
     type: function
-    desc: set bone position manually
+    desc: set bone position. Addictive.
 
     parameters:
         - name: instance
@@ -243,7 +243,7 @@
 
   - name: set_bone_rotation
     type: function
-    desc: set bone rotation manually
+    desc: set bone rotation offset. Addictive.
 
     parameters:
         - name: instance
@@ -311,9 +311,9 @@
           type: integer
           desc: size of batch_buffer
 
-  - name: set_visible
+  - name: set_slot_visibility
     type: function
-    desc: Hide a slot
+    desc: Hide/Show a slot
 
     parameters:
         - name: instance
