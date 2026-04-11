@@ -49,7 +49,7 @@ void ActionTimelineState::_onCrossFrame(unsigned frameIndex) const
                 {
                     const auto eventObject = BaseObject::borrowObject<EventObject>();
                     // eventObject->time = _frameArray[frameOffset] * _frameRateR; // Precision problem
-                    eventObject->time = _frameArray[frameOffset] / _frameRate;
+                    eventObject->time = _frameArray[frameOffset] ; // _frameRate;
                     eventObject->animationState = _animationState;
                     EventObject::actionDataToInstance(action, eventObject, _armature);
                     _armature->_dragonBones->bufferEvent(eventObject);
