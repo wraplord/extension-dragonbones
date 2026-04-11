@@ -51,7 +51,9 @@ protected:
     TextureAtlasData* _buildTextureAtlasData(TextureAtlasData* textureAtlasData, void* textureAtlas) const override;
     Armature* _buildArmature(const BuildArmaturePackage& dataPackage) const override;
     Slot* _buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const override;
-
+    //void (*_listener)(const std::string& type, dragonBones::EventObject *);
+    std::function<void (const std::string& type, dragonBones::EventObject *)> lam_listener;
+    bool dispatchEvents = false;
 public:
     OpenGLFactory();
     ~OpenGLFactory();
@@ -61,11 +63,29 @@ public:
         _dragonBones = dragonBones;
     }
 
+    /*void setEventCallback(void (*listener)(const std::string& type, dragonBones::EventObject *))
+    {
+        
+        _listener = listener;
+        dispatchEvents = true;
+    }*/
+
+    void disableEvents()
+    {
+        dispatchEvents = false;
+    }
+
+    void setEventCallback(std::function<void (const std::string& type, dragonBones::EventObject *)> listener)
+    {
+        dispatchEvents = true;
+        lam_listener = listener;
+    }
+
     // IEventDispatcher interface
-    void addDBEventListener(const std::string& type, const std::function<void(EventObject*)>& listener) override {}
+    void addDBEventListener(const std::string& type, const std::function<void(EventObject*)>& listener) override ;
     void removeDBEventListener(const std::string& type, const std::function<void(EventObject*)>& listener) override {}
-    bool hasDBEventListener(const std::string& type) const override { return false; }
-    void dispatchDBEvent(const std::string& type, EventObject* value) override {}
+    bool hasDBEventListener(const std::string& type) const override { return dispatchEvents; }
+    void dispatchDBEvent(const std::string& type, EventObject* value) override ;
 
     // IArmatureProxy interface implementation
     void dbInit(Armature* armature) override {}

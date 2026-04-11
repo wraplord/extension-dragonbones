@@ -21,6 +21,7 @@
 #include <dmsdk/gamesys/property.h>
 #include <dmsdk/gamesys/render_constants.h>
 #include <dmsdk/sdk.h>
+#include <dmsdk/script/script.h>
 
  
 namespace dmDragonBones
@@ -39,9 +40,7 @@ namespace dmDragonBones
         float viewportWidth  = 800.0f;
         float viewportHeight = 600.0f;
 
-       
-
-      
+       dmScript::LuaCallbackInfo* event_cbk;
 
         // Armature transform
         float worldScale = 0.5f;
@@ -58,6 +57,7 @@ namespace dmDragonBones
         bool isGlReady = true;
 
         dmArray<dmScript::LuaHBuffer> buffers;
+        const std::function<void (dragonBones::EventObject *)> listener;
 
         ~JniBridgeInstance() {
             if (dragonBones) {
@@ -69,6 +69,9 @@ namespace dmDragonBones
                 factory = nullptr;
             }
             
+            if(event_cbk){
+                dmScript::DestroyCallback(event_cbk);
+            } 
             /*
             if (programId) {
                 glDeleteProgram(programId);
@@ -208,11 +211,19 @@ namespace dmDragonBones
 
             armatureObject->getAnimation()->reset();
             //dmLogInfo("Armature building done.");
-
+           
            
         } else {
             dmLogError("Failed to build armature '%s'.", armatureNameToBuild.c_str());
         }
+    }
+
+    static void eventListener(dragonBones::EventObject * eventObj){
+        dmLogInfo("Callback fired.");
+        dmLogInfo("Name %s", eventObj->name.c_str());
+        //frameEventCallback(L, instance, eventObj);
+
+        dmLogInfo("Event time: %f", eventObj->time);
     }
 
     /*# 
@@ -244,6 +255,9 @@ namespace dmDragonBones
         dmLogInfo("DragonBones Initialized");
 
         lua_pushlightuserdata(L, instance);
+
+        //instance->listener =  event_listener;
+
         return 1;
     }
 
@@ -350,6 +364,7 @@ namespace dmDragonBones
             _tryBuildArmature(instance);
         }
 
+        
         return 1;
         
     }
@@ -361,6 +376,103 @@ namespace dmDragonBones
         instance->viewportHeight = (float)luaL_checknumber(L, 3);
             // Create the projection matrix to map pixel coordinates to screen space
         createOrthographicMatrix(0.0f, (float)instance->viewportWidth, (float)instance->viewportHeight, 0.0f, -1.0f, 1.0f, instance->projectionMatrix);
+        return 1;
+    }
+
+    static void frameEventCallback(lua_State* L, dmScript::LuaCallbackInfo* event_cbk, const std::string& type, dragonBones::EventObject * eventObj){
+       
+        if (!dmScript::SetupCallback(event_cbk))
+        {
+            dmLogInfo("Error cannot create callback.");
+            return;
+        }
+
+        lua_newtable(L);
+        lua_pushstring(L, "type");
+        lua_pushstring(L, eventObj->type.c_str());
+        lua_settable(L, -3);
+
+        lua_pushstring(L, "name");
+        lua_pushstring(L, eventObj->name.c_str());
+        lua_settable(L, -3);
+ 
+        lua_pushstring(L, "time");
+        lua_pushnumber(L, eventObj->time);
+        lua_settable(L, -3);
+
+        
+        if(eventObj->data){
+            lua_pushstring(L, "ints");
+            lua_newtable(L);
+            std::vector<int> ints = eventObj->data->ints;
+            for(int i = 0; i < ints.size(); i++){
+                lua_pushnumber(L, i + 1);
+                lua_pushnumber(L, ints[i]);
+                lua_settable(L, -3);
+            }
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "floats");
+            lua_newtable(L);
+        
+            std::vector<float> floats = eventObj->data->floats;
+            for(int i = 0; i < floats.size(); i++){
+                lua_pushnumber(L, i + 1);
+                lua_pushnumber(L, floats[i]);
+                lua_settable(L, -3);
+            }
+        
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "strings");
+            lua_newtable(L);
+            
+            std::vector<std::string> strings = eventObj->data->strings;
+            for(int i = 0; i < strings.size(); i++){
+                lua_pushnumber(L, i + 1);
+                lua_pushstring(L, strings[i].c_str());
+                lua_settable(L, -3);
+            }
+            lua_settable(L, -3);
+
+        }
+        
+        dmScript::PCall(L, 2, 0); // self + # user arguments
+
+        dmScript::TeardownCallback(event_cbk);
+    }
+
+
+    static int addEventListener(lua_State* L) {
+        JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* event_name = luaL_checkstring(L, 2);
+        instance->event_cbk = dmScript::CreateCallback(L, 3);
+
+        if(!instance){
+            dmLogInfo("No instance.");
+            return 0;
+        }
+
+        std::string name(event_name);
+        instance->factory->setEventCallback([L, instance](const std::string& type, dragonBones::EventObject * eventObj){
+            //dmLogInfo("Send to lua");
+            frameEventCallback(L, instance->event_cbk, type,  eventObj);
+        });
+        //instance->factory->addDBEventListener(dragonBones::EventObject::FRAME_EVENT, [](dragonBones::EventObject * eventObj){
+        //    dmLogInfo("Event %s called.", dragonBones::EventObject::FRAME_EVENT);
+        //});
+        
+        //dmLogInfo("Callback added.");
+        return 1;
+    }
+
+     static int removeEventListener(lua_State* L) {
+        JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
+        if(!instance){
+            dmLogInfo("Mo instance.");
+            return 0;
+        }
+        instance->factory->disableEvents();
         return 1;
     }
 
@@ -1156,7 +1268,8 @@ namespace dmDragonBones
         float x = (float)luaL_checknumber(L, 3);
         float y = (float)luaL_checknumber(L, 4);
 
-        auto* bone = instance->armature->getBone(boneNameChars);
+        std::string name(boneNameChars);
+        auto* bone = instance->armature->getBone(name);
         if (bone) {
             // Convert screen coordinates to armature space
             const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
@@ -1170,11 +1283,27 @@ namespace dmDragonBones
         return 1;
     }
 
+     static int setVisible(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 2);
+        bool val = (bool)luaL_checkint(L, 3);
+       
+        std::string name(boneNameChars);
+
+        auto* bone = instance->armature->getBone(name);
+        if (bone) {
+            bone->setVisible(val);
+            bone->invalidUpdate();
+        }
+        return 1;
+    }
+
     static int resetBone(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         const char* boneNameChars = luaL_checkstring(L, 2);
 
-        auto* bone = instance->armature->getBone(boneNameChars);
+        std::string name(boneNameChars);
+        auto* bone = instance->armature->getBone(name);
         if (bone) {
             #undef None
             bone->offsetMode = dragonBones::OffsetMode::None;
@@ -1277,6 +1406,9 @@ namespace dmDragonBones
             {"stop_animation",          stopAnimation        },
             {"debug_draw",              debugDraw            },
             {"get_batch_buffer",        getBatchBuffer       },
+            {"set_visible",             setVisible           },
+            {"add_event_callback",      addEventListener     },
+            {"remove_event_callback",   removeEventListener  },
             {0, 0}
     };
 
