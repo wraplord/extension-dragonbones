@@ -57,7 +57,8 @@ void DragonBones::advanceTime(float passedTime)
                 armature->getProxy()->dispatchDBEvent(eventObject->type, eventObject);
                 if (eventObject->type == EventObject::SOUND_EVENT)
                 {
-                    _eventManager->dispatchDBEvent(eventObject->type, eventObject);
+                    //_eventManager->dispatchDBEvent(eventObject->type, eventObject);
+                    //WHY SEND TWICE?????????????????????????????
                 }
             }
 
