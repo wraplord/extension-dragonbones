@@ -48,6 +48,7 @@ function on_message(self, message_id, message)
 			--dragonbones.set_slot_visibility(self.instance, "head", false)
 			dragonbones.set_flip_x(self.instance, true)
 			--dragonbones.set_bone_rotation(self.instance, "head", math.rad(-60))
+			dragonbones.set_bone_position(self.instance, "head", 100, 1)
 		end
 	end
 end

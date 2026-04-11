@@ -1272,12 +1272,12 @@ namespace dmDragonBones
         auto* bone = instance->armature->getBone(name);
         if (bone) {
             // Convert screen coordinates to armature space
-            const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
-            const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
+            //const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
+            //const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
 
             bone->offsetMode = dragonBones::OffsetMode::Additive;
-            bone->offset.x = armatureX;
-            bone->offset.y = armatureY;
+            bone->offset.x = x;
+            bone->offset.y = y;
             bone->invalidUpdate();
         }
         return 1;
