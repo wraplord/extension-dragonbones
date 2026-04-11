@@ -1262,7 +1262,7 @@ namespace dmDragonBones
         return 1;
     }
 
-    static int overrideBonePosition(lua_State* L) {
+    static int setBonePosition(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         const char* boneNameChars = luaL_checkstring(L, 2);
         float x = (float)luaL_checknumber(L, 3);
@@ -1283,7 +1283,25 @@ namespace dmDragonBones
         return 1;
     }
 
-     static int setVisible(lua_State* L) {
+    static int setBoneRotation(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 2);
+        float angle = (float)luaL_checknumber(L, 3);
+      
+
+        std::string name(boneNameChars);
+        auto* bone = instance->armature->getBone(name);
+        if (bone) {
+            // Convert screen coordinates to armature space
+           
+            bone->offsetMode = dragonBones::OffsetMode::Additive;
+            bone->offset.rotation = angle;
+            bone->invalidUpdate();
+        }
+        return 1;
+    }
+
+    static int setSlotVisibility(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         const char* boneNameChars = luaL_checkstring(L, 2);
         bool val = (bool)lua_toboolean(L, 3);
@@ -1295,6 +1313,90 @@ namespace dmDragonBones
             slot->setVisible(val);
             slot->invalidUpdate();
         }
+        return 1;
+    }
+
+    static int setSlotDisplayIndex(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 2);
+        int index = luaL_checkint(L, 3);
+       
+        std::string name(boneNameChars);
+
+        auto* slot = instance->armature->getSlot(name);
+        if (slot) {
+            slot->setDisplayIndex(index);
+            slot->invalidUpdate();
+        }
+        return 1;
+    }
+
+    //TODO
+    //instead of building one armature, build all the define armatures
+    //keep a list of build armatures, their cache and skin name
+    //instance->factory->buildArmature(armatureNameToBuild, "CACHE_NAME", "SKIN_NAME", dragonBonesData->name);
+    static int replaceSkin(lua_State* L){
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if(!(instance && instance->armature)) {
+            return 0;
+        }
+
+        const char* _name = luaL_checkstring(L, 2);
+        std::string skin_name(_name);
+
+        //const auto partArmatureData = instance->factory->getArmatureData(skin_name, cache_name);
+        // Replace skin.
+        //if(partArmatureData) {
+        //   instance->factory->replaceSkin(instance->armature, partArmatureData->defaultSkin);
+        //}
+        dmLogInfo("Todo: Skin replacement.")
+
+        return 1;
+    }
+
+
+    static int loadSkinData(lua_State* L){
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if(!(instance && instance->armature)) {
+            return 0;
+        }
+
+        const char* _name = luaL_checkstring(L, 2);
+        std::string armature_name(_name);
+
+        //auto armature2 =  instance->factory->buildArmature(armature_name, armature_name + "_CACHE" , armature_name + "_SKIN");
+        //_tryBuildArmature(instance, armature_name)
+
+        
+        dmLogInfo("Todo: Load skin data.")
+
+        return 1;
+    }
+
+
+
+
+    static int setFlipX(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if(!(instance && instance->armature)) {
+            return 0;
+        }
+        bool val = (bool)lua_toboolean(L, 2);
+       
+        instance->armature->setFlipX(val);
+
+        return 1;
+    }
+
+    static int setFlipY(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if(!(instance && instance->armature)) {
+            return 0;
+        }
+        bool val = (bool)lua_toboolean(L, 2);
+       
+        instance->armature->setFlipY(val);
+
         return 1;
     }
 
@@ -1388,7 +1490,7 @@ namespace dmDragonBones
            
             {"create",               init           },
             {"update",               update         },
-            {"update_viewport",      resize         },
+            {"resize",               resize         },
             {"destroy",              destroy        },
             {"load_data",            loadData2      },
             {"get_no_slots",         getNoSlots     },
@@ -1401,14 +1503,18 @@ namespace dmDragonBones
             {"scale",                   setWorldScale        },
             {"set_world_translation",   setWorldTranslation  },
             {"move",                    setWorldTranslation  },
-            {"override_bone_position",  overrideBonePosition },
+            {"set_bone_position",       setBonePosition      },
+            {"set_bone_rotation",       setBoneRotation      },
             {"reset_bone",              resetBone            },
             {"stop_animation",          stopAnimation        },
             {"debug_draw",              debugDraw            },
             {"get_batch_buffer",        getBatchBuffer       },
-            {"set_visible",             setVisible           },
+            {"set_slot_visibility",     setSlotVisibility    },
+            {"set_flip_x",              setFlipX             },
+            {"set_flip_y",              setFlipY             },
             {"add_event_callback",      addEventListener     },
             {"remove_event_callback",   removeEventListener  },
+            //{"replace_skin",            replaceSkin          },
             {0, 0}
     };
 

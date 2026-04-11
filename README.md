@@ -106,8 +106,11 @@ function set_world_translation(instance, x, y)
 function move(instance, x, y)
     alias for set_world_translation
 
-function override_bone_position(instance, bone_name, x, y)
+function set_bone_position(instance, bone_name, x, y)
     set bone position manually, for IK?
+
+function set_bone_rotation(instance, bone_name, angle)
+    set bone rotation in radians
 
 function reset_bone(instance, bone_name)
     reset bone transforms
@@ -126,5 +129,13 @@ function add_event_callback(instance, function(self, tbl_event) end)
 
 function remove_event_callback(instance)
     stop receiving events 
+
+function set_flip_x(instance, bool_flip)
+    flip left or right
+
+function set_flip_y(instance, bool_flip)
+    flip up or down
+
+
 </pre>
     

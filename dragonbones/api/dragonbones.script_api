@@ -223,7 +223,7 @@
         - name : y
           type : number
 
-  - name: override_bone_position
+  - name: set_bone_position
     type: function
     desc: set bone position manually
 
@@ -240,6 +240,22 @@
 
         - name : y
           type : number
+
+  - name: set_bone_rotation
+    type: function
+    desc: set bone rotation manually
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
+        - name : bone_name
+          type : string
+
+        - name : angle
+          type : number
+          desc: angle in radians
 
   - name: reset_bone
     type: function
@@ -340,5 +356,31 @@
         - name: instance
           type: userdata
           desc: dragobones instance.
+
+  - name: set_flip_x
+    type: function
+    desc: flip aramture on x axis
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+        - name: flip
+          type: bool
+          desc: flip left or right
+
+  - name: set_flip_y
+    type: function
+    desc: flip aramture on y axis
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+        - name: flip
+          type: bool
+          desc: flip up or down
       
 
