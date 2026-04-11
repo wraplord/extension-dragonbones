@@ -297,32 +297,24 @@
 
   - name: set_visible
     type: function
-    desc: Hide a bone
+    desc: Hide a slot
 
     parameters:
         - name: instance
           type: userdata
           desc: dragobones instance.
 
-        - name: bone_name
+        - name: slot_name
           type: string
-          desc: name of the bone
+          desc: name of the slot
 
         - name: visible
           type: bool
           desc: false or true
           
-    return:
-        - name: batch_buffer
-          type: userdata
-          desc: Defold buffer object
-
-        - name: batch_buffer_count
-          type: integer
-          desc: size of batch_buffer
           
 
-  - name: add_frame_event_callback
+  - name: add_event_callback
     type: function
     desc: add callback for events
 
@@ -333,11 +325,20 @@
 
         - name: event_name
           type: string
-          desc: The following event names frameEvent, soundEvent, fadeOutComplete, fadeOut,fadeInComplete, fadeIn, complete,loopComplete,start
+          desc: The following event_names (frameEvent, soundEvent, fadeOutComplete, fadeOut,fadeInComplete, fadeIn, complete,loopComplete,start)
 
         - name: callback
           type: function
-          desc: callback(self, tbl)
+          desc: callback(self, tbl) tbl has following fields
+             type is in event_names, frame , name , custom in floats, ints and strings sub tables.
 
+  - name: remove_event_callback
+    type: function
+    desc: stop receiving events
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
       
 

@@ -117,5 +117,14 @@ function stop_animation(instance, animation_name)
 
 function debug_draw(instance, debug?)  
     Show debug lines
+
+function set_visible(instance, slot_name, bool_visible)
+    Hide or Show the slot with slot_name.
+
+function add_event_callback(instance, function(self, tbl_event) end)
+    Receive events
+
+function remove_event_callback(instance)
+    stop receiving events 
 </pre>
     

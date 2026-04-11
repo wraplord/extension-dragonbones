@@ -38,9 +38,10 @@ function on_message(self, message_id, message)
 			--	x = x - 5
 			--	dragonbones.set_world_translation(module_instance.instance, x, 100)
 			--end) --test culling
-			dragonbones.add_event_callback(self.instance, "soundEvent", function(me, tbl)
+			dragonbones.add_event_callback(self.instance, function(me, tbl)
 				pprint(tbl)
 			end)
+			dragonbones.set_visible(self.instance, "head", false)
 		end
 	end
 end

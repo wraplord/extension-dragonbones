@@ -396,7 +396,7 @@ namespace dmDragonBones
         lua_pushstring(L, eventObj->name.c_str());
         lua_settable(L, -3);
  
-        lua_pushstring(L, "time");
+        lua_pushstring(L, "frame");
         lua_pushnumber(L, eventObj->time);
         lua_settable(L, -3);
 
@@ -445,15 +445,15 @@ namespace dmDragonBones
 
     static int addEventListener(lua_State* L) {
         JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
-        const char* event_name = luaL_checkstring(L, 2);
-        instance->event_cbk = dmScript::CreateCallback(L, 3);
+        //const char* event_name = luaL_checkstring(L, 2);
+        instance->event_cbk = dmScript::CreateCallback(L, 2);
 
         if(!instance){
             dmLogInfo("No instance.");
             return 0;
         }
 
-        std::string name(event_name);
+        //std::string name(event_name);
         instance->factory->setEventCallback([L, instance](const std::string& type, dragonBones::EventObject * eventObj){
             //dmLogInfo("Send to lua");
             frameEventCallback(L, instance->event_cbk, type,  eventObj);
@@ -469,7 +469,7 @@ namespace dmDragonBones
      static int removeEventListener(lua_State* L) {
         JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
         if(!instance){
-            dmLogInfo("Mo instance.");
+            dmLogInfo("No instance.");
             return 0;
         }
         instance->factory->disableEvents();
@@ -1286,14 +1286,14 @@ namespace dmDragonBones
      static int setVisible(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         const char* boneNameChars = luaL_checkstring(L, 2);
-        bool val = (bool)luaL_checkint(L, 3);
+        bool val = (bool)lua_toboolean(L, 3);
        
         std::string name(boneNameChars);
 
-        auto* bone = instance->armature->getBone(name);
-        if (bone) {
-            bone->setVisible(val);
-            bone->invalidUpdate();
+        auto* slot = instance->armature->getSlot(name);
+        if (slot) {
+            slot->setVisible(val);
+            slot->invalidUpdate();
         }
         return 1;
     }
