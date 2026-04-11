@@ -1275,7 +1275,7 @@ namespace dmDragonBones
             const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
             const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
 
-            bone->offsetMode = dragonBones::OffsetMode::Override;
+            bone->offsetMode = dragonBones::OffsetMode::Additive;
             bone->offset.x = armatureX;
             bone->offset.y = armatureY;
             bone->invalidUpdate();
