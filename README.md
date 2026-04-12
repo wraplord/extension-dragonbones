@@ -48,7 +48,7 @@
                     local x = 100
                     timer.delay(1/30, true, function()
                         x = x - 5
-                        dragonbones.set_world_translation(module_instance.instance, x, 100)
+                        dragonbones.set_world_translation(self.instance, x, 100)
                     end) --test culling
                     
                 end

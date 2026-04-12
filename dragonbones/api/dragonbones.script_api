@@ -328,8 +328,6 @@
           type: bool
           desc: false or true
           
-          
-
   - name: add_event_callback
     type: function
     desc: add callback for events
