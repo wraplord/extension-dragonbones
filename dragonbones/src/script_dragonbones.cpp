@@ -58,6 +58,7 @@ namespace dmDragonBones
 
         dmArray<dmScript::LuaHBuffer> buffers;
         const std::function<void (dragonBones::EventObject *)> listener;
+        unsigned int frameRate = 1;
 
         ~JniBridgeInstance() {
             if (dragonBones) {
@@ -178,6 +179,8 @@ namespace dmDragonBones
             return;
         }
 
+        instance->frameRate = dragonBonesData->frameRate;
+
         const auto& armatureNames = dragonBonesData->getArmatureNames();
         std::string armatureNameToBuild;
         if (!armatureNames.empty()) {
@@ -200,6 +203,7 @@ namespace dmDragonBones
         }
 
         auto* armatureObject = instance->factory->buildArmature(armatureNameToBuild, "", "", dragonBonesData->name);
+        
         if (armatureObject)
         {
             instance->armature = armatureObject;
@@ -1373,8 +1377,17 @@ namespace dmDragonBones
         return 1;
     }
 
+    static int getFrameRate(lua_State* L) {
 
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        if(!(instance && instance->armature)) {
+            return 0;
+        }
+        
+        lua_pushinteger(L, instance->frameRate);
 
+        return 1;
+    }
 
     static int setFlipX(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
@@ -1515,7 +1528,7 @@ namespace dmDragonBones
             {"set_flip_y",                 setFlipY             },
             {"add_event_callback",         addEventListener     },
             {"remove_event_callback",      removeEventListener  },
-            //{"replace_skin",            replaceSkin          },
+            {"get_frame_rate",             getFrameRate         },
             {0, 0}
     };
 

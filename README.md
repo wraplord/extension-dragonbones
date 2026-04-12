@@ -136,6 +136,9 @@ function set_flip_x(instance, bool_flip)
 function set_flip_y(instance, bool_flip)
     flip up or down
 
+function get_frame_rate(instance)
+    frame rate e.g 24
+
 
 </pre>
     

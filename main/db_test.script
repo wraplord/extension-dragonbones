@@ -1,7 +1,7 @@
 local module_instance = require("dragonbones.shared.instance")
 
-local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
-local tex_json = "/custom_res/character4/Bicycle_tex.json"
+local skeleton_json = "/custom_res/character3/Yah_ske.json"
+local tex_json = "/custom_res/character3/Yah_tex.json"
 
 function init(self)
 	profiler.enable_ui(true)
@@ -49,6 +49,7 @@ function on_message(self, message_id, message)
 			--dragonbones.set_flip_x(self.instance, true)
 			--dragonbones.set_bone_rotation(self.instance, "head", math.rad(-60))
 			--dragonbones.set_bone_position(self.instance, "head", 100, 1)
+			print(dragonbones.get_frame_rate(self.instance))
 		end
 	end
 end

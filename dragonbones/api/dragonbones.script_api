@@ -380,5 +380,19 @@
         - name: flip
           type: bool
           desc: flip up or down
+
+  - name: get_frame_rate
+    type: function
+    desc: get current armature frame rate e.g 24
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+    return:
+        - name: frame_rate
+          type: integer
+          desc: frame rate e.g 24
       
 

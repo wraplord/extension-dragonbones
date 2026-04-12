@@ -16,7 +16,7 @@ instances {
     }
     properties {
       id: "u_texture"
-      value: "/custom_res/character4/Bicycle_tex.png"
+      value: "/custom_res/character3/Yah_tex.png"
       type: PROPERTY_TYPE_HASH
     }
   }
