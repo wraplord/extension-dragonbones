@@ -5,6 +5,16 @@ instances {
   component_properties {
     id: "BatchDragonModel"
     properties {
+      id: "viewportWidth"
+      value: "1600.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "viewportHeight"
+      value: "1200.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
       id: "u_texture"
       value: "/custom_res/character4/Bicycle_tex.png"
       type: PROPERTY_TYPE_HASH
@@ -17,6 +27,17 @@ embedded_instances {
   data: "components {\n"
   "  id: \"test\"\n"
   "  component: \"/main/db_test.script\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"anim\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
+  "}\\n"
+  "\"\n"
   "}\n"
   ""
   position {

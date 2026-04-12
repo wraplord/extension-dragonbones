@@ -18,7 +18,8 @@ function init(self)
 	}
 	
 	msg.post("/BatchDragonModel", hash("load"), tbl)
-	
+	--go.animate(".", "position.x", go.PLAYBACK_LOOP_PINGPONG, 100, 
+	--go.EASING_LINEAR, 5)
 end
 
 local function update_world(self)

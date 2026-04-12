@@ -73,21 +73,27 @@ Dont call dragonbones.update or dragonbones.create directly. Send messages inste
 Other dragonbones.* methods can be used directly.
 
 **Texture Bleeding**
-Solution: Extrude texture borders.
-There is a python script extrude.py to do just that.
-Make sure to install PIL
-    ```pip install pillow```
+- Solution 1: 
+    Extrude texture borders.
+    There is a python script extrude.py to do just that.
+    Make sure to install PIL  
+        ```pip install pillow```
 
-in Dragon Editor Texture config 
-    - export as texture atlas first
-       settings: 
-            padding x and y = 4
-            powers of 2
-    - export as images to the same folder.
-Update and run extrude.py
- + set padding
- + set input folder
- + set armature name
+    - In Dragon Editor Texture config  
+        - export as texture atlas first
+            settings:  
+                padding x and y = 4  
+                powers of 2
+        - export as images to the same folder.  
+        - Update and run extrude.py  
+            - set padding  
+            - set input folder  
+            - set armature name
+
++ Solution 2:  
+Include a tiny sprite in the same collection.  
+WHY DOES THIS SOLVE TEXTURE BLEEDING?   
+    - Maybe due to dragobones.material using tile tag?
 
 
 **Documentation**
