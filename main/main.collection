@@ -5,18 +5,8 @@ instances {
   component_properties {
     id: "BatchDragonModel"
     properties {
-      id: "viewportWidth"
-      value: "1600.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "viewportHeight"
-      value: "1200.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
       id: "u_texture"
-      value: "/custom_res/character3/Yah_tex.png"
+      value: "/custom_res/character4/Bicycle_tex.png"
       type: PROPERTY_TYPE_HASH
     }
   }
@@ -29,4 +19,8 @@ embedded_instances {
   "  component: \"/main/db_test.script\"\n"
   "}\n"
   ""
+  position {
+    x: 80.0
+    y: 80.0
+  }
 }

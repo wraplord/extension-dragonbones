@@ -1,11 +1,13 @@
 local module_instance = require("dragonbones.shared.instance")
 
-local skeleton_json = "/custom_res/character3/Yah_ske.json"
-local tex_json = "/custom_res/character3/Yah_tex.json"
+local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
+local tex_json = "/custom_res/character4/Bicycle_tex.json"
 
 function init(self)
-	profiler.enable_ui(true)
-	profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+	if profiler then
+		profiler.enable_ui(true)
+		profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+	end
 	
 	msg.post(".", "acquire_input_focus")
 
@@ -16,7 +18,6 @@ function init(self)
 	}
 	
 	msg.post("/BatchDragonModel", hash("load"), tbl)
-
 	
 end
 

@@ -992,7 +992,7 @@ namespace dmDragonBones
                 continue;
             }
 
-            total_len += slot_indices.size() * 4;
+            total_len += slot_indices.size() * 1; //Was 4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         batch_trilist.resize(total_len * 20);
         
