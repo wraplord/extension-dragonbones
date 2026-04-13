@@ -6,6 +6,7 @@
     - Modify #DragonModel.script or #BatchDragonModel.script properties  
         - viewport -> set dimensions  
         - u_texture -> pick the png texture
+        - auto_transform_world -> mesh go will transform instance's scale and transform
 
 
 - In your .script file modify the paths to point to the correct custom resource folder.
@@ -119,13 +120,14 @@ function contains_point(instance, x, y)
     Return the slot name if the given x,y lie in that slot
 
 
-function set_world_scale(instance, scale)
+function set_world_scale(instance, scale_x, scale_y)
     Set world scale. Use this function and set_world_translation to manage world transform
 
-function scale(instance, scale)
+function scale(instance, scale_x, scale_y)
     alias for set_world_scale
 
 function set_world_translation(instance, x, y)
+    y up
     set world translation
 
 function move(instance, x, y)

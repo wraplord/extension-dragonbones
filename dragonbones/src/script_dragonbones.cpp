@@ -43,7 +43,8 @@ namespace dmDragonBones
        dmScript::LuaCallbackInfo* event_cbk;
 
         // Armature transform
-        float worldScale = 0.5f;
+        float worldScaleX = 0.5f;
+        float worldScaleY = 0.5f;
         float worldTranslateX = 0.0f;
         float worldTranslateY = 0.0f;
 
@@ -511,7 +512,7 @@ namespace dmDragonBones
 
         //projection
         float viewMatrix[16], scaleM[16], transM[16];
-        createScaleMatrix(scaleM, instance->worldScale, instance->worldScale, 1.0f);
+        createScaleMatrix(scaleM, instance->worldScaleX, instance->worldScaleY, 1.0f);
         createTranslateMatrix(transM, (instance->viewportWidth / 2.0f) + instance->worldTranslateX, (instance->viewportHeight / 2.0f) + instance->worldTranslateY, 0.0f);
         multiplyMatrices(transM, scaleM, viewMatrix);
 
@@ -951,7 +952,7 @@ namespace dmDragonBones
 
         //projection
         float viewMatrix[16], scaleM[16], transM[16];
-        createScaleMatrix(scaleM, instance->worldScale, instance->worldScale, 1.0f);
+        createScaleMatrix(scaleM, instance->worldScaleX, instance->worldScaleY, 1.0f);
         createTranslateMatrix(transM, (instance->viewportWidth / 2.0f) + instance->worldTranslateX, (instance->viewportHeight / 2.0f) + instance->worldTranslateY, 0.0f);
         multiplyMatrices(transM, scaleM, viewMatrix);
 
@@ -1233,8 +1234,8 @@ namespace dmDragonBones
         float y = (float)luaL_checknumber(L, 3);
 
         // Convert screen coordinates to armature space coordinates
-        const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScale;
-        const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScale;
+        const float armatureX = (x - (instance->viewportWidth / 2.0f) - instance->worldTranslateX) / instance->worldScaleX;
+        const float armatureY = (y - (instance->viewportHeight / 2.0f) - instance->worldTranslateY) / instance->worldScaleY;
 
         auto* slot = instance->armature->containsPoint(armatureX, armatureY);
         if (slot) {
@@ -1248,9 +1249,12 @@ namespace dmDragonBones
 
     static int setWorldScale(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        float scale = (float)luaL_checknumber(L, 2);
+        float scaleX = (float)luaL_checknumber(L, 2);
+        float scaleY = (float)luaL_checknumber(L, 3);
+
         if (instance) {
-            instance->worldScale = scale;
+            instance->worldScaleX = scaleX;
+            instance->worldScaleY = scaleY;
         }
         return 1;
     }

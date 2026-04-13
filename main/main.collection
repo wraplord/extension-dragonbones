@@ -2,6 +2,14 @@ name: "main"
 instances {
   id: "BatchDragonModel"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    x: 397.0
+    y: 300.0
+  }
+  rotation {
+    z: 0.38268343
+    w: 0.9238795
+  }
   component_properties {
     id: "BatchDragonModel"
     properties {
@@ -19,6 +27,10 @@ instances {
       value: "/custom_res/character4/Bicycle_tex.png"
       type: PROPERTY_TYPE_HASH
     }
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
   }
 }
 scale_along_z: 0

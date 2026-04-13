@@ -19,8 +19,15 @@ function init(self)
 	}
 	
 	msg.post("/BatchDragonModel", hash("load"), tbl)
-	--go.animate(".", "position.x", go.PLAYBACK_LOOP_PINGPONG, 100, 
-	--go.EASING_LINEAR, 5)
+	--[[go.animate("/BatchDragonModel", "position.x", go.PLAYBACK_LOOP_PINGPONG, 100, 
+	   go.EASING_LINEAR, 5)
+	go.animate("/BatchDragonModel", "position.y", go.PLAYBACK_LOOP_PINGPONG, -100, 
+	go.EASING_LINEAR, 10)
+	--]]
+
+	go.animate("/BatchDragonModel", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, 
+	go.EASING_LINEAR, 10)
+	
 end
 
 local function update_world(self)

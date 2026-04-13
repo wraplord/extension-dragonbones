@@ -178,7 +178,10 @@
           type: userdata
           desc: dragobones instance.
 
-        - name : scale
+        - name : scale_x
+          type : number
+
+        - name : scale_y
           type : number
   
   - name: scale
@@ -190,7 +193,10 @@
           type: userdata
           desc: dragobones instance.
 
-        - name : scale
+        - name : scale_x
+          type : number
+        
+        - name : scale_y
           type : number
 
   - name: set_world_translation

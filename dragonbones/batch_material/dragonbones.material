@@ -2,6 +2,7 @@ name: "dragonbones"
 tags: "tile"
 vertex_program: "/dragonbones/batch_material/dragonbones.vp"
 fragment_program: "/dragonbones/batch_material/dragonbones.fp"
+vertex_space: VERTEX_SPACE_LOCAL
 fragment_constants {
   name: "tint"
   type: CONSTANT_TYPE_USER
