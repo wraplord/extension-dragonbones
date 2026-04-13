@@ -1,7 +1,8 @@
 local module_instance = require("dragonbones.shared.instance")
 
-local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
-local tex_json = "/custom_res/character4/Bicycle_tex.json"
+local folder = "character4/Bicycle"
+local skeleton_json = "/custom_res/" .. folder .. "_ske.json"
+local tex_json      = "/custom_res/" .. folder .. "_tex.json"
 
 function init(self)
 	if profiler then
