@@ -95,6 +95,9 @@ Ship a tiny sprite in BatchDragonModel.
 WHY DOES THIS SOLVE TEXTURE BLEEDING?   
     - Maybe due to dragobones.material using tile tag?
 
++ Todo:  
+Find the root cause.
+
 
 **Documentation**
 
