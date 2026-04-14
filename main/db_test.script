@@ -27,8 +27,8 @@ function init(self)
 	local tbl1 = getInitData("character4/Bicycle")
 	local tbl2 = getInitData("character2/Rooster_Ani")
 
-	pprint(tbl1)
-	pprint(tbl2)
+	--pprint(tbl1)
+	--pprint(tbl2)
 
 	msg.post("/BatchDragonModel",  hash("load"), tbl1)
 	msg.post("/BatchDragonModel1", hash("load"), tbl2)

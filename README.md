@@ -5,7 +5,7 @@
 
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
 
-- Add camera to your collection
+- Add camera to your collection. Set camera properties such as zoom, orthographic etc.
 
 - Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples. Make sure your armature canvas in DragonBones Editor match game.project display width and height otherwise there will be skewing.  
     - Modify #DragonModel.script or #BatchDragonModel.script property
@@ -33,6 +33,7 @@
             local tbl = {
                 skeleton_json = skeleton_json, 
                 tex_json = tex_json,
+                buffer_prefix = "buffer1"
             }
             
             -- set the correct url of added go
@@ -69,7 +70,7 @@
 **Notes**
 
 Dont call dragonbones.update or dragonbones.create directly. Send messages instead.  
-Other dragonbones.* methods can be used directly.
+Other dragonbones.* methods can be used directly. Make sure to pass instance as the first parameter.
 
 **Texture Bleeding**
 - Solution 1:  
