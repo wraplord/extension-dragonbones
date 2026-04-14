@@ -1,8 +1,16 @@
 local module_instance = require("dragonbones.shared.instance")
 
-local folder = "character4/Bicycle"
-local skeleton_json = "/custom_res/" .. folder .. "_ske.json"
-local tex_json      = "/custom_res/" .. folder .. "_tex.json"
+
+local function getInitData(folder_prefix)
+	local skeleton_json = "/custom_res/" .. folder_prefix .. "_ske.json"
+	local tex_json      = "/custom_res/" .. folder_prefix .. "_tex.json"
+	local name  = module_instance.create_buffer_prefix_name()
+	return {
+		skeleton_json = skeleton_json, 
+		tex_json = tex_json,
+		buffer_prefix = name
+	}
+end
 
 function init(self)
 	if profiler then
@@ -11,43 +19,54 @@ function init(self)
 	end
 	
 	msg.post(".", "acquire_input_focus")
+	math.randomseed(socket.gettime())
+	for i = 1, 4 do math.random(1, 10) end
+	
 
 	self.instance = nil
-	local tbl = {
-		skeleton_json = skeleton_json, 
-		tex_json = tex_json,
-	}
+	local tbl1 = getInitData("character4/Bicycle")
+	local tbl2 = getInitData("character2/Rooster_Ani")
 
-	msg.post("/BatchDragonModel", hash("load"), tbl)
+	pprint(tbl1)
+	pprint(tbl2)
+
+	msg.post("/BatchDragonModel",  hash("load"), tbl1)
+	msg.post("/BatchDragonModel1", hash("load"), tbl2)
 end
 
 local function update_world(self)
 	timer.delay(1/30.0, true, function()
 		msg.post("/BatchDragonModel", hash("update"), { dt = 1/30.0 })
 	end)
+	timer.delay(1/24.0, true, function()
+		msg.post("/BatchDragonModel1", hash("update"), { dt = 1/24.0 })
+	end)
 end
 
 function on_message(self, message_id, message)
 	if message_id == hash("loaded") then
 		update_world(self)
-		self.instance = module_instance.instances[message.instance_no]
-		if self.instance then
-			print("Instance FPS", dragonbones.get_frame_rate(self.instance))
-			--use game object for instance transform
-			--[
-				go.animate("/BatchDragonModel", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
-				go.EASING_LINEAR, 2)
-			--]]
-			
-			--dragonbones.add_event_callback(self.instance, function(me, tbl)
-			--	pprint(tbl)
-			--end)
-			
-			--dragonbones.set_slot_visibility(self.instance, "head", false)
-			--dragonbones.set_flip_x(self.instance, true)
-			--dragonbones.set_bone_rotation(self.instance, "root", math.rad(-60))
-			--dragonbones.set_bone_position(self.instance, "root", 10, 30)
+		local instance = module_instance.instances[message.instance_no]
+		print("Instance FPS", dragonbones.get_frame_rate(instance))
+		--use game object for instance transform
+		if message.instance_no == 1 then
+			go.animate("/BatchDragonModel", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
+			go.EASING_LINEAR, 2)
+		elseif message.instance_no == 2 then
+			go.animate("/BatchDragonModel1", "position.x", go.PLAYBACK_LOOP_FORWARD, -200, 
+			go.EASING_LINEAR, 4)
+			pprint(dragonbones.get_anination_names(instance))
+			dragonbones.fade_in_animation(instance, "rooster_walk_anim", 0, 0, 0.2)
 		end
+		
+		--dragonbones.add_event_callback(instance, function(me, tbl)
+		--	pprint(tbl)
+		--end)
+		
+		--dragonbones.set_slot_visibility(instance, "head", false)
+		--dragonbones.set_flip_x(instance, true)
+		--dragonbones.set_bone_rotation(instance, "root", math.rad(-60))
+		--dragonbones.set_bone_position(instance, "root", 10, 30)
 	end
 end
 

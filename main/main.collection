@@ -15,6 +15,25 @@ instances {
     y: 0.5
   }
 }
+instances {
+  id: "BatchDragonModel1"
+  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    x: 100.0
+  }
+  component_properties {
+    id: "BatchDragonModel"
+    properties {
+      id: "u_texture"
+      value: "/custom_res/character2/Rooster_Ani_tex.png"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "go"

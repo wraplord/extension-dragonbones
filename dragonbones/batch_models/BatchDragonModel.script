@@ -1,19 +1,7 @@
 go.property("u_texture", resource.texture())
 
-local module_instance = require("dragonbones.shared.instance")
+local mod_instances = require("dragonbones.shared.instance")
 
-local function create_buffer_prefix_name()
-	math.randomseed(os.clock())
-	for i = 1, 4 do math.random(1, 10) end
-
-	local tbl = {}
-	local alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
-	for i = 1, 20 do
-		local pos = math.random(1, string.len(alphabet))
-		table.insert(tbl, string.sub(alphabet, pos, pos))
-	end
-	return table.concat(tbl, "")
-end
 
 local function spawn_mesh(self, no)
 	local z = 0 + 0.01 * no
@@ -27,7 +15,7 @@ end
 
 local function set_mesh_data(self, mesh_no, buffer_data)
 	local mesh_id = self.meshes[mesh_no]
-	local buffer_name = self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
+	local buffer_name = "/" .. self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
 
 	local my_buffer
 	if self.current_buffers[mesh_no] then
@@ -60,12 +48,11 @@ local function load_world(self)
 	--initiate dragon bones and upload json data
 	self.dt = 1/30.0
 	self.instance = dragonbones.create()
-	table.insert(module_instance.instances , self.instance)
-	self.instance_no = #module_instance.instances
+	table.insert(mod_instances.instances , self.instance)
+	self.instance_no = #mod_instances.instances
 	
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
 
-	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
 	self.current_buffers = {}
 	self.meshes  = {}
 
@@ -80,23 +67,18 @@ local function load_world(self)
 	update_db_world(self)
 end
 
-local function update_world(self)
-	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
-	update_db_world(self)
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash("load") then
-		print("load")
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
-
+		self.buffer_prefix_name =  message.buffer_prefix
+		
 		load_world(self)
 		msg.post(sender, "loaded", {instance_no = self.instance_no})
 	elseif message_id == hash("update") then
 		self.dt = message.dt or self.dt
 		if self.instance then
-			update_world(self)
+			update_db_world(self)
 		end
 	end
 end
@@ -106,5 +88,5 @@ function final(self)
 		resource.release(self.current_buffers[i])
 	end
 	dragonbones.destroy(self.instance)
-	module_instance.instances[self.instance_no] = nil
+	mod_instances.instances[self.instance_no] = nil
 end
