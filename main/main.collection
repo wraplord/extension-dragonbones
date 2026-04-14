@@ -2,29 +2,11 @@ name: "main"
 instances {
   id: "BatchDragonModel"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
-  position {
-    x: 397.0
-    y: 300.0
-  }
-  rotation {
-    z: 0.38268343
-    w: 0.9238795
-  }
   component_properties {
     id: "BatchDragonModel"
     properties {
-      id: "viewportWidth"
-      value: "1600.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
-      id: "viewportHeight"
-      value: "1200.0"
-      type: PROPERTY_TYPE_NUMBER
-    }
-    properties {
       id: "u_texture"
-      value: "/custom_res/character4/Bicycle_tex.png"
+      value: "/custom_res/character3/Yah_tex.png"
       type: PROPERTY_TYPE_HASH
     }
   }
@@ -40,9 +22,16 @@ embedded_instances {
   "  id: \"test\"\n"
   "  component: \"/main/db_test.script\"\n"
   "}\n"
+  "embedded_components {\n"
+  "  id: \"camera\"\n"
+  "  type: \"camera\"\n"
+  "  data: \"aspect_ratio: 1.0\\n"
+  "fov: 0.7854\\n"
+  "near_z: -1.0\\n"
+  "far_z: 1.0\\n"
+  "orthographic_projection: 1\\n"
+  "orthographic_zoom: 0.5\\n"
+  "\"\n"
+  "}\n"
   ""
-  position {
-    x: 80.0
-    y: 80.0
-  }
 }

@@ -9,15 +9,6 @@
     desc: initialize dragonbones with viewport width and height. Get instance object to be pass to all functions.
       called destroy to free this object.
 
-    parameters:
-      - name: viewportWidth
-        type: integer
-        desc: viewport width.
-
-      - name: viewportHeight
-        type: integer
-        desc: viewport height.
-
     return:
       - name: instance
         type: userdata
@@ -52,23 +43,6 @@
       - name: dt
         type: number
         desc: 1/fps, typically 1/60.0
-
-  - name: resize
-    type: function
-    desc: update viewport width and height. 
-
-    parameters:
-      - name: instance
-        type: userdata
-        desc: dragobones instance.
-
-      - name: width
-        type: integer
-        desc: viewport width
-
-      - name: height
-        type: integer
-        desc: viewport height
 
   - name: destroy
     type: function
@@ -168,66 +142,6 @@
     return:
         - name : slot_name
           type : string
-
-  - name: set_world_scale
-    type: function
-    desc: set world scale
-
-    parameters:
-        - name: instance
-          type: userdata
-          desc: dragobones instance.
-
-        - name : scale_x
-          type : number
-
-        - name : scale_y
-          type : number
-  
-  - name: scale
-    type: function
-    desc: alias for set_world_scale
-
-    parameters:
-        - name: instance
-          type: userdata
-          desc: dragobones instance.
-
-        - name : scale_x
-          type : number
-        
-        - name : scale_y
-          type : number
-
-  - name: set_world_translation
-    type: function
-    desc: set world translation
-
-    parameters:
-        - name: instance
-          type: userdata
-          desc: dragobones instance.
-          
-        - name : x
-          type : number
-
-        - name : y
-          type : number
-
-  - name: move
-    type: function
-    desc: alias for set_world_translation
-
-    parameters:
-        - name: instance
-          type: userdata
-          desc: dragobones instance.
-          
-        - name : x
-          type : number
-
-        - name : y
-          type : number
 
   - name: set_bone_position
     type: function

@@ -2,11 +2,11 @@
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
 
 
-- Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples.
-    - Modify #DragonModel.script or #BatchDragonModel.script properties  
-        - viewport -> set dimensions  
+- Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples. Make sure your armature canvas in DragonBones Editor match game.project display width and height to stop skewing.
+    - Modify #DragonModel.script or #BatchDragonModel.script property
         - u_texture -> pick the png texture
-        - auto_transform_world -> mesh go will transform instance's scale and transform
+    - Modify #camera
+        - set zoom
 
 
 - In your .script file modify the paths to point to the correct custom resource folder.
@@ -103,13 +103,10 @@ Find the root cause.
 **Documentation**
 
 <pre>
-function resize(instance, viewportWidth, viewportHeight)
-    update viewport width and height. 
 
 function get_anination_names(instance)
     Get a table of animations defined.
      
-    
 function fade_in_animation(instance, animation_name, layer, loop, fade_in_time)
     Play the specify animation
     animation_name must be in get_aimation_names, layer can be 0,
@@ -118,20 +115,6 @@ function fade_in_animation(instance, animation_name, layer, loop, fade_in_time)
 
 function contains_point(instance, x, y)
     Return the slot name if the given x,y lie in that slot
-
-
-function set_world_scale(instance, scale_x, scale_y)
-    Set world scale. Use this function and set_world_translation to manage world transform
-
-function scale(instance, scale_x, scale_y)
-    alias for set_world_scale
-
-function set_world_translation(instance, x, y)
-    y up
-    set world translation
-
-function move(instance, x, y)
-    alias for set_world_translation
 
 function set_bone_position(instance, bone_name, x, y)
     set bone position manually, for IK?
@@ -145,11 +128,11 @@ function reset_bone(instance, bone_name)
 function stop_animation(instance, animation_name)
     stop the given running animation
 
-function debug_draw(instance, debug?)  
-    Show debug lines
-
-function set_visible(instance, slot_name, bool_visible)
+function set_slot_visibility(instance, slot_name, bool_visible)
     Hide or Show the slot with slot_name.
+
+function set_slot_display_index(instance, slot_name, index)
+    Switch slot display image. Bounds check done internally in dragonbones?
 
 function add_event_callback(instance, function(self, tbl_event) end)
     Receive events

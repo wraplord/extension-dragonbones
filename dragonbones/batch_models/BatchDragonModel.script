@@ -1,7 +1,4 @@
-go.property("viewportWidth",  800)
-go.property("viewportHeight", 600)
 go.property("u_texture", resource.texture())
-go.property("auto_transform_world", true)
 
 local module_instance = require("dragonbones.shared.instance")
 
@@ -46,20 +43,6 @@ end
 local function update_db_world(self)
 	--update animation and get buffers
 	dragonbones.update(self.instance, self.dt)
-
-	if self.auto_transform_world then
-		local p = go.get_position(".")
-		local s = go.get_scale(".")
-		dragonbones.move(self.instance, p.x - self.viewportWidth/4 , -p.y + self.viewportHeight/4)
-		dragonbones.scale(self.instance, s.x, s.y)
-
-		--weird rotations
-		
-		--local angle = go.get(".", "euler.z")
-		--local rad_angle = math.rad(angle); -- math.pi/2
-		--dragonbones.set_bone_rotation(self.instance, "root",  rad_angle)
-		
-	end
 	
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
 	--pprint(buffer_table)
@@ -76,7 +59,7 @@ local function load_world(self)
 
 	--initiate dragon bones and upload json data
 	self.dt = 1/30.0
-	self.instance = dragonbones.create(self.viewportWidth, self.viewportHeight)
+	self.instance = dragonbones.create()
 	table.insert(module_instance.instances , self.instance)
 	self.instance_no = #module_instance.instances
 	
@@ -99,6 +82,9 @@ end
 
 local function update_world(self)
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
+
+	local p = go.get_position(".")
+	print(p)
 	update_db_world(self)
 end
 

@@ -216,7 +216,7 @@ namespace dmDragonBones
 
             armatureObject->getAnimation()->reset();
             //dmLogInfo("Armature building done.");
-           
+            instance->dragonBones->yDown = false;
            
         } else {
             dmLogError("Failed to build armature '%s'.", armatureNameToBuild.c_str());
@@ -239,8 +239,8 @@ namespace dmDragonBones
     {
         DM_LUA_STACK_CHECK(L, 1);
 
-        float width = (float)luaL_checknumber(L, 1);
-        float height = (float)luaL_checknumber(L, 2);
+        //float width = (float)luaL_checknumber(L, 1);
+        //float height = (float)luaL_checknumber(L, 2);
 
         auto* instance = new JniBridgeInstance();
         if (!instance->factory) {
@@ -252,10 +252,11 @@ namespace dmDragonBones
             instance->factory->setDragonBones(instance->dragonBones);
         }
 
-        instance->viewportWidth = width;
-        instance->viewportHeight = height;
+        //unused
+        instance->viewportWidth = 800.0f; 
+        instance->viewportHeight = 600.0f;
         createOrthographicMatrix(0.0f, instance->viewportWidth, instance->viewportHeight, 0.0f, -1.0f, 1.0f, instance->projectionMatrix);
-
+        //can be deleted
         
         dmLogInfo("DragonBones Initialized");
 
@@ -565,7 +566,8 @@ namespace dmDragonBones
             }
 
 
-            //vertices
+            //vertices, in case Defold support indices
+            //use this instead of buffer_trilist below
             /*
             dmBuffer::HBuffer buffer1 = 0x0;
             {
@@ -703,6 +705,7 @@ namespace dmDragonBones
             */
 
             //vertices
+            //temporary solution until Defold support mesh indices
             dmBuffer::HBuffer buffer_trilist = 0x0;
             std::vector<float> trilist;
             {
@@ -804,40 +807,29 @@ namespace dmDragonBones
                 } else {
                     convertDBMatrixToGL(slot->globalTransformMatrix, slotModelMatrix);
                 }
-                float pvMatrix[16], mvpMatrix[16];
-                multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
+
+                //Defold gos will handle
+                //float pvMatrix[16], mvpMatrix[16];
+                //multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
                 //dmLogInfo("pvMatrix 0,1 : %f, %f", pvMatrix[0], pvMatrix[1]);
-                multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
-                //dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
+                //multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
+                //dmLogInfo("slotModelMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, slotModelMatrix[0], slotModelMatrix[4],  slotModelMatrix[8], slotModelMatrix[12]);
 
                 mvp = {
-                    {mvpMatrix[0],   mvpMatrix[1],  mvpMatrix[2],  mvpMatrix[3]},
-                    {mvpMatrix[4],   mvpMatrix[5],  mvpMatrix[6],  mvpMatrix[7]},
-                    {mvpMatrix[8],   mvpMatrix[9],  mvpMatrix[10], mvpMatrix[11]},
-                    {mvpMatrix[12],  mvpMatrix[13], mvpMatrix[14], mvpMatrix[15]},
-                };
-
-                /*
-                model = {
                     {slotModelMatrix[0],   slotModelMatrix[1],  slotModelMatrix[2],  slotModelMatrix[3]},
                     {slotModelMatrix[4],   slotModelMatrix[5],  slotModelMatrix[6],  slotModelMatrix[7]},
                     {slotModelMatrix[8],   slotModelMatrix[9],  slotModelMatrix[10], slotModelMatrix[11]},
                     {slotModelMatrix[12],  slotModelMatrix[13], slotModelMatrix[14], slotModelMatrix[15]},
                 };
 
-                view = {
-                    {viewMatrix[0],   viewMatrix[1],  viewMatrix[2],  viewMatrix[3]},
-                    {viewMatrix[4],   viewMatrix[5],  viewMatrix[6],  viewMatrix[7]},
-                    {viewMatrix[8],   viewMatrix[9],  viewMatrix[10], viewMatrix[11]},
-                    {viewMatrix[12],  viewMatrix[13], viewMatrix[14], viewMatrix[15]},
-                };*/
-               
+        
                 
             }    
             
             
             
-            //indices NOT USE!!!!
+            //DON'T DELETE!!!!
+            //Defold may support this later
             /*
             dmBuffer::HBuffer buffer3;
             {
@@ -951,10 +943,24 @@ namespace dmDragonBones
         
 
         //projection
-        float viewMatrix[16], scaleM[16], transM[16];
-        createScaleMatrix(scaleM, instance->worldScaleX, instance->worldScaleY, 1.0f);
-        createTranslateMatrix(transM, (instance->viewportWidth / 2.0f) + instance->worldTranslateX, (instance->viewportHeight / 2.0f) + instance->worldTranslateY, 0.0f);
-        multiplyMatrices(transM, scaleM, viewMatrix);
+        //float viewMatrix[16], scaleM[16], transM[16];
+        //createScaleMatrix(scaleM, instance->worldScaleX, instance->worldScaleY, 1.0f);
+        //createTranslateMatrix(transM, (instance->viewportWidth / 2.0f) + instance->worldTranslateX, (instance->viewportHeight / 2.0f) + instance->worldTranslateY, 0.0f);
+        //multiplyMatrices(transM, scaleM, viewMatrix);
+
+        //todo remove
+        /*
+            dmLogInfo("View Matrix");
+            for(int i = 0; i < 16; i += 4){
+                dmLogInfo("%f, %f, %f, %f", viewMatrix[i+0], viewMatrix[i+1], viewMatrix[i+2], viewMatrix[i+3])
+            }
+
+            dmLogInfo("Projection Matrix");
+            for(int i = 0; i < 16; i += 4){
+                dmLogInfo("%f, %f, %f, %f", instance->projectionMatrix[i+0], instance->projectionMatrix[i+1], 
+                    instance->projectionMatrix[i+2], instance->projectionMatrix[i+3])
+            }
+        */
 
         //dmLogInfo("View matrix 0,1 : %f, %f", viewMatrix[0], viewMatrix[1])
         auto aabb = instance->armature->getArmatureData()->aabb;
@@ -1034,12 +1040,21 @@ namespace dmDragonBones
                 } else {
                     convertDBMatrixToGL(slot->globalTransformMatrix, slotModelMatrix);
                 }
-                float pvMatrix[16], mvpMatrix[16];
-                multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
+                
+                //Defold gos will handle this
+                //float pvMatrix[16], mvpMatrix[16];
+                //multiplyMatrices(instance->projectionMatrix, viewMatrix, pvMatrix);
                 //dmLogInfo("pvMatrix 0,1 : %f, %f", pvMatrix[0], pvMatrix[1]);
-                multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
-                //dmLogInfo("mvpMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, mvpMatrix[0], mvpMatrix[4],  mvpMatrix[8], mvpMatrix[12]);
+                //multiplyMatrices(pvMatrix, slotModelMatrix, mvpMatrix);
+                //dmLogInfo("slotModelMatrix for %s values 0,1,2, 3 : %f, %f, %f, %f", slot_name, slotModelMatrix[0], slotModelMatrix[4],  slotModelMatrix[8], slotModelMatrix[12]);
 
+                /*
+                    dmLogInfo("Model Matrix");
+                    for(int i = 0; i < 16; i += 4){
+                        dmLogInfo("%f, %f, %f, %f", slotModelMatrix[i+0], slotModelMatrix[i+1], 
+                            slotModelMatrix[i+2], slotModelMatrix[i+3])
+                    }
+                */
 
                 //vertices
                 {
@@ -1056,25 +1071,25 @@ namespace dmDragonBones
                         batch_trilist[offset_trilist + 2] = tx; 
                         batch_trilist[offset_trilist + 3] = ty; 
 
-                        batch_trilist[offset_trilist + 4] = mvpMatrix[0]; 
-                        batch_trilist[offset_trilist + 5] = mvpMatrix[1]; 
-                        batch_trilist[offset_trilist + 6] = mvpMatrix[2]; 
-                        batch_trilist[offset_trilist + 7] = mvpMatrix[3]; 
+                        batch_trilist[offset_trilist + 4] = slotModelMatrix[0]; 
+                        batch_trilist[offset_trilist + 5] = slotModelMatrix[1]; 
+                        batch_trilist[offset_trilist + 6] = slotModelMatrix[2]; 
+                        batch_trilist[offset_trilist + 7] = slotModelMatrix[3]; 
 
-                        batch_trilist[offset_trilist + 8] = mvpMatrix[4]; 
-                        batch_trilist[offset_trilist + 9] = mvpMatrix[5]; 
-                        batch_trilist[offset_trilist + 10] = mvpMatrix[6]; 
-                        batch_trilist[offset_trilist + 11] = mvpMatrix[7]; 
+                        batch_trilist[offset_trilist + 8] = slotModelMatrix[4]; 
+                        batch_trilist[offset_trilist + 9] = slotModelMatrix[5]; 
+                        batch_trilist[offset_trilist + 10] = slotModelMatrix[6]; 
+                        batch_trilist[offset_trilist + 11] = slotModelMatrix[7]; 
 
-                        batch_trilist[offset_trilist + 12] = mvpMatrix[8]; 
-                        batch_trilist[offset_trilist + 13] = mvpMatrix[9]; 
-                        batch_trilist[offset_trilist + 14] = mvpMatrix[10]; 
-                        batch_trilist[offset_trilist + 15] = mvpMatrix[11]; 
+                        batch_trilist[offset_trilist + 12] = slotModelMatrix[8]; 
+                        batch_trilist[offset_trilist + 13] = slotModelMatrix[9]; 
+                        batch_trilist[offset_trilist + 14] = slotModelMatrix[10]; 
+                        batch_trilist[offset_trilist + 15] = slotModelMatrix[11]; 
 
-                        batch_trilist[offset_trilist + 16] = mvpMatrix[12]; 
-                        batch_trilist[offset_trilist + 17] = mvpMatrix[13]; 
-                        batch_trilist[offset_trilist + 18] = mvpMatrix[14]; 
-                        batch_trilist[offset_trilist + 19] = mvpMatrix[15]; 
+                        batch_trilist[offset_trilist + 16] = slotModelMatrix[12]; 
+                        batch_trilist[offset_trilist + 17] = slotModelMatrix[13]; 
+                        batch_trilist[offset_trilist + 18] = slotModelMatrix[14]; 
+                        batch_trilist[offset_trilist + 19] = slotModelMatrix[15]; 
                          
                         
                         offset_trilist += 20;
