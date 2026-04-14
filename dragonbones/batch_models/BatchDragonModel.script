@@ -17,7 +17,7 @@ end
 
 local function spawn_mesh(self, no)
 	local z = 0 + 0.01 * no
-	local id = factory.create("#factory", vmath.vector3(0, 0, z), nil, nil, vmath.vector3(1, 1, 1))
+	local id = factory.create("#factory", vmath.vector3(0, 0, z))
 	local mesh_id =  msg.url(nil, id, "mesh" )
 	go.set_parent(id, ".")
 
@@ -44,9 +44,6 @@ end
 local function update_db_world(self)
 	--update animation and get buffers
 	dragonbones.update(self.instance, self.dt)
-	--local p = go.get_position(".")
-	--print(p)
-	--dragonbones.move(self.instance, p.x, p.y)
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
 	--pprint(buffer_table)
 
@@ -85,14 +82,12 @@ end
 
 local function update_world(self)
 	self.buffer_prefix_name = "/" .. create_buffer_prefix_name()
-
-	local p = go.get_position(".")
-	print(p)
 	update_db_world(self)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("load") then
+		print("load")
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
 

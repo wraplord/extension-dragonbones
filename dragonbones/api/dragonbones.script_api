@@ -79,15 +79,6 @@
         type: table
         desc: 2d table
 
-  - name: free_buffers
-    type: function
-    desc: Free the buffers created by get_buffers. Called before next get_buffers.
-     
-    parameters:
-      - name: instance
-        type: userdata
-        desc: dragobones instance.
-
   - name: get_anination_names
     type: function
     desc: Get a list of animations defined.
@@ -200,18 +191,6 @@
           
         - name : animation_name
           type : string
-
-  - name: debug_draw
-    type: function
-    desc: Show debug lines
-
-    parameters:
-        - name: instance
-          type: userdata
-          desc: dragobones instance.
-          
-        - name : debug
-          type : bool
 
   - name: get_batch_buffer
     type: function

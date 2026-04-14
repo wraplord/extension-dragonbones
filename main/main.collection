@@ -6,7 +6,7 @@ instances {
     id: "BatchDragonModel"
     properties {
       id: "u_texture"
-      value: "/custom_res/character3/Yah_tex.png"
+      value: "/custom_res/character4/Bicycle_tex.png"
       type: PROPERTY_TYPE_HASH
     }
   }
@@ -19,7 +19,7 @@ scale_along_z: 0
 embedded_instances {
   id: "go"
   data: "components {\n"
-  "  id: \"test\"\n"
+  "  id: \"db_test\"\n"
   "  component: \"/main/db_test.script\"\n"
   "}\n"
   "embedded_components {\n"
@@ -30,7 +30,6 @@ embedded_instances {
   "near_z: -1.0\\n"
   "far_z: 1.0\\n"
   "orthographic_projection: 1\\n"
-  "orthographic_zoom: 0.5\\n"
   "\"\n"
   "}\n"
   ""

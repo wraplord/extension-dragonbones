@@ -8,6 +8,6 @@ Thumbs.db
 .project
 .cproject
 builtins
-log.txt
-notes.txt
+*.txt
 .editor_settings
+dragonbones/src/script_dragonbones_old.cpp

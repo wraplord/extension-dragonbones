@@ -1,15 +1,20 @@
 **USAGE**
+- The DragonBones Editor can be obtained from [Dragon Bones Editor](https://web.archive.org/web/20211013162034/http://tool.egret-labs.org/DragonBonesPro/DragonBonesPro-v5.6.3.exe)
+
+- In Defold create a project and add custom resource folder hereby called custom_res/ and update game.project' custom resource entry.
+
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
 
+- Add camera to your collection
 
-- Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples. Make sure your armature canvas in DragonBones Editor match game.project display width and height to stop skewing.
+- Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples. Make sure your armature canvas in DragonBones Editor match game.project display width and height otherwise there will be skewing.  
     - Modify #DragonModel.script or #BatchDragonModel.script property
-        - u_texture -> pick the png texture
-    - Modify #camera
-        - set zoom
+        - u_texture -> pick exported png texture in custom_res
+    - Adjust the added go transform to fit your needs. Note the camera view.
+    
 
 
-- In your .script file modify the paths to point to the correct custom resource folder.
+- Add .script file to your collection. Add the following content. Modify the paths to point to the correct custom resource folder.
    ```
         local module_instance = require("dragonbones.models.instance")
 
@@ -17,8 +22,10 @@
         local tex_json = "/custom_res/character4/Bicycle_tex.json"
 
         function init(self)
-            profiler.enable_ui(true)
-            profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+            if profiler then
+               profiler.enable_ui(true)
+               profiler.set_ui_view_mode(profiler.VIEW_MODE_MINIMIZED)
+            end
             
             msg.post(".", "acquire_input_focus")
 
@@ -28,16 +35,16 @@
                 tex_json = tex_json,
             }
             
-            --set the correct url, for batch /BatchDragonModel
-            msg.post("/DragonModel", hash("load"), tbl)
-
+            -- set the correct url of added go
+            msg.post("/BatchDragonModel", hash("load"), tbl)
+            -- This script will received hash("loaded") message.
             
         end
 
         local function update_world(self)
             timer.delay(1/30.0, true, function()
-                --set the correct url, for batch /BatchDragonModel
-                msg.post("/DragonModel", hash("update"), { dt = 1/30.0 })
+                -- set the correct url of added go
+                msg.post("/BatchDragonModel", hash("update"), { dt = 1/30.0 })
             end)
         end
 
@@ -46,12 +53,8 @@
                 update_world(self)
                 self.instance = module_instance.instances[message.instance_no]
                 if self.instance then
-                    local x = 100
-                    timer.delay(1/30, true, function()
-                        x = x - 5
-                        dragonbones.set_world_translation(self.instance, x, 100)
-                    end) --test culling
-                    
+                    --called dragonbones.* functions
+                    --or go.* functions on the added go
                 end
             end
         end
@@ -63,12 +66,7 @@
 - Build
 
 
-**Todo**  
-   Use editor scripts to auto link
-
 **Notes**
-
-The DragonBones Editor can be obtained from [Dragon Bones Editor](https://web.archive.org/web/20211013162034/http://tool.egret-labs.org/DragonBonesPro/DragonBonesPro-v5.6.3.exe)
 
 Dont call dragonbones.update or dragonbones.create directly. Send messages instead.  
 Other dragonbones.* methods can be used directly.
@@ -116,16 +114,16 @@ function fade_in_animation(instance, animation_name, layer, loop, fade_in_time)
 function contains_point(instance, x, y)
     Return the slot name if the given x,y lie in that slot
 
-function set_bone_position(instance, bone_name, x, y)
+function set_bone_position(instance, str_bone_name, x, y, bool_override)
     set bone position manually, for IK?
 
-function set_bone_rotation(instance, bone_name, angle)
+function set_bone_rotation(instance, str_bone_name, rad_angle, bool_override)
     set bone rotation in radians
 
-function reset_bone(instance, bone_name)
+function reset_bone(instance, str_bone_name)
     reset bone transforms
 
-function stop_animation(instance, animation_name)
+function stop_animation(instance, str_animation_name)
     stop the given running animation
 
 function set_slot_visibility(instance, slot_name, bool_visible)
@@ -135,7 +133,7 @@ function set_slot_display_index(instance, slot_name, index)
     Switch slot display image. Bounds check done internally in dragonbones?
 
 function add_event_callback(instance, function(self, tbl_event) end)
-    Receive events
+    Receive events. There are extra tables ints, floats and strings for custom events. pprint this table for full parameters.
 
 function remove_event_callback(instance)
     stop receiving events 
