@@ -1,7 +1,8 @@
 name: "dragonbones"
-tags: "model"
+tags: "tile"
 vertex_program: "/dragonbones/batch_material/dragonbones.vp"
 fragment_program: "/dragonbones/batch_material/dragonbones.fp"
+vertex_space: VERTEX_SPACE_LOCAL
 vertex_constants {
   name: "mtx_worldview"
   type: CONSTANT_TYPE_WORLDVIEW
@@ -30,7 +31,7 @@ vertex_constants {
 }
 vertex_constants {
   name: "mtx_viewproj"
-  type: CONSTANT_TYPE_WORLDVIEWPROJ
+  type: CONSTANT_TYPE_VIEWPROJ
 }
 fragment_constants {
   name: "tint"

@@ -216,7 +216,7 @@ namespace dmDragonBones
 
             armatureObject->getAnimation()->reset();
             //dmLogInfo("Armature building done.");
-            instance->dragonBones->yDown = false;
+            instance->dragonBones->yDown = true;
            
         } else {
             dmLogError("Failed to build armature '%s'.", armatureNameToBuild.c_str());

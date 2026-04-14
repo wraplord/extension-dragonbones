@@ -29,11 +29,11 @@ void main() {
     //gl_Position  = mtx_viewproj *  a_mat  * p;
 
 
-    vec4 p = mtx_worldview *  vec4(a_position.xy, 0.0, 1.0);
+    vec4 p =  vec4(a_position.xy, 0.0, 1.0);
     v_light = mtx_view * vec4(1.0, 1.0, 1.0, 1.0);
     v_position = p;
     v_texCoord = a_texCoord;
     v_normal = normalize((mtx_normal * vec4(a_normal, 0.0)).xyz);
-    gl_Position =  mtx_viewproj * a_mat * p;
+    gl_Position =  mtx_viewproj * mtx_worldview * a_mat * p;
     
 }
