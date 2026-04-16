@@ -15,7 +15,7 @@ end
 
 local function set_mesh_data(self, mesh_no, buffer_data)
 	local mesh_id = self.meshes[mesh_no]
-	local buffer_name = "/" .. self.buffer_prefix_name .. tostring(mesh_no) .. ".bufferc"
+	local buffer_name = "/" .. self.instance_name .. tostring(mesh_no) .. ".bufferc"
 
 	local my_buffer
 	if self.current_buffers[mesh_no] then
@@ -48,8 +48,7 @@ local function load_world(self)
 	--initiate dragon bones and upload json data
 	self.dt = 1/30.0
 	self.instance = dragonbones.create()
-	table.insert(mod_instances.instances , self.instance)
-	self.instance_no = #mod_instances.instances
+	mod_instances.instances[self.instance_name] = self.instance
 	
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
 
@@ -73,10 +72,10 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("load") then
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
-		self.buffer_prefix_name =  message.buffer_prefix
+		self.instance_name =  message.buffer_prefix
 		self.enabled = true
 		load_world(self)
-		msg.post(sender, "loaded", {instance_no = self.instance_no})
+		msg.post(sender, "loaded", {instance_name = self.instance_name})
 	elseif message_id == hash("update") then
 		if self.enabled then
 			self.dt = message.dt or self.dt
@@ -92,9 +91,6 @@ function on_message(self, message_id, message, sender)
 end
 
 function final(self)
-	for i = 1, #self.current_buffers do
-		resource.release(self.current_buffers[i])
-	end
 	dragonbones.destroy(self.instance)
-	mod_instances.instances[self.instance_no] = nil
+	mod_instances.instances[self.instance_name] = nil
 end

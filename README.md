@@ -30,10 +30,11 @@
             msg.post(".", "acquire_input_focus")
 
             self.instance = nil
+            self.instance_name = "buffer1"
             local tbl = {
                 skeleton_json = skeleton_json, 
                 tex_json = tex_json,
-                buffer_prefix = "buffer1"
+                buffer_prefix = self.instance_name
             }
             
             -- set the correct url of added go
@@ -44,18 +45,15 @@
             --msg.post("/BatchDragonModel", hash("disable"), {disable = true})
         end
 
-        local function update_world(self)
-            timer.delay(1/30.0, true, function()
-                -- set the correct url of added go
-                msg.post("/BatchDragonModel", hash("update"), { dt = 1/30.0 })
-            end)
-        end
-
         function on_message(self, message_id, message)
             if message_id == hash("loaded") then
-                update_world(self)
-                self.instance = module_instance.instances[message.instance_no]
-                if self.instance then
+                --Handle specific instance, the provided name is the supply name.
+                if message.instance_name == self.instance_name then
+                    local instance = module_instance.instances[message.instance_name]
+                    timer.delay(1/30.0, true, function()
+                        -- set the correct url of added go
+                        msg.post("/BatchDragonModel", hash("update"), { dt = 1/30.0 })
+                    end)
                     --called dragonbones.* functions
                     --or go.* functions on the added go
                 end

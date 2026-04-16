@@ -1,6 +1,6 @@
 name: "main"
 instances {
-  id: "Bicycle"
+  id: "Bicycle4"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   component_properties {
     id: "BatchDragonModel"
@@ -26,6 +26,54 @@ instances {
     properties {
       id: "u_texture"
       value: "/custom_res/character2/Rooster_Ani_tex.png"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
+}
+instances {
+  id: "Bicycle1"
+  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  component_properties {
+    id: "BatchDragonModel"
+    properties {
+      id: "u_texture"
+      value: "/custom_res/character4/Bicycle_tex.png"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
+}
+instances {
+  id: "Bicycle2"
+  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  component_properties {
+    id: "BatchDragonModel"
+    properties {
+      id: "u_texture"
+      value: "/custom_res/character4/Bicycle_tex.png"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
+}
+instances {
+  id: "Bicycle3"
+  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  component_properties {
+    id: "BatchDragonModel"
+    properties {
+      id: "u_texture"
+      value: "/custom_res/character4/Bicycle_tex.png"
       type: PROPERTY_TYPE_HASH
     }
   }
