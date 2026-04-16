@@ -30,17 +30,29 @@ function init(self)
 	--pprint(tbl1)
 	--pprint(tbl2)
 
-	msg.post("/BatchDragonModel",  hash("load"), tbl1)
-	msg.post("/BatchDragonModel1", hash("load"), tbl2)
+	msg.post("/Bicycle",  hash("load"), tbl1)
+	msg.post("/Rooster", hash("load"), tbl2)
 end
 
 local function update_world(self)
 	timer.delay(1/30.0, true, function()
-		msg.post("/BatchDragonModel", hash("update"), { dt = 1/30.0 })
+		msg.post("/Bicycle", hash("update"), { dt = 1/30.0 })
 	end)
 	timer.delay(1/24.0, true, function()
-		msg.post("/BatchDragonModel1", hash("update"), { dt = 1/24.0 })
+		msg.post("/Rooster", hash("update"), { dt = 1/24.0 })
 	end)
+end
+
+local function walk(self, instance, flip)
+	local p = go.get_position("/Rooster")
+	dragonbones.set_flip_x(instance, not flip)	
+
+	local d = flip and -400 or 400
+	go.animate("/Rooster", "position.x", go.PLAYBACK_ONCE_FORWARD, p.x + d, go.EASING_LINEAR, 5, 0, function()
+		walk(self, instance, not flip)
+	end)
+	
+	
 end
 
 function on_message(self, message_id, message)
@@ -50,11 +62,10 @@ function on_message(self, message_id, message)
 		print("Instance FPS", dragonbones.get_frame_rate(instance))
 		--use game object for instance transform
 		if message.instance_no == 1 then
-			go.animate("/BatchDragonModel", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
-			go.EASING_LINEAR, 2)
+			go.animate("/Bicycle", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
+			go.EASING_LINEAR, 10)
 		elseif message.instance_no == 2 then
-			go.animate("/BatchDragonModel1", "position.x", go.PLAYBACK_LOOP_FORWARD, -200, 
-			go.EASING_LINEAR, 4)
+			walk(self, instance, true)
 			pprint(dragonbones.get_anination_names(instance))
 			dragonbones.fade_in_animation(instance, "rooster_walk_anim", 0, 0, 0.2)
 		end

@@ -64,7 +64,9 @@ local function load_world(self)
 	--pprint(tbl_animations)
 	dragonbones.fade_in_animation(self.instance, tbl_animations[1], 0, 0, 0)
 
-	update_db_world(self)
+	if self.enabled then
+		update_db_world(self)
+	end
 end
 
 function on_message(self, message_id, message, sender)
@@ -72,14 +74,20 @@ function on_message(self, message_id, message, sender)
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
 		self.buffer_prefix_name =  message.buffer_prefix
-		
+		self.enabled = true
 		load_world(self)
 		msg.post(sender, "loaded", {instance_no = self.instance_no})
 	elseif message_id == hash("update") then
-		self.dt = message.dt or self.dt
-		if self.instance then
-			update_db_world(self)
+		if self.enabled then
+			self.dt = message.dt or self.dt
+			if self.instance then
+				update_db_world(self)
+			end
 		end
+	elseif message_id == hash("disable") then
+		self.enabled = message.disable
+		local str_enable = self.enabled and "enable" or "disable"
+		msg.post("#mesh",  str_enable)
 	end
 end
 

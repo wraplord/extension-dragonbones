@@ -26,14 +26,13 @@ namespace dmDragonBones
 {
 
     struct JniBridgeInstance {
-        dmGameObject::HComponent m_component = nullptr;
-
+      
         dragonBones::DragonBones* dragonBones = nullptr;
         dragonBones::Armature* armature = nullptr;
         dragonBones::opengl::OpenGLFactory* factory = nullptr;
        
 
-       dmScript::LuaCallbackInfo* event_cbk;
+        dmScript::LuaCallbackInfo* event_cbk;
 
 
         // Buffers to hold data, loaded off the GL thread
@@ -62,8 +61,6 @@ namespace dmDragonBones
             } 
         }
     };
-
-    void _tryBuildArmature(JniBridgeInstance* instance); // Forward declaration
 
     void createIdentityMatrix(float* matrix) {
         matrix[0] = 1.0f; matrix[4] = 0.0f; matrix[8] = 0.0f; matrix[12] = 0.0f;
@@ -97,7 +94,7 @@ namespace dmDragonBones
         memcpy(result, res, sizeof(res));
     }
 
-    void _tryBuildArmature(JniBridgeInstance* instance) {
+    void _tryBuildArmature(JniBridgeInstance* instance, int armatureIndex) {
         if (!instance->isGlReady || !instance->isDataLoaded || instance->armature) {
             return;
         }
@@ -125,18 +122,9 @@ namespace dmDragonBones
 
         const auto& armatureNames = dragonBonesData->getArmatureNames();
         std::string armatureNameToBuild;
-        if (!armatureNames.empty()) {
-            bool dragonFound = false;
-            for (const auto& name : armatureNames) {
-                if (name == "Dragon") {
-                    armatureNameToBuild = name;
-                    dragonFound = true;
-                    break;
-                }
-            }
-            if (!dragonFound) {
-                armatureNameToBuild = armatureNames[0]; 
-            }
+        if (!armatureNames.empty() && armatureIndex >= 0 && armatureIndex < armatureNames.size()) {
+            armatureNameToBuild = armatureNames[armatureIndex]; 
+           
         }
 
         if (armatureNameToBuild.empty()) {
@@ -144,28 +132,27 @@ namespace dmDragonBones
             return;
         }
 
+        std::string cache_name = armatureNameToBuild + "_CACHE" ;
         auto* armatureObject = instance->factory->buildArmature(armatureNameToBuild, "", "", dragonBonesData->name);
-        
         if (armatureObject)
         {
-            instance->armature = armatureObject;
             dmLogInfo("Armature '%s' built at %p, instance is %p", armatureNameToBuild.c_str(), instance->armature, instance);
+            instance->armature = armatureObject;
             instance->dragonBones->getClock()->add(armatureObject);
-           
             armatureObject->getAnimation()->reset();
-            //dmLogInfo("Armature building done.");
             instance->dragonBones->yDown = false;
-           
         } else {
             dmLogError("Failed to build armature '%s'.", armatureNameToBuild.c_str());
         }
+        
+        return;
     }
 
     /*# 
       Initialize Dragon Bones. Get userdata instance
       Destroy the instance by calling destroy function
     */
-    static int init(lua_State* L)
+    static int create(lua_State* L)
     {
         DM_LUA_STACK_CHECK(L, 1);
 
@@ -199,7 +186,7 @@ namespace dmDragonBones
         return 1;
      }
 
-    static int loadData2(lua_State* L) {
+    static int loadData(lua_State* L) {
         /*#
         Load armatures and textures. The parameters are as follows
         1. is the instance return from init.
@@ -221,9 +208,13 @@ namespace dmDragonBones
         dmBuffer::GetBytes(texture_json_buffer, (void**)&texture_json_bytes, &texture_json_len);
         //dmLogInfo("Atlas json no of bytes: %d", texture_json_len);
 
+        int armatureIndex = (int)luaL_optnumber(L, 4, 0);
+        //if(lua_isnumber(L, 4) ){
+        //   armatureIndex = luaL_checkinteger(L, 4);
+        //}
         
         if (!instance) {
-            dmLogInfo("No instance, called init.")
+            dmLogInfo("No instance, called create.")
             return -1;
         }
 
@@ -242,11 +233,9 @@ namespace dmDragonBones
 
         //dmLogInfo("Buffering data from byte arrays...");
 
-        
         // Skeleton data
         instance->dragonBonesDataBuffer.assign(skeleton_bytes, skeleton_bytes + skeleton_len);
         instance->dragonBonesDataBuffer.push_back('\0'); // Null-terminate for string parsing
-
         if(instance->dragonBonesDataBuffer.empty()){
             dmLogInfo("Empty dargon bones %d", instance->dragonBonesDataBuffer[0]);
         }
@@ -267,7 +256,7 @@ namespace dmDragonBones
         } else {
             //dmLogInfo("Data successfully buffered.");
             instance->isDataLoaded = true;
-            _tryBuildArmature(instance);
+            _tryBuildArmature(instance, armatureIndex);
         }
 
         
@@ -354,13 +343,14 @@ namespace dmDragonBones
         return 1;
     }
 
-     static int removeEventListener(lua_State* L) {
+     static int enableEventListener(lua_State* L) {
         JniBridgeInstance* instance     = (JniBridgeInstance*)lua_touserdata(L, 1);
         if(!instance){
             dmLogInfo("No instance.");
             return 0;
         }
-        instance->factory->disableEvents();
+        int status = lua_toboolean(L, 2);
+        instance->factory->disableEvents(status);
         return 1;
     }
 
@@ -1132,39 +1122,30 @@ namespace dmDragonBones
         //instead of building one armature, build all the define armatures
         //keep a list of build armatures, their cache and skin name
         //instance->factory->buildArmature(armatureNameToBuild, "CACHE_NAME", "SKIN_NAME", dragonBonesData->name);
-        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        JniBridgeInstance* instance      =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if(!(instance && instance->armature)) {
             return 0;
         }
 
-        const char* _name = luaL_checkstring(L, 2);
-        std::string skin_name(_name);
+        const char* char_armature = luaL_checkstring(L, 2);
+        std::string armatureNameToBuild(char_armature);
+       
+        auto* armature = instance->factory->buildArmature(armatureNameToBuild);
+        if(!armature){
+            dmLogInfo("Cannot build armature: %s", char_armature)
+            return 0;
+        }
 
-        //const auto partArmatureData = instance->factory->getArmatureData(skin_name, cache_name);
+        const auto partArmatureData = armature->getArmatureData();
+            
         // Replace skin.
-        //if(partArmatureData) {
-        //   instance->factory->replaceSkin(instance->armature, partArmatureData->defaultSkin);
-        //}
-        dmLogInfo("Todo: Skin replacement.")
-
-        return 1;
-    }
-
-    static int loadSkinData(lua_State* L){
-        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
-        if(!(instance && instance->armature)) {
+        if(!partArmatureData) {
+            dmLogInfo("Cannot replace skin: %s", char_armature);
             return 0;
         }
-
-        const char* _name = luaL_checkstring(L, 2);
-        std::string armature_name(_name);
-
-        //auto armature2 =  instance->factory->buildArmature(armature_name, armature_name + "_CACHE" , armature_name + "_SKIN");
-        //_tryBuildArmature(instance, armature_name)
-
-        
-        dmLogInfo("Todo: Load skin data.")
-
+       
+        instance->factory->replaceSkin(instance->armature, partArmatureData->defaultSkin);
+        armature->dispose();
         return 1;
     }
 
@@ -1292,10 +1273,10 @@ namespace dmDragonBones
     static const luaL_reg DRAGONBONES_COMP_FUNCTIONS[] =
     {
            
-            {"create",               init           },
+            {"create",               create         },
             {"update",               update         },
             {"destroy",              destroy        },
-            {"load_data",            loadData2      },
+            {"load_data",            loadData       },
             {"get_no_slots",         getNoSlots     },
             {"get_buffers",          getBuffers     },
             {"fade_in_animation",       fadeInAnimation      },
@@ -1307,12 +1288,13 @@ namespace dmDragonBones
             {"stop_animation",          stopAnimation        },
             {"get_batch_buffer",        getBatchBuffer       },
             {"set_slot_visibility",     setSlotVisibility    },
-            {"set_slot_display_index",     setSlotDisplayIndex  },
-            {"set_flip_x",                 setFlipX             },
-            {"set_flip_y",                 setFlipY             },
-            {"add_event_callback",         addEventListener     },
-            {"remove_event_callback",      removeEventListener  },
-            {"get_frame_rate",             getFrameRate         },
+            {"set_slot_display_index",     setSlotDisplayIndex   },
+            {"set_flip_x",                 setFlipX              },
+            {"set_flip_y",                 setFlipY              },
+            {"add_event_callback",         addEventListener      },
+            {"disable_event_callback",     enableEventListener   },
+            {"get_frame_rate",             getFrameRate          },
+            {"replace_skin",               replaceSkin           },
             {0, 0}
     };
 

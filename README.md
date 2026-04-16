@@ -38,8 +38,10 @@
             
             -- set the correct url of added go
             msg.post("/BatchDragonModel", hash("load"), tbl)
-            -- This script will received hash("loaded") message.
+            -- This script will received hash("loaded") message with instance_no value.
             
+            --Disable or enable. It will disable the mesh and all updates will not be processed.
+            --msg.post("/BatchDragonModel", hash("disable"), {disable = true})
         end
 
         local function update_world(self)
@@ -113,7 +115,7 @@ function fade_in_animation(instance, animation_name, layer, loop, fade_in_time)
     fade_in_time : time to blend to this animation
 
 function contains_point(instance, x, y)
-    Return the slot name if the given x,y lie in that slot
+    Return the slot name if the given x,y lie in that slot. Translate x,y before pass it in.
 
 function set_bone_position(instance, str_bone_name, x, y, bool_override)
     set bone position manually, for IK?
@@ -134,10 +136,10 @@ function set_slot_display_index(instance, slot_name, index)
     Switch slot display image. Bounds check done internally in dragonbones?
 
 function add_event_callback(instance, function(self, tbl_event) end)
-    Receive events. There are extra tables ints, floats and strings for custom events. pprint this table for full parameters.
+    Receive events. Callback added. There are extra tables ints, floats and strings for custom events. pprint this table for full parameters.
 
-function remove_event_callback(instance)
-    stop receiving events 
+function enable_event_callback(instance, bool_enable)
+    Enable or disable the added event callback.
 
 function set_flip_x(instance, bool_flip)
     flip left or right
@@ -147,6 +149,10 @@ function set_flip_y(instance, bool_flip)
 
 function get_frame_rate(instance)
     frame rate e.g 24
+
+function replace_skin(instance, armature_name)
+    No tested.
+    Build a new armature and replace current armature skin from the build one.
 
 
 </pre>

@@ -70,9 +70,9 @@ public:
         dispatchEvents = true;
     }*/
 
-    void disableEvents()
+    void disableEvents(bool status)
     {
-        dispatchEvents = false;
+        dispatchEvents = status;
     }
 
     void setEventCallback(std::function<void (const std::string& type, dragonBones::EventObject *)> listener)

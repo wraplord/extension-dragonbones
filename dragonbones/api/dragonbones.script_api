@@ -30,6 +30,10 @@
       - name: tex_json
         type: handle
         desc: A resource buffer of atlas json.
+
+      - name: aramture_index
+        type: integer
+        desc: Optional. The armature index to built. Default is 0.
   
   - name: update
     type: function
@@ -245,7 +249,7 @@
           desc: callback(self, tbl) tbl has following fields
              type is in event_names, frame , name , custom in floats, ints and strings sub tables.
 
-  - name: remove_event_callback
+  - name: enable_event_callback
     type: function
     desc: stop receiving events
 
@@ -253,6 +257,9 @@
         - name: instance
           type: userdata
           desc: dragobones instance.
+
+        - name: enable
+          type: bool
 
   - name: set_flip_x
     type: function
@@ -293,5 +300,19 @@
         - name: frame_rate
           type: integer
           desc: frame rate e.g 24
+
+  - name: replace_skin
+    type: function
+    desc: replace current armature' skin from a newly build armature. Alpha need testing.
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+    return:
+        - name: armature_name
+          type: string
+          desc: The armature to get default skin out of
       
 

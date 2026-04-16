@@ -11,3 +11,5 @@ builtins
 *.txt
 .editor_settings
 dragonbones/src/script_dragonbones_old.cpp
+*.der
+/.vscode
