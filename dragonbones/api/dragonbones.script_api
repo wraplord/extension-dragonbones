@@ -172,6 +172,26 @@
           type : number
           desc: angle in radians
 
+  - name: set_bone_scale
+    type: function
+    desc: set bone scale offset. Addictive.
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+          
+        - name : bone_name
+          type : string
+
+        - name : scale_x
+          type : number
+          desc: scale 
+
+        - name : scale_y
+          type : number
+          desc: scale 
+
   - name: reset_bone
     type: function
     desc: reset bone transforms
@@ -230,6 +250,27 @@
         - name: visible
           type: bool
           desc: false or true
+
+  - name: set_slot_scale
+    type: function
+    desc: Scale a slot
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+        - name: slot_name
+          type: string
+          desc: name of the slot
+
+        - name: scale_x
+          type: number
+          desc: x scale
+
+        - name: scale_y
+          type: number
+          desc: y scale
           
   - name: add_event_callback
     type: function
@@ -310,7 +351,6 @@
           type: userdata
           desc: dragobones instance.
 
-    return:
         - name: armature_name
           type: string
           desc: The armature to get default skin out of

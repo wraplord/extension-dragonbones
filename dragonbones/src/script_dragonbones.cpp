@@ -1079,11 +1079,29 @@ namespace dmDragonBones
         auto* bone = instance->armature->getBone(name);
         if (bone) {
             // Convert screen coordinates to armature space
-           
+                    
             bone->offsetMode = dragonBones::OffsetMode::Additive;
             bone->offset.rotation = angle;
             bone->invalidUpdate();
         }
+        return 1;
+    }
+
+    static int setBoneScale(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 2);
+        float sx = (float)luaL_checknumber(L, 3);
+        float sy = (float)luaL_checknumber(L, 4);
+      
+        std::string name(boneNameChars);
+        auto* bone = instance->armature->getBone(name);
+        if (bone) {
+                   
+            bone->offsetMode = dragonBones::OffsetMode::Additive;
+            bone->offset.scaleX = sx;
+            bone->offset.scaleY = sy;
+            bone->invalidUpdate();
+        } 
         return 1;
     }
 
@@ -1101,6 +1119,25 @@ namespace dmDragonBones
         }
         return 1;
     }
+
+    static int setSlotScale(lua_State* L) {
+        JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
+        const char* boneNameChars = luaL_checkstring(L, 2);
+        float sx = (float)luaL_checknumber(L, 3);
+        float sy = (float)luaL_checknumber(L, 4);
+       
+        std::string name(boneNameChars);
+
+        auto* slot = instance->armature->getSlot(name);
+        if (slot) {
+            slot->offset.scaleX = sx;
+            slot->offset.scaleY = sy;
+            slot->invalidUpdate();
+        }
+        return 1;
+    }
+
+    
 
     static int setSlotDisplayIndex(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
@@ -1282,17 +1319,25 @@ namespace dmDragonBones
             {"fade_in_animation",       fadeInAnimation      },
             {"get_anination_names",     getAnimationNames    },
             {"contains_point",          containsPoint        },
+
             {"set_bone_position",       setBonePosition      },
             {"set_bone_rotation",       setBoneRotation      },
+            {"set_bone_scale",          setBoneScale         },
             {"reset_bone",              resetBone            },
+
             {"stop_animation",          stopAnimation        },
             {"get_batch_buffer",        getBatchBuffer       },
+
             {"set_slot_visibility",     setSlotVisibility    },
-            {"set_slot_display_index",     setSlotDisplayIndex   },
+            {"set_slot_display_index",  setSlotDisplayIndex  },
+            {"set_slot_scale",          setSlotScale         },
+
             {"set_flip_x",                 setFlipX              },
             {"set_flip_y",                 setFlipY              },
+
             {"add_event_callback",         addEventListener      },
             {"disable_event_callback",     enableEventListener   },
+            
             {"get_frame_rate",             getFrameRate          },
             {"replace_skin",               replaceSkin           },
             {0, 0}

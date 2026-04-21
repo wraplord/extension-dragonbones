@@ -61,13 +61,16 @@ end
 
 local function walk(self, instance, flip)
 	local p = go.get_position("/Rooster")
-	dragonbones.set_flip_x(instance, not flip)	
+	dragonbones.set_flip_x(instance, not flip)
+
+	--override flipping of some slots	
+	local scale_x = flip and 1.0 or -1.0
+	dragonbones.set_slot_scale(instance, "copyrights", scale_x, 1.0)
 
 	local d = flip and -400 or 400
 	go.animate("/Rooster", "position.x", go.PLAYBACK_ONCE_FORWARD, p.x + d, go.EASING_LINEAR, 5, 0, function()
 		walk(self, instance, not flip)
 	end)
-	
 	
 end
 

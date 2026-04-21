@@ -164,6 +164,12 @@ function replace_skin(instance, armature_name)
     No tested.
     Build a new armature and replace current armature skin from the build one.
 
+function set_bone_scale(instance, bone_name, scale_x, scale_y)
+    Scale the given bone. Addictive offset mode.
+
+function set_slot_scale(instance, slot_name, scale_x, scale_y)
+    Scale the given slot.
+
 
 </pre>
     
