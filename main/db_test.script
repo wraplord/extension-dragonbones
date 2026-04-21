@@ -1,3 +1,4 @@
+go.property("my_texture", resource.texture()) --custom texture for swapping
 local module_instance = require("dragonbones.shared.instance")
 
 
@@ -55,6 +56,7 @@ function init(self)
 	go.EASING_LINEAR, 2)
 	go.animate("/Bicycle4", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
 	go.EASING_LINEAR, 5)
+
 end
 
 local function walk(self, instance, flip)
@@ -86,10 +88,17 @@ function on_message(self, message_id, message)
 			timer.delay(1/30.0, true, function()
 				msg.post("/Bicycle1", hash("update"), { dt = 1/30.0 })
 			end)
+			--SIMPLE TEXTURE SWAPPING
+			timer.delay(10, false, function()
+				local tex_name = "my_unique_texture_id"
+				module_instance.textures[tex_name] = hash(self.my_texture) -- from go.property
+				msg.post("/Bicycle1", hash("swap_texture"), {texture_name = tex_name})
+			end)
 		elseif message.instance_name == self.bicycle2_name then
 			timer.delay(1/30.0, true, function()
 				msg.post("/Bicycle2", hash("update"), { dt = 1/30.0 })
 			end)
+			msg.post("/Bicycle2", hash("tint"), {tint = vmath.vector4(1.0, 0.0, 0.0, 1.0)})
 		elseif message.instance_name == self.bicycle3_name then
 			timer.delay(1/30.0, true, function()
 				msg.post("/Bicycle3", hash("update"), { dt = 1/30.0 })

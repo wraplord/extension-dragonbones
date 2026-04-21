@@ -56,8 +56,8 @@ local function load_world(self)
 	self.meshes  = {}
 
 	--dragonbones.get_no_slots(self.instance)
-	local mesh_id = spawn_mesh(self, 1)
-	table.insert(self.meshes, mesh_id)
+	self.mesh_id = spawn_mesh(self, 1)
+	table.insert(self.meshes, self.mesh_id)
 
 	local tbl_animations = dragonbones.get_anination_names(self.instance)
 	--pprint(tbl_animations)
@@ -86,11 +86,21 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("disable") then
 		self.enabled = message.disable
 		local str_enable = self.enabled and "enable" or "disable"
-		msg.post("#mesh",  str_enable)
+		msg.post(self.mesh_id,  str_enable)
+	elseif message_id == hash("swap_texture") then
+		local tex = mod_instances.textures[message.texture_name]
+		if tex then
+			go.set(self.mesh_id, "texture0",  tex)
+		end
+	elseif message_id == hash("tint") then
+		go.set(self.mesh_id, hash("tint"), message.tint)
 	end
 end
 
 function final(self)
+	for i = 1, #self.current_buffers do
+		resource.release(self.current_buffers[i])
+	end
 	dragonbones.destroy(self.instance)
 	mod_instances.instances[self.instance_name] = nil
 end

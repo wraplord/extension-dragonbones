@@ -29,10 +29,6 @@ instances {
       type: PROPERTY_TYPE_HASH
     }
   }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
 }
 instances {
   id: "Bicycle1"
@@ -84,10 +80,15 @@ instances {
 }
 scale_along_z: 0
 embedded_instances {
-  id: "go"
+  id: "main"
   data: "components {\n"
   "  id: \"db_test\"\n"
   "  component: \"/main/db_test.script\"\n"
+  "  properties {\n"
+  "    id: \"my_texture\"\n"
+  "    value: \"/custom_res/character4/Bicycle_tex_swap.png\"\n"
+  "    type: PROPERTY_TYPE_HASH\n"
+  "  }\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"camera\"\n"

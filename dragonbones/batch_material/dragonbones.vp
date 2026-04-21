@@ -6,34 +6,19 @@ attribute mediump vec3 a_normal;
 attribute mediump mat4 a_mat;
 
 out highp vec4 v_position;
-out mediump vec3 v_normal;
 out mediump vec2 v_texCoord;
-out mediump vec4 v_light;
+out mediump vec3 v_normal;
 
 uniform vs_uniforms
 {
     uniform mediump mat4 mtx_worldview;
-    uniform mediump mat4 mtx_view;
-    uniform mediump mat4 mtx_proj;
     uniform mediump mat4 mtx_viewproj;
-    uniform mediump mat4 mtx_normal;
-    uniform mediump vec4 light;
 };
 
 void main() {
-    //Remove z component
-    //vec4 p = vec4(a_position.xy, 0, 1.0);
-    //v_texCoord  = a_texCoord;
-    //v_normal    = a_normal;
-    //v_position  = p;
-    //gl_Position  = mtx_viewproj *  a_mat  * p;
-
-
     vec4 p =  vec4(a_position.xy, 0.0, 1.0);
-    v_light = mtx_view * vec4(1.0, 1.0, 1.0, 1.0);
     v_position = p;
     v_texCoord = a_texCoord;
-    v_normal = normalize((mtx_normal * vec4(a_normal, 0.0)).xyz);
+    v_normal   = a_normal;
     gl_Position =  mtx_viewproj * mtx_worldview * a_mat * p;
-    
 }

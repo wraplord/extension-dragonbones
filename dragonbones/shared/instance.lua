@@ -1,5 +1,7 @@
 local M = {}
 M.instances = {}
+M.textures = {}
+
 
 function M.create_buffer_prefix_name()
 	local tbl = {}

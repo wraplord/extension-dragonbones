@@ -16,8 +16,10 @@
 
 - Add .script file to your collection. Add the following content. Modify the paths to point to the correct custom resource folder.
    ```
+        --go.property("my_texture", resource.texture()) --custom texture for swapping
         local module_instance = require("dragonbones.models.instance")
 
+    
         local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
         local tex_json = "/custom_res/character4/Bicycle_tex.json"
 
@@ -43,6 +45,8 @@
             
             --Disable or enable. It will disable the mesh and all updates will not be processed.
             --msg.post("/BatchDragonModel", hash("disable"), {disable = true})
+
+           
         end
 
         function on_message(self, message_id, message)
@@ -56,6 +60,14 @@
                     end)
                     --called dragonbones.* functions
                     --or go.* functions on the added go
+
+                    --SIMPLE TEXTURE SWAPPING
+                    --local tex_name = "my_unique_texture_id"
+                    --module_instance.textures[tex_name] = hash(self.my_texture) -- from go.property
+                    --msg.post("/BatchDragonModel", hash("swap_texture"), {texture_name = tex_name})
+
+                    --tint the character
+                    --msg.post("/BatchDragonModel", hash("tint"), {tint = vmath.vector4(1.0, 0.0, 0.0, 1.0)})
                 end
             end
         end
