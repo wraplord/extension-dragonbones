@@ -44,14 +44,14 @@ function init(self)
 	
 	msg.post("/Rooster", hash("load"), tbl2)
 	
-	go.animate("/Bicycle1", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, 
-	go.EASING_LINEAR, 3)
-	go.animate("/Bicycle2", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
-	go.EASING_LINEAR, 4)
-	go.animate("/Bicycle3", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, 
-	go.EASING_LINEAR, 2)
-	go.animate("/Bicycle4", "euler.z", go.PLAYBACK_LOOP_FORWARD, -359, 
+	go.animate("/Bicycle1", "position.x", go.PLAYBACK_LOOP_PINGPONG, -400, 
 	go.EASING_LINEAR, 5)
+	go.animate("/Bicycle2", "position.x", go.PLAYBACK_LOOP_FORWARD, -400, 
+	go.EASING_LINEAR, 4)
+	go.animate("/Bicycle3", "position.x", go.PLAYBACK_LOOP_FORWARD, -300, 
+	go.EASING_LINEAR, 8)
+	--go.animate("/Bicycle4", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
+	--go.EASING_LINEAR, 5)
 
 end
 

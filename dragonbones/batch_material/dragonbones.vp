@@ -1,9 +1,9 @@
 #version 140
 
-attribute mediump vec3 a_position;
-attribute mediump vec2 a_texCoord;
-attribute mediump vec3 a_normal;
-attribute mediump mat4 a_mat;
+in mediump vec3 a_position;
+in mediump vec2 a_texCoord;
+in mediump vec3 a_normal;
+in mediump mat4 a_mat;
 
 out highp vec4 v_position;
 out mediump vec2 v_texCoord;
@@ -11,8 +11,7 @@ out mediump vec3 v_normal;
 
 uniform vs_uniforms
 {
-    uniform mediump mat4 mtx_worldview;
-    uniform mediump mat4 mtx_viewproj;
+    mediump mat4 mtx_worldviewproj;
 };
 
 void main() {
@@ -20,5 +19,5 @@ void main() {
     v_position = p;
     v_texCoord = a_texCoord;
     v_normal   = a_normal;
-    gl_Position =  mtx_viewproj * mtx_worldview * a_mat * p;
+    gl_Position =  mtx_worldviewproj  * a_mat  * p;
 }

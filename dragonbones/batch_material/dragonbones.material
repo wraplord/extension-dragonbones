@@ -4,12 +4,8 @@ vertex_program: "/dragonbones/batch_material/dragonbones.vp"
 fragment_program: "/dragonbones/batch_material/dragonbones.fp"
 vertex_space: VERTEX_SPACE_LOCAL
 vertex_constants {
-  name: "mtx_worldview"
-  type: CONSTANT_TYPE_WORLDVIEW
-}
-vertex_constants {
-  name: "mtx_viewproj"
-  type: CONSTANT_TYPE_VIEWPROJ
+  name: "mtx_worldviewproj"
+  type: CONSTANT_TYPE_WORLDVIEWPROJ
 }
 fragment_constants {
   name: "tint"

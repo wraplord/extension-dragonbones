@@ -9,6 +9,7 @@ shared_state = 1
 width = 800
 height = 600
 high_dpi = 1
+samples = 4
 
 [android]
 input_method = HiddenInputField
@@ -26,6 +27,7 @@ debug = 1
 clear_color_green = 0.2
 clear_color_blue = 0.2
 clear_color_red = 0.2
+clear_color_alpha = 0.0
 
 [library]
 include_dirs = dragonbones

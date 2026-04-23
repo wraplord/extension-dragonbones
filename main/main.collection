@@ -3,6 +3,7 @@ instances {
   id: "Bicycle4"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
+    y: -176.0
     z: 0.2
   }
   component_properties {
@@ -33,10 +34,17 @@ instances {
       type: PROPERTY_TYPE_HASH
     }
   }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
 }
 instances {
   id: "Bicycle1"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    x: 188.0
+  }
   component_properties {
     id: "BatchDragonModel"
     properties {
@@ -53,6 +61,10 @@ instances {
 instances {
   id: "Bicycle2"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    x: 114.0
+    y: 74.0
+  }
   component_properties {
     id: "BatchDragonModel"
     properties {
@@ -69,6 +81,10 @@ instances {
 instances {
   id: "Bicycle3"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    x: 171.0
+    y: -46.0
+  }
   component_properties {
     id: "BatchDragonModel"
     properties {
@@ -102,6 +118,7 @@ embedded_instances {
   "near_z: -1.0\\n"
   "far_z: 1.0\\n"
   "orthographic_projection: 1\\n"
+  "orthographic_mode: ORTHO_MODE_AUTO_FIT\\n"
   "\"\n"
   "}\n"
   ""

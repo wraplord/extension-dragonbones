@@ -76,7 +76,7 @@
                     --or go.* functions on the added go
 
                     --SIMPLE TEXTURE SWAPPING
-                    --local tex_name = "my_unique_texture_id"
+                    --local tex_name = "my_texture_id"
                     --module_instance.textures[tex_name] = hash(self.my_texture) -- from go.property
                     --msg.post("/BatchDragonModel", hash("swap_texture"), {texture_name = tex_name})
 
