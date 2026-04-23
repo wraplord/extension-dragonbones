@@ -2,6 +2,9 @@ name: "main"
 instances {
   id: "Bicycle4"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    z: 0.2
+  }
   component_properties {
     id: "BatchDragonModel"
     properties {
@@ -20,6 +23,7 @@ instances {
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
     x: 200.0
+    z: 0.5
   }
   component_properties {
     id: "BatchDragonModel"

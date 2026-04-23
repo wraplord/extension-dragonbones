@@ -4,8 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Users/admin/Desktop/MustDragon/dmsdk/**",
-                "C:/Users/admin/Desktop/MustDragon"
+                "C:/Users/admin/Desktop/coding/MustDragon/dmsdk/**",
+                "C:/Users/admin/Desktop/coding/MustDragon"
             ],
             "defines": [
                 "_DEBUG",

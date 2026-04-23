@@ -4,8 +4,8 @@ local mod_instances = require("dragonbones.shared.instance")
 
 
 local function spawn_mesh(self, no)
-	local z = 0 + 0.01 * no
-	local id = factory.create("#factory", vmath.vector3(0, 0, z))
+	--local z = 0 + 0.01 * no
+	local id = factory.create("#factory") --, vmath.vector3(0, 0, z))
 	local mesh_id =  msg.url(nil, id, "mesh" )
 	go.set_parent(id, ".")
 
@@ -18,15 +18,15 @@ local function set_mesh_data(self, mesh_no, buffer_data)
 	local buffer_name = "/" .. self.instance_name .. tostring(mesh_no) .. ".bufferc"
 
 	local my_buffer
-	if self.current_buffers[mesh_no] then
-		my_buffer = self.current_buffers[mesh_no]
+	if mod_instances.buffers[self.instance_name] then
+		my_buffer = mod_instances.buffers[self.instance_name]
 		resource.set_buffer(my_buffer, buffer_data.batch_buffer)
 	else
-		my_buffer = resource.create_buffer(buffer_name, { buffer = buffer_data.batch_buffer }) 
+		my_buffer = resource.create_buffer(buffer_name, { buffer = buffer_data.batch_buffer })
+		mod_instances.buffers[self.instance_name] = my_buffer 
 	end
 
 	go.set(mesh_id, hash("vertices"), my_buffer )
-	self.current_buffers[mesh_no] = my_buffer
 end
 
 local function update_db_world(self)
@@ -98,8 +98,9 @@ function on_message(self, message_id, message, sender)
 end
 
 function final(self)
-	for i = 1, #self.current_buffers do
-		resource.release(self.current_buffers[i])
+	if mod_instances.buffers[self.instance_name] then
+		resource.release(mod_instances.buffers[self.instance_name])
+		mod_instances.buffers[self.instance_name] = nil
 	end
 	dragonbones.destroy(self.instance)
 	mod_instances.instances[self.instance_name] = nil

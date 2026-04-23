@@ -353,6 +353,6 @@
 
         - name: armature_name
           type: string
-          desc: The armature to get default skin out of
+          desc: The armature to get default skin out of, armature should be in skeleton data.
       
 

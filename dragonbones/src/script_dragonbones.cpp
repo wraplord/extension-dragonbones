@@ -910,6 +910,7 @@ namespace dmDragonBones
         };
     
         dmBuffer::Result r = dmBuffer::Create(total_len, streams_decl, 4, &buffer_trilist);
+        //dmBuffer::Destroy will destroy buffer and its streams above
     
         if (r == dmBuffer::RESULT_OK) {
             
@@ -943,7 +944,7 @@ namespace dmDragonBones
             //dmLogInfo("Buffer Count, Components: %d, %d", count, components);
             if (r1 == dmBuffer::RESULT_OK && r2 == dmBuffer::RESULT_OK && r4 == dmBuffer::RESULT_OK ) {
                 int batch_offset = 0;
-                float z = -1;
+                float z = 0;
                 for(int i = 0; i < count; ++i){
                     
                     //y axis is up in defold
@@ -951,8 +952,8 @@ namespace dmDragonBones
                     auto pos_y =  batch_trilist[batch_offset + 1];
                     positions[0] =  pos_x ; 
                     positions[1] =  pos_y ; 
-                    positions[2] =  z;
-                    z += 0.01;
+                    positions[2] =  0; //z; one unit
+                    //z += 0.01;
                     
                     //flip y tex coordinates
                     auto tex_x =       batch_trilist[batch_offset + 2];

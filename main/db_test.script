@@ -28,25 +28,21 @@ function init(self)
 	self.bicycle2_name = module_instance.create_buffer_prefix_name()
 	self.bicycle3_name = module_instance.create_buffer_prefix_name()
 	self.bicycle4_name = module_instance.create_buffer_prefix_name()
-	
+
 	local tbl11 = getInitData("character4/Bicycle", self.bicycle1_name)
 	local tbl12 = getInitData("character4/Bicycle", self.bicycle2_name)
 	local tbl13 = getInitData("character4/Bicycle", self.bicycle3_name)
 	local tbl14 = getInitData("character4/Bicycle", self.bicycle4_name)
-
+	
 	self.rooster_name = module_instance.create_buffer_prefix_name()
 	local tbl2 = getInitData("character2/Rooster_Ani", self.rooster_name)
 
-	pprint(tbl11)
-	--pprint(tbl2)
-
-	msg.post("/Bicycle1",   hash("load"), tbl11)
+	msg.post("/Bicycle1",  hash("load"), tbl11)
 	msg.post("/Bicycle2",  hash("load"), tbl12)
 	msg.post("/Bicycle3",  hash("load"), tbl13)
 	msg.post("/Bicycle4",  hash("load"), tbl14)
 	
 	msg.post("/Rooster", hash("load"), tbl2)
-
 	
 	go.animate("/Bicycle1", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, 
 	go.EASING_LINEAR, 3)
@@ -87,7 +83,7 @@ function on_message(self, message_id, message)
 			timer.delay(1/24.0, true, function()
 				msg.post("/Rooster", hash("update"), { dt = 1/24.0 })
 			end)
-		elseif message.instance_name == self.bicycle1_name then
+		elseif message.instance_name ==  self.bicycle1_name then
 			timer.delay(1/30.0, true, function()
 				msg.post("/Bicycle1", hash("update"), { dt = 1/30.0 })
 			end)
@@ -97,7 +93,7 @@ function on_message(self, message_id, message)
 				module_instance.textures[tex_name] = hash(self.my_texture) -- from go.property
 				msg.post("/Bicycle1", hash("swap_texture"), {texture_name = tex_name})
 			end)
-		elseif message.instance_name == self.bicycle2_name then
+		elseif message.instance_name ==  self.bicycle2_name then
 			timer.delay(1/30.0, true, function()
 				msg.post("/Bicycle2", hash("update"), { dt = 1/30.0 })
 			end)
@@ -107,9 +103,10 @@ function on_message(self, message_id, message)
 				msg.post("/Bicycle3", hash("update"), { dt = 1/30.0 })
 			end)
 		elseif message.instance_name == self.bicycle4_name then
-			timer.delay(1/30.0, true, function()
-				msg.post("/Bicycle4", hash("update"), { dt = 1/30.0 })
-			end)
+			--static
+			--timer.delay(1/30.0, true, function()
+			--	msg.post("/Bicycle3", hash("update"), { dt = 1/30.0 })
+			--end)
 		end
 		
 		--dragonbones.add_event_callback(instance, function(me, tbl)

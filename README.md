@@ -7,12 +7,26 @@
 
 - Add camera to your collection. Set camera properties such as zoom, orthographic etc.
 
-- Add DragonModel.go or BatchDragonModel.go to your collection. The Batch version batched all the slots thereby reduce draw calls to 1. The non-batch version rendered the same way as dragon bones samples. Make sure your armature canvas in DragonBones Editor match game.project display width and height otherwise there will be skewing.  
-    - Modify #DragonModel.script or #BatchDragonModel.script property
+- Add render script. Choose dragonbones.render_script in game.project or add the following to your render script. After the model rendering.
+    ```
+        -- in init, add dragon predicate
+        self.predicates = create_predicates("tile", "gui", "particle", "model", "debug_text", "dragon")
+
+        --in update, after model rendering
+        -- render `dragon`
+        --
+        render.enable_state(graphics.STATE_BLEND)
+        render.set_blend_func(graphics.BLEND_FACTOR_ONE, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+        render.draw(predicates.dragon, draw_options_world)
+        render.set_blend_func(graphics.BLEND_FACTOR_SRC_ALPHA, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+        render.disable_state(graphics.STATE_BLEND)
+    ```
+
+- Add BatchDragonModel.go to your collection. Rename it if needed. 
+    - Modify #BatchDragonModel.script property
         - u_texture -> pick exported png texture in custom_res
     - Adjust the added go transform to fit your needs. Note the camera view.
     
-
 
 - Add .script file to your collection. Add the following content. Modify the paths to point to the correct custom resource folder.
    ```
@@ -41,7 +55,7 @@
             
             -- set the correct url of added go
             msg.post("/BatchDragonModel", hash("load"), tbl)
-            -- This script will received hash("loaded") message with instance_no value.
+            -- This script will received hash("loaded") message with instance_name value.
             
             --Disable or enable. It will disable the mesh and all updates will not be processed.
             --msg.post("/BatchDragonModel", hash("disable"), {disable = true})
@@ -84,35 +98,10 @@
 Dont call dragonbones.update or dragonbones.create directly. Send messages instead.  
 Other dragonbones.* methods can be used directly. Make sure to pass instance as the first parameter.
 
-**Texture Bleeding**
-- Solution 1:  
-    Extrude texture borders. Currently this does not solve the issue.
-    There is a python script extrude.py to do just that.
-    Make sure to install PIL  
-        ```pip install pillow```
 
-    - In Dragon Editor Texture config  
-        - export as texture atlas first
-            settings:  
-                padding x and y = 4  
-                powers of 2
-        - export as images to the same folder.  
-        - Update and run extrude.py  
-            - set padding  
-            - set input folder  
-            - set armature name
+**Documentation**  
 
-+ Solution 2:  
-Ship a tiny sprite in BatchDragonModel.  
-WHY DOES THIS SOLVE TEXTURE BLEEDING?   
-    - Maybe due to dragobones.material using tile tag?
-
-+ Todo:  
-Find the root cause.
-
-
-**Documentation**
-
+**Dragonbones namespace**
 <pre>
 
 function get_anination_names(instance)
@@ -170,6 +159,42 @@ function set_bone_scale(instance, bone_name, scale_x, scale_y)
 function set_slot_scale(instance, slot_name, scale_x, scale_y)
     Scale the given slot.
 
+</pre>
 
+**BatchDragonModel Messages**
+<pre>
+    hash("load")
+        Message format = {
+            skeleton_json = string  --valid path
+            tex_json = string  
+            buffer_prefix = string --unique
+        }  
+        Return
+            Message format = {
+                 instance_name = string -- buffer_prefix from incoming
+            } 
+            module_instance.instances[buffer_prefix] state changed.  
+
+    hash("update")
+      Message format = {  
+        dt = number -- advance time by given delta e.g 1/60
+      }  
+
+    hash("disable")
+        Message format = {
+            disable = bool  
+        }  
+
+    hash("tint")
+        Message format = {
+            tint = vmath.vector4
+        }
+    
+    hash("swap_texture")
+        Message format = {
+            texture_name = string
+        }
+        module_instance.textures[texture_name] must have valid texture.
+        Obtain from resource.*
 </pre>
     

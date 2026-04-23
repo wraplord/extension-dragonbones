@@ -1,5 +1,5 @@
 name: "dragonbones"
-tags: "tile"
+tags: "dragon"
 vertex_program: "/dragonbones/batch_material/dragonbones.vp"
 fragment_program: "/dragonbones/batch_material/dragonbones.fp"
 vertex_space: VERTEX_SPACE_LOCAL
