@@ -1315,23 +1315,25 @@ namespace dmDragonBones
             {"update",               update         },
             {"destroy",              destroy        },
             {"load_data",            loadData       },
-            {"get_no_slots",         getNoSlots     },
-            {"get_buffers",          getBuffers     },
+    
+            {"get_frame_rate",          getFrameRate         },
             {"fade_in_animation",       fadeInAnimation      },
             {"get_anination_names",     getAnimationNames    },
-            {"contains_point",          containsPoint        },
-
+            {"stop_animation",          stopAnimation        },
+            
             {"set_bone_position",       setBonePosition      },
             {"set_bone_rotation",       setBoneRotation      },
             {"set_bone_scale",          setBoneScale         },
             {"reset_bone",              resetBone            },
 
-            {"stop_animation",          stopAnimation        },
             {"get_batch_buffer",        getBatchBuffer       },
+            {"get_buffers",             getBuffers           },
+            {"get_no_slots",            getNoSlots           },
 
             {"set_slot_visibility",     setSlotVisibility    },
             {"set_slot_display_index",  setSlotDisplayIndex  },
             {"set_slot_scale",          setSlotScale         },
+            {"get_slot_in_point",       containsPoint        },
 
             {"set_flip_x",                 setFlipX              },
             {"set_flip_y",                 setFlipY              },
@@ -1339,7 +1341,6 @@ namespace dmDragonBones
             {"add_event_callback",         addEventListener      },
             {"disable_event_callback",     enableEventListener   },
             
-            {"get_frame_rate",             getFrameRate          },
             {"replace_skin",               replaceSkin           },
             {0, 0}
     };

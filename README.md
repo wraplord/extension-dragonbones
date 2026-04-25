@@ -113,8 +113,8 @@ function fade_in_animation(instance, animation_name, layer, loop, fade_in_time)
     loop: -1 means use default value, 0 means loop infinitely, [1~N] times
     fade_in_time : time to blend to this animation
 
-function contains_point(instance, x, y)
-    Return the slot name if the given x,y lie in that slot. Translate x,y before pass it in.
+function stop_animation(instance, str_animation_name)
+    stop the given running animation
 
 function set_bone_position(instance, str_bone_name, x, y, bool_override)
     set bone position manually, for IK?
@@ -125,14 +125,20 @@ function set_bone_rotation(instance, str_bone_name, rad_angle, bool_override)
 function reset_bone(instance, str_bone_name)
     reset bone transforms
 
-function stop_animation(instance, str_animation_name)
-    stop the given running animation
+function set_bone_scale(instance, bone_name, scale_x, scale_y)
+    Scale the given bone. Addictive offset mode.
 
 function set_slot_visibility(instance, slot_name, bool_visible)
     Hide or Show the slot with slot_name.
 
 function set_slot_display_index(instance, slot_name, index)
     Switch slot display image. Bounds check done internally in dragonbones?
+
+function set_slot_scale(instance, slot_name, scale_x, scale_y)
+    Scale the given slot.
+
+function get_slot_in_point(instance, x, y)
+    Return the slot name if the given x,y lie in that slot. Translate x,y before pass it in.
 
 function add_event_callback(instance, function(self, tbl_event) end)
     Receive events. Callback added. There are extra tables ints, floats and strings for custom events. pprint this table for full parameters.
@@ -152,12 +158,6 @@ function get_frame_rate(instance)
 function replace_skin(instance, armature_name)
     No tested.
     Build a new armature and replace current armature skin from the build one.
-
-function set_bone_scale(instance, bone_name, scale_x, scale_y)
-    Scale the given bone. Addictive offset mode.
-
-function set_slot_scale(instance, slot_name, scale_x, scale_y)
-    Scale the given slot.
 
 </pre>
 
