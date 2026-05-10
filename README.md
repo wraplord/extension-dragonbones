@@ -107,11 +107,13 @@ Other dragonbones.* methods can be used directly. Make sure to pass instance as 
 function get_anination_names(instance)
     Get a table of animations defined.
      
-function fade_in_animation(instance, animation_name, layer, loop, fade_in_time)
-    Play the specify animation
-    animation_name must be in get_aimation_names, layer can be 0,
-    loop: -1 means use default value, 0 means loop infinitely, [1~N] times
-    fade_in_time : time to blend to this animation
+function fade_in_animation(instance, animation_name, config)
+    Play the specify animation. animation_name must be in get_aimation_names
+    config table with fields
+      layer = blending layer default 0
+      loop = -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
+      fade_in_time = fadeIn time to enable blending and layering.
+      time_scale = default 1.0 [(-N~0) Reverse play, 0 Stop play, (0~1) Slow play, 1 Normal play, (1~N) Fast play]
 
 function stop_animation(instance, str_animation_name)
     stop the given running animation

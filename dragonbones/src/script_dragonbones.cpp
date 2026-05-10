@@ -1026,6 +1026,8 @@ namespace dmDragonBones
         return 1;
     }
 
+    
+
     static int containsPoint(lua_State* L) {
         JniBridgeInstance* instance     =  (JniBridgeInstance*)lua_touserdata(L, 1);
         if (!instance || !instance->armature) {
@@ -1289,18 +1291,53 @@ namespace dmDragonBones
 
         const char* nameChars = luaL_checkstring(L, 2);
         std::string name(nameChars);
+        if(!instance->armature->getAnimation()->hasAnimation(name)){
+            dmLogInfo("FadeIn: No such animation %s.", nameChars);
+            return 1;
+        }
 
-        // playTimes: -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
-        // The `loop` parameter from Kotlin is: 0 for infinite, 1 for once, etc. This maps directly to playTimes.
-        int layer          = (int)luaL_checknumber(L, 3);
-        int playTimes      = (int)luaL_checknumber(L, 4);
-        float fade_in_time = (float)luaL_checknumber(L, 5);
+        // playTimes: 
+        int layer          = 0; //blending layer
+        int playTimes      = 0; //-1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
+        float fade_in_time = 0.0f; //time to blend
+        float time_scale   = 1.0f; //[(-N~0): Reverse play, 0: Stop play, (0~1): Slow play, 1: Normal play, (1~N): Fast play]
+
+        if(lua_istable(L, 3)){
+            lua_getfield(L, 3, "layer"); 
+            if(!lua_isnil(L, -1)){
+                layer = (int)luaL_checknumber(L, -1);
+            }
+            lua_pop(L, 1);  
+
+            lua_getfield(L, 3, "play_times"); 
+            if(!lua_isnil(L, -1)){
+                playTimes = (int)luaL_checknumber(L, -1);
+            }
+            lua_pop(L, 1);  
+
+            lua_getfield(L, 3, "fade_in_time"); 
+            if(!lua_isnil(L, -1)){
+                fade_in_time = (float)luaL_checknumber(L, -1);
+            }
+            lua_pop(L, 1);
+
+            lua_getfield(L, 3, "time_scale"); 
+            if(!lua_isnil(L, -1)){
+                time_scale = (float)luaL_checknumber(L, -1);
+            }
+            lua_pop(L, 1);
+
+        }
         
+    
 
         // Use fadeIn to enable blending and layering.
         // Set fadeOutMode to None to prevent animations on different layers from stopping each other.
         // Use SameLayerAndGroup if you want an animation to replace another on the same layer.
-        if(instance->armature->getAnimation()->fadeIn(name, (float)fade_in_time, playTimes, (int)layer, "", dragonBones::AnimationFadeOutMode::SameLayerAndGroup)) {
+        auto anim_state = instance->armature->getAnimation()->fadeIn(name, (float)fade_in_time, playTimes, (int)layer,
+         "", dragonBones::AnimationFadeOutMode::SameLayerAndGroup);
+        if(anim_state) {
+            anim_state->timeScale = time_scale;
             dmLogInfo("Fading in animation: '%s' on layer %d, loop: %d, fade: %f", name.c_str(), (int)layer, playTimes, (float)fade_in_time);
         } else {
             dmLogInfo("Animation not found: '%s'", name.c_str());
@@ -1313,8 +1350,8 @@ namespace dmDragonBones
            
             {"create",               create         },
             {"update",               update         },
-            {"destroy",              destroy        },
-            {"load_data",            loadData       },
+            {"destroy",              destroy                },
+            {"load_data",            loadData               },
     
             {"get_frame_rate",          getFrameRate         },
             {"fade_in_animation",       fadeInAnimation      },

@@ -4,8 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Users/admin/Desktop/coding/MustDragon/dmsdk/**",
-                "C:/Users/admin/Desktop/coding/MustDragon"
+                "D:/cpp_sdks"
             ],
             "defines": [
                 "_DEBUG",

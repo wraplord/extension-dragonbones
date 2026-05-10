@@ -61,7 +61,7 @@ local function load_world(self)
 
 	local tbl_animations = dragonbones.get_anination_names(self.instance)
 	--pprint(tbl_animations)
-	dragonbones.fade_in_animation(self.instance, tbl_animations[1], 0, 0, 0)
+	dragonbones.fade_in_animation(self.instance, tbl_animations[1])
 
 	if self.enabled then
 		update_db_world(self)

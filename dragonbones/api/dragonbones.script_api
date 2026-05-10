@@ -108,16 +108,12 @@
         - name : animation_name
           type : string
         
-        - name: layer
-          type : int
-        
-        - name: loop
-          type: integer
-          desc : -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
-        
-        - name: fade_in_time
-          type: integer
-          desc: fadeIn to enable blending and layering.
+        - name: config
+          type : table
+          desc: field layer, blending layer default 0
+                field loop, -1 means use default value, 0 means loop infinitely, [1~N] means repeat N times.
+                field fade_in_time, fadeIn time to enable blending and layering.
+                field time_scale, default 1.0 [(-N~0) Reverse play, 0 Stop play, (0~1) Slow play, 1 Normal play, (1~N) Fast play]
 
   - name: contains_point
     type: function
