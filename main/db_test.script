@@ -79,7 +79,9 @@ function on_message(self, message_id, message)
 		if message.instance_name == self.rooster_name then
 			--walk(self, instance, true)
 			pprint(dragonbones.get_anination_names(instance))
-			local config = {layer = 0, play_times = 0, fade_in_time = 0.2, time_scale = -1.0 }
+
+			--use negative time_scale to reverse play.
+			local config = {layer = 0, play_times = 0, fade_in_time = 0.2, time_scale = 1.0 }
 			dragonbones.fade_in_animation(instance, "rooster_walk_anim", config)
 			timer.delay(1/24.0, true, function()
 				msg.post("/Rooster", hash("update"), { dt = 1/24.0 })
