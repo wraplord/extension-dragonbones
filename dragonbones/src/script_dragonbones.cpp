@@ -914,10 +914,10 @@ namespace dmDragonBones
     
         if (r == dmBuffer::RESULT_OK) {
             
-            //dmBuffer::Result rm = dmBuffer::SetMetaData(buffer_trilist, dmHashString32("AABB"), &aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
-            //if(rm != dmBuffer::RESULT_OK){
-            //    dmLogInfo("Cannot set AABB");
-            //}
+            dmBuffer::Result rm = dmBuffer::SetMetaData(buffer_trilist, dmHashString32("AABB"), &aabb_array , 6, dmBuffer::VALUE_TYPE_FLOAT32);
+            if(rm != dmBuffer::RESULT_OK){
+                dmLogInfo("Cannot set AABB");
+            }
 
             float* positions = 0x0;
             float* texCoord = 0x0;

@@ -15,9 +15,9 @@ uniform vs_uniforms
 };
 
 void main() {
-    vec4 p =  vec4(a_position.xy, 0.0, 1.0);
+    vec4 p = a_mat  * vec4(a_position.xy, 0.0, 1.0);
     v_position = p;
     v_texCoord = a_texCoord;
     v_normal   = a_normal;
-    gl_Position =  mtx_worldviewproj  * a_mat  * p;
+    gl_Position =  mtx_worldviewproj * p;
 }

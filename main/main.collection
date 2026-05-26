@@ -3,6 +3,7 @@ instances {
   id: "Bicycle4"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
+    x: -4.0
     y: -176.0
     z: 0.2
   }
@@ -43,7 +44,7 @@ instances {
   id: "Bicycle1"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
-    x: 188.0
+    x: 216.0
   }
   component_properties {
     id: "BatchDragonModel"
@@ -113,13 +114,16 @@ embedded_instances {
   "embedded_components {\n"
   "  id: \"camera\"\n"
   "  type: \"camera\"\n"
-  "  data: \"aspect_ratio: 1.0\\n"
+  "  data: \"aspect_ratio: 1.333333\\n"
   "fov: 0.7854\\n"
-  "near_z: -1.0\\n"
-  "far_z: 1.0\\n"
-  "orthographic_projection: 1\\n"
+  "near_z: 10.0\\n"
+  "far_z: 1000.0\\n"
   "orthographic_mode: ORTHO_MODE_AUTO_FIT\\n"
   "\"\n"
   "}\n"
   ""
+  position {
+    x: 24.0
+    z: 911.0
+  }
 }
