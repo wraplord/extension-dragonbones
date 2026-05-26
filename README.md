@@ -31,7 +31,7 @@
 - Add .script file to your collection. Add the following content. Modify the paths to point to the correct custom resource folder.
    ```
         --go.property("my_texture", resource.texture()) --custom texture for swapping
-        local module_instance = require("dragonbones.models.instance")
+        local module_instance = require("dragonbones.shared.instance")
 
     
         local skeleton_json = "/custom_res/character4/Bicycle_ske.json"
