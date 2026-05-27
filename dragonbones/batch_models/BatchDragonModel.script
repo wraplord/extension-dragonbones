@@ -111,7 +111,7 @@ function on_message(self, message_id, message, sender)
 			end
 		end
 	elseif message_id == hash("disable") then
-		self.enabled = message.disable
+		self.enabled = not message.disable
 		local str_enable = self.enabled and "enable" or "disable"
 		msg.post(self.mesh_id,  str_enable)
 	elseif message_id == hash("swap_texture") then
