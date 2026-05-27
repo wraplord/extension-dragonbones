@@ -57,7 +57,7 @@ void main() {
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         -translation.x, -translation.y, -translation.z, 1.0
-    ); //get inverse;
+    ); //get inverse; ignore z axis
    
     mat4 rotation1 = transpose(quat_to_mat4(rotation)); //get inverse
 

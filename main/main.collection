@@ -69,6 +69,7 @@ instances {
   position {
     x: 114.0
     y: 74.0
+    z: 0.1
   }
   component_properties {
     id: "BatchDragonModel"
@@ -89,6 +90,7 @@ instances {
   position {
     x: 171.0
     y: -46.0
+    z: 0.15
   }
   component_properties {
     id: "BatchDragonModel"
@@ -126,7 +128,7 @@ embedded_instances {
   "}\\n"
   "\"\n"
   "  position {\n"
-  "    z: -449.0\n"
+  "    z: -789.0\n"
   "  }\n"
   "  scale {\n"
   "    x: 4.0\n"
