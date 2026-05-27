@@ -9,7 +9,13 @@ local function spawn_mesh(self, no)
 	local mesh_id =  msg.url(nil, id, "mesh" )
 	go.set_parent(id, ".")
 
-	go.set(mesh_id, "texture0",  hash(self.u_texture))
+	if self.texture_name then
+		local tex = mod_instances.textures[self.texture_name]
+		go.set(mesh_id, "texture0",  tex)
+	else
+		go.set(mesh_id, "texture0",  hash(self.u_texture))
+	end
+	
 	return mesh_id
 end
 
@@ -98,6 +104,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("load") then
 		self.skeleton_json = message.skeleton_json
 		self.tex_json = message.tex_json
+		self.texture_name = message.texture_name
 		self.instance_name =  message.buffer_prefix
 		self.enabled = true
 		load_world(self)
