@@ -24,7 +24,12 @@ instances {
   id: "Rooster"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
-    x: 39.0
+    x: 769.0
+    z: 0.6
+  }
+  rotation {
+    z: 0.38268343
+    w: 0.9238795
   }
   component_properties {
     id: "BatchDragonModel"
@@ -139,7 +144,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 39.0
+    x: 769.0
     z: 851.0
   }
 }

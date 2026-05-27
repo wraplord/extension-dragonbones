@@ -10,23 +10,60 @@ out mediump vec2 v_texCoord;
 uniform vs_uniforms
 {
     highp mat4 mtx_worldviewproj;
-    mediump mat4 mtx_view;
     mediump vec4 scale;
+    mediump vec4 rotation;
+    mediump vec4 translation;
 };
+
+mat4 quat_to_mat4(vec4 q) {
+    float x = q.x, y = q.y, z = q.z, w = q.w;
+    float x2 = x + x;
+    float y2 = y + y;
+    float z2 = z + z;
+
+    float xx = x * x2;
+    float xy = x * y2;
+    float xz = x * z2;
+    float yy = y * y2;
+    float yz = y * z2;
+    float zz = z * z2;
+
+    float wx = w * x2;
+    float wy = w * y2;
+    float wz = w * z2;
+
+    return mat4(
+        1.0 - (yy + zz),  xy + wz,          xz - wy,          0.0,
+        xy - wz,          1.0 - (xx + zz),  yz + wx,          0.0,
+        xz + wy,          yz - wx,          1.0 - (xx + yy),  0.0,
+        0.0,              0.0,              0.0,              1.0
+    );
+}
+
 
 void main() {
     highp vec4 p = a_mat * vec4(a_position.xyz, 1.0);
-    //highp mat4 m = a_mat;
-    //highp vec4 u;
+   
+    //Get the world transform
+    mat4 scale1 = mat4(
+        1.0/scale.x, 0.0, 0.0,  0.0,
+        0.0, 1.0/scale.y, 0.0,  0.0,
+        0.0, 0.0,         1.0,  0.0,
+        0.0 ,0.0,         0.0,  1.0
+    ); //get inverse;
     
-    //u.x = m[0].x * v.x + m[1].x * v.y + m[2].x * v.z + m[3].x * v.w;
-    //u.y = m[0].y * v.x + m[1].y * v.y + m[2].y * v.z + m[3].y * v.w;
-    //u.z = m[0].z * v.x + m[1].z * v.y + m[2].z * v.z + m[3].z * v.w;
-    //u.w = 1.0;
+    mat4 translation1 = mat4(
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        -translation.x, -translation.y, -translation.z, 1.0
+    ); //get inverse;
+   
+    mat4 rotation1 = transpose(quat_to_mat4(rotation)); //get inverse
+
+    //move the world backwards
+    mat4 inverse_view = scale1 * rotation1 * translation1; 
     
-    float sx = 1.0 / scale.x;
-    float sy = 1.0 / scale.y;
-    vec4 p2 = vec4(p.x + mtx_view[3][0] * sx , p.y + mtx_view[3][1] * sy, p.z, 1.0);
     v_texCoord = a_texCoord;
-    gl_Position =  mtx_worldviewproj * p2;
+    gl_Position = mtx_worldviewproj * inverse_view * p;
 }

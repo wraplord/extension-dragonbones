@@ -31,11 +31,26 @@ end
 
 local function update_db_world(self)
 	--update animation and get buffers
-	local scale = go.get_scale(".")
+	local scale   = go.get_world_scale(".")
+	local rotation = go.get_world_rotation(".")
+	local translation = go.get_world_position(".")
+	
 	self.scale.x = scale.x;
 	self.scale.y = scale.y;
-	--self.scale.z = scale.z;
+	self.scale.z = scale.z;
+	
+	self.rotation.x = rotation.x
+	self.rotation.y = rotation.y
+	self.rotation.z = rotation.z
+	self.rotation.w = rotation.w
+	
+	self.translation.x = translation.x
+	self.translation.y = translation.y
+	self.translation.z = translation.z
+	
 	go.set(self.mesh_id, hash("scale"), self.scale)
+	go.set(self.mesh_id, hash("rotation"), self.rotation)
+	go.set(self.mesh_id, hash("translation"), self.translation)
 	
 	dragonbones.update(self.instance, self.dt)
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
@@ -54,6 +69,8 @@ local function load_world(self)
 	--initiate dragon bones and upload json data
 	self.dt = 1/30.0
 	self.scale = vmath.vector4(1.0)
+	self.rotation = vmath.vector4(1.0)
+	self.translation = vmath.vector4(1.0)
 
 	
 	self.instance = dragonbones.create()
