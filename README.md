@@ -1,7 +1,7 @@
 **USAGE**
 - The DragonBones Editor can be obtained from [Dragon Bones Editor](https://web.archive.org/web/20211013162034/http://tool.egret-labs.org/DragonBonesPro/DragonBonesPro-v5.6.3.exe)
 
-- In Defold create a project and add custom resource folder hereby called custom_res/ and update game.project' custom resource entry.
+- In Defold create a project and add custom resource folder hereby called custom_res/. Update game.project/Project/Custom Resources entry.
 
 - In DragonBones Editor export your animations to custom_res/ folder. Export texture in powers of 2.  Make sure three files are exported to custom resource folder. Two jsons and one png.  
 
@@ -9,17 +9,10 @@
 
 - Add render script. Choose dragonbones.render_script in game.project or add the following to your render script. After the model rendering.
     ```
-        -- in init, add dragon predicate
-        self.predicates = create_predicates("tile", "gui", "particle", "model", "debug_text", "dragon")
-
-        --in update, after model rendering
-        -- render `dragon`
-        --
-        render.enable_state(graphics.STATE_BLEND)
+        --in update, change tile rendering blend func
         render.set_blend_func(graphics.BLEND_FACTOR_ONE, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
-        render.draw(predicates.dragon, draw_options_world)
+        render.draw(predicates.tile, draw_options_world)
         render.set_blend_func(graphics.BLEND_FACTOR_SRC_ALPHA, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
-        render.disable_state(graphics.STATE_BLEND)
     ```
 
 - Add BatchDragonModel.go to your collection. Rename it if needed. 
@@ -47,9 +40,17 @@
 
             self.instance = nil
             self.instance_name = "buffer1"
+            self.tex_name = "texture1"
+
+
+            module_instance.textures[self.tex_name] = hash(self.my_texture) 
+            -- from go.property("my_texture", resource.texture())
+
+
             local tbl = {
                 skeleton_json = skeleton_json, 
                 tex_json = tex_json,
+                texture_name   = self.tex_name, --optional
                 buffer_prefix = self.instance_name
             }
             
