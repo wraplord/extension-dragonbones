@@ -24,8 +24,7 @@ instances {
   id: "Rooster"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
-    x: 200.0
-    z: 0.5
+    x: 39.0
   }
   component_properties {
     id: "BatchDragonModel"
@@ -44,7 +43,7 @@ instances {
   id: "Bicycle1"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
-    x: 216.0
+    x: 1026.0
   }
   component_properties {
     id: "BatchDragonModel"
@@ -112,18 +111,35 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"anim\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    z: -449.0\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 4.0\n"
+  "    y: 4.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
   "  id: \"camera\"\n"
   "  type: \"camera\"\n"
   "  data: \"aspect_ratio: 1.333333\\n"
-  "fov: 0.7854\\n"
+  "fov: 0.78\\n"
   "near_z: 10.0\\n"
   "far_z: 1000.0\\n"
-  "orthographic_mode: ORTHO_MODE_AUTO_FIT\\n"
   "\"\n"
   "}\n"
   ""
   position {
-    x: 24.0
-    z: 911.0
+    x: 39.0
+    z: 851.0
   }
 }

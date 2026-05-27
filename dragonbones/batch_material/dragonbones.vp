@@ -1,23 +1,32 @@
 #version 140
 
-in mediump vec3 a_position;
+in highp vec3 a_position;
 in mediump vec2 a_texCoord;
 in mediump vec3 a_normal;
-in mediump mat4 a_mat;
+in highp mat4 a_mat;
 
-out highp vec4 v_position;
 out mediump vec2 v_texCoord;
-out mediump vec3 v_normal;
 
 uniform vs_uniforms
 {
-    mediump mat4 mtx_worldviewproj;
+    highp mat4 mtx_worldviewproj;
+    mediump mat4 mtx_view;
+    mediump vec4 scale;
 };
 
 void main() {
-    vec4 p = a_mat  * vec4(a_position.xy, 0.0, 1.0);
-    v_position = p;
+    highp vec4 p = a_mat * vec4(a_position.xyz, 1.0);
+    //highp mat4 m = a_mat;
+    //highp vec4 u;
+    
+    //u.x = m[0].x * v.x + m[1].x * v.y + m[2].x * v.z + m[3].x * v.w;
+    //u.y = m[0].y * v.x + m[1].y * v.y + m[2].y * v.z + m[3].y * v.w;
+    //u.z = m[0].z * v.x + m[1].z * v.y + m[2].z * v.z + m[3].z * v.w;
+    //u.w = 1.0;
+    
+    float sx = 1.0 / scale.x;
+    float sy = 1.0 / scale.y;
+    vec4 p2 = vec4(p.x + mtx_view[3][0] * sx , p.y + mtx_view[3][1] * sy, p.z, 1.0);
     v_texCoord = a_texCoord;
-    v_normal   = a_normal;
-    gl_Position =  mtx_worldviewproj * p;
+    gl_Position =  mtx_worldviewproj * p2;
 }

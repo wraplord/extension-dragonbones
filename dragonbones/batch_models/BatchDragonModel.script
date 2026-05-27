@@ -31,6 +31,12 @@ end
 
 local function update_db_world(self)
 	--update animation and get buffers
+	local scale = go.get_scale(".")
+	self.scale.x = scale.x;
+	self.scale.y = scale.y;
+	--self.scale.z = scale.z;
+	go.set(self.mesh_id, hash("scale"), self.scale)
+	
 	dragonbones.update(self.instance, self.dt)
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
 	--pprint(buffer_table)
@@ -47,6 +53,9 @@ local function load_world(self)
 
 	--initiate dragon bones and upload json data
 	self.dt = 1/30.0
+	self.scale = vmath.vector4(1.0)
+
+	
 	self.instance = dragonbones.create()
 	mod_instances.instances[self.instance_name] = self.instance
 	
@@ -78,6 +87,7 @@ function on_message(self, message_id, message, sender)
 		msg.post(sender, "loaded", {instance_name = self.instance_name})
 	elseif message_id == hash("update") then
 		if self.enabled then
+			self.camera_pos = message.camera_pos or self.camera_pos
 			self.dt = message.dt or self.dt
 			if self.instance then
 				update_db_world(self)
