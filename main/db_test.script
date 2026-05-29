@@ -54,6 +54,8 @@ function init(self)
 	go.animate("/nest", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
 	go.EASING_LINEAR, 5)
 
+	go.animate("/main", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
+	go.EASING_LINEAR, 5)
 end
 
 local function walk(self, instance, flip)
