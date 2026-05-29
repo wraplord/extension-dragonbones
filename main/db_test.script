@@ -50,13 +50,14 @@ function init(self)
 	go.EASING_LINEAR, 4)
 	go.animate("/Bicycle3", "position.x", go.PLAYBACK_LOOP_FORWARD, -300, 
 	go.EASING_LINEAR, 8)
-	--go.animate("/Bicycle4", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
-	--go.EASING_LINEAR, 5)
+
+	go.animate("/nest", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
+	go.EASING_LINEAR, 5)
 
 end
 
 local function walk(self, instance, flip)
-	local p = go.get_position("/Rooster")
+	local p = go.get_position("/nest")
 	dragonbones.set_flip_x(instance, not flip)
 
 	--override flipping of some slots	
@@ -64,7 +65,7 @@ local function walk(self, instance, flip)
 	dragonbones.set_slot_scale(instance, "copyrights", scale_x, 1.0)
 
 	local d = flip and -400 or 400
-	go.animate("/Rooster", "position.x", go.PLAYBACK_ONCE_FORWARD, p.x + d, go.EASING_LINEAR, 5, 0, function()
+	go.animate("/nest", "position.x", go.PLAYBACK_ONCE_FORWARD, p.x + d, go.EASING_LINEAR, 5, 0, function()
 		walk(self, instance, not flip)
 	end)
 	

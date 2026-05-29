@@ -37,9 +37,9 @@ end
 
 local function update_db_world(self)
 	--update animation and get buffers
-	local scale   = go.get_world_scale(".")
-	local rotation = go.get_world_rotation(".")
-	local translation = go.get_world_position(".")
+	local scale   = go.get_scale(".")
+	local rotation = go.get_rotation(".")
+	local translation = go.get_position(".")
 	
 	self.scale.x = scale.x;
 	self.scale.y = scale.y;

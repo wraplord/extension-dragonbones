@@ -21,30 +21,6 @@ instances {
   }
 }
 instances {
-  id: "Rooster"
-  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
-  position {
-    x: 769.0
-    z: 0.6
-  }
-  rotation {
-    z: 0.38268343
-    w: 0.9238795
-  }
-  component_properties {
-    id: "BatchDragonModel"
-    properties {
-      id: "u_texture"
-      value: "/custom_res/character2/Rooster_Ani_tex.png"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
-}
-instances {
   id: "Bicycle1"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
@@ -105,6 +81,29 @@ instances {
     y: 0.5
   }
 }
+instances {
+  id: "Rooster"
+  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
+  position {
+    z: 0.6
+  }
+  rotation {
+    z: 0.38268343
+    w: 0.9238795
+  }
+  component_properties {
+    id: "BatchDragonModel"
+    properties {
+      id: "u_texture"
+      value: "/custom_res/character2/Rooster_Ani_tex.png"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "main"
@@ -146,7 +145,12 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 769.0
+    x: -5.0
     z: 851.0
   }
+}
+embedded_instances {
+  id: "nest"
+  children: "Rooster"
+  data: ""
 }
