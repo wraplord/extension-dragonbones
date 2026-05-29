@@ -167,7 +167,7 @@ namespace dmDragonBones
         }
 
         
-        dmLogInfo("DragonBones Initialized");
+        //dmLogInfo("DragonBones Initialized");
 
         lua_pushlightuserdata(L, instance);
 
