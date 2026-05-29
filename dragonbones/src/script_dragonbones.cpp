@@ -136,7 +136,7 @@ namespace dmDragonBones
         auto* armatureObject = instance->factory->buildArmature(armatureNameToBuild, "", "", dragonBonesData->name);
         if (armatureObject)
         {
-            dmLogInfo("Armature '%s' built at %p, instance is %p", armatureNameToBuild.c_str(), instance->armature, instance);
+            //dmLogInfo("Armature '%s' built at %p, instance is %p", armatureNameToBuild.c_str(), instance->armature, instance);
             instance->armature = armatureObject;
             instance->dragonBones->getClock()->add(armatureObject);
             armatureObject->getAnimation()->reset();
@@ -1338,7 +1338,7 @@ namespace dmDragonBones
          "", dragonBones::AnimationFadeOutMode::SameLayerAndGroup);
         if(anim_state) {
             anim_state->timeScale = time_scale;
-            dmLogInfo("Fading in animation: '%s' on layer %d, loop: %d, fade: %f", name.c_str(), (int)layer, playTimes, (float)fade_in_time);
+            //dmLogInfo("Fading in animation: '%s' on layer %d, loop: %d, fade: %f", name.c_str(), (int)layer, playTimes, (float)fade_in_time);
         } else {
             dmLogInfo("Animation not found: '%s'", name.c_str());
         }
