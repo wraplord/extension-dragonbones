@@ -277,10 +277,6 @@
           type: userdata
           desc: dragobones instance.
 
-        - name: event_name
-          type: string
-          desc: The following event_names (frameEvent, soundEvent, fadeOutComplete, fadeOut,fadeInComplete, fadeIn, complete,loopComplete,start)
-
         - name: callback
           type: function
           desc: callback(self, tbl) tbl has following fields
