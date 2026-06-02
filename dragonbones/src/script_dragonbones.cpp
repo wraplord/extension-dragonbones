@@ -1119,6 +1119,8 @@ namespace dmDragonBones
         if (slot) {
             slot->setVisible(val);
             slot->invalidUpdate();
+        } else {
+            dmLogInfo("No such slot %s", boneNameChars);
         }
         return 1;
     }

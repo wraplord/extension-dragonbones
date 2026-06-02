@@ -246,6 +246,23 @@
         - name: visible
           type: bool
           desc: false or true
+          
+  - name: set_slot_display_index
+    type: function
+    desc: Switch slot image
+
+    parameters:
+        - name: instance
+          type: userdata
+          desc: dragobones instance.
+
+        - name: slot_name
+          type: string
+          desc: name of the slot
+
+        - name: index
+          type: integer
+          desc: -1 .. N
 
   - name: set_slot_scale
     type: function
