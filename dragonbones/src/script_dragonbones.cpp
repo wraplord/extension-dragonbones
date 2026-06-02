@@ -1154,7 +1154,8 @@ namespace dmDragonBones
         auto* slot = instance->armature->getSlot(name);
         if (slot) {
             slot->setDisplayIndex(index);
-            slot->invalidUpdate();
+            slot->displayController = "none";
+            //slot->invalidUpdate();
         }
         return 1;
     }
