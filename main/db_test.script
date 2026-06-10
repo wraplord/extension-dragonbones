@@ -31,11 +31,11 @@ function init(self)
 
 
 	msg.post("/Rooster", hash("load"), tbl2)
-	
+	--msg.post("/Rooster", hash("coordinate_space"), {is_local_space = false})
 
-	go.animate("/Rooster", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, go.EASING_LINEAR, 15)
+	--go.animate("/Rooster", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, go.EASING_LINEAR, 15)
 
-	go.animate("/main", "position.x", go.PLAYBACK_LOOP_FORWARD, -1800, go.EASING_LINEAR, 10)
+	--go.animate("/main", "position.x", go.PLAYBACK_LOOP_FORWARD, -1800, go.EASING_LINEAR, 10)
 end
 
 
@@ -54,6 +54,12 @@ local function walk(self, instance, flip)
 	
 end
 
+function update(self, dt)
+	if self.rooster_instance then
+		msg.post("/Rooster", hash("update"), { dt = dt})
+	end
+end
+
 function on_message(self, message_id, message)
 	if message_id == hash("loaded") then
 		local instance = module_instance.instances[message.instance_name]
@@ -63,13 +69,11 @@ function on_message(self, message_id, message)
 		if message.instance_name == self.rooster_name then
 			--walk(self, instance, true)
 			pprint(dragonbones.get_anination_names(instance))
-
+			self.rooster_instance  = instance
 			--use negative time_scale to reverse play.
 			local config = {layer = 0, play_times = 0, fade_in_time = 0.2, time_scale = 1.50 }
 			dragonbones.fade_in_animation(instance, "rooster_walk_anim", config)
-			timer.delay(1/24.0, true, function()
-				msg.post("/Rooster", hash("update"), { dt = 1/24.0})
-			end)
+			
 		end
 		
 		--dragonbones.add_event_callback(instance, function(me, tbl)

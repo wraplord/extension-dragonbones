@@ -3,7 +3,7 @@ instances {
   id: "Rooster"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
-    x: -556.0
+    z: -840.0
   }
   component_properties {
     id: "BatchDragonModel"
@@ -17,6 +17,7 @@ instances {
 scale_along_z: 0
 embedded_instances {
   id: "main"
+  children: "nest"
   data: "components {\n"
   "  id: \"db_test\"\n"
   "  component: \"/main/db_test.script\"\n"
@@ -57,6 +58,9 @@ embedded_instances {
   "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
   "}\\n"
   "\"\n"
+  "  position {\n"
+  "    z: -817.8\n"
+  "  }\n"
   "  scale {\n"
   "    x: 4.0\n"
   "    y: 4.0\n"
@@ -77,7 +81,8 @@ embedded_instances {
   "}\\n"
   "\"\n"
   "  position {\n"
-  "    x: -556.0\n"
+  "    x: -356.0\n"
+  "    z: -818.0\n"
   "  }\n"
   "  scale {\n"
   "    x: 8.0\n"

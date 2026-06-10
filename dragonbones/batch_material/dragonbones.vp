@@ -12,10 +12,9 @@ uniform vs_uniforms
     highp mat4 mtx_viewproj;
     highp mat4 mtx_worldviewproj;
     
-    highp vec4 scale;
-    highp vec4 rotation;
-    highp vec4 translation;
-
+    mediump vec4 scale;
+    mediump vec4 rotation;
+    mediump vec4 translation;
 };
 
 mat4 quat_to_mat4(vec4 q) {
@@ -60,7 +59,7 @@ void main() {
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
-        translation.x, translation.y, 0, 1.0
+        translation.x, translation.y, translation.z, 1.0
     ); 
    
     mat4 world =  translation1 * rotation1 * scale1 ; 
@@ -69,8 +68,8 @@ void main() {
 
     //translate the world manually!!!!
     gl_Position = mtx_viewproj * world * p;
-
-    //lead to discrepancy
+    
+    //lead to discrepancy WHEN THE CAMERA MOVES
     //gl_Position = mtx_worldviewproj * p;
 }
 
