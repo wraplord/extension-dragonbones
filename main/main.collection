@@ -1,95 +1,9 @@
 name: "main"
 instances {
-  id: "Bicycle4"
-  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
-  position {
-    x: -4.0
-    y: -176.0
-    z: 0.2
-  }
-  component_properties {
-    id: "BatchDragonModel"
-    properties {
-      id: "u_texture"
-      value: "/custom_res/character4/Bicycle_tex.png"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
-}
-instances {
-  id: "Bicycle1"
-  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
-  position {
-    x: 1026.0
-  }
-  component_properties {
-    id: "BatchDragonModel"
-    properties {
-      id: "u_texture"
-      value: "/custom_res/character4/Bicycle_tex.png"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
-}
-instances {
-  id: "Bicycle2"
-  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
-  position {
-    x: 114.0
-    y: 74.0
-    z: 0.1
-  }
-  component_properties {
-    id: "BatchDragonModel"
-    properties {
-      id: "u_texture"
-      value: "/custom_res/character4/Bicycle_tex.png"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
-}
-instances {
-  id: "Bicycle3"
-  prototype: "/dragonbones/batch_models/BatchDragonModel.go"
-  position {
-    x: 171.0
-    y: -46.0
-    z: 0.15
-  }
-  component_properties {
-    id: "BatchDragonModel"
-    properties {
-      id: "u_texture"
-      value: "/custom_res/character4/Bicycle_tex.png"
-      type: PROPERTY_TYPE_HASH
-    }
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-  }
-}
-instances {
   id: "Rooster"
   prototype: "/dragonbones/batch_models/BatchDragonModel.go"
   position {
-    z: 0.6
-  }
-  rotation {
-    z: 0.38268343
-    w: 0.9238795
+    x: -556.0
   }
   component_properties {
     id: "BatchDragonModel"
@@ -98,10 +12,6 @@ instances {
       value: "/custom_res/character2/Rooster_Ani_tex.png"
       type: PROPERTY_TYPE_HASH
     }
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
   }
 }
 scale_along_z: 0
@@ -117,24 +27,6 @@ embedded_instances {
   "  }\n"
   "}\n"
   "embedded_components {\n"
-  "  id: \"sprite\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"default_animation: \\\"anim\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "textures {\\n"
-  "  sampler: \\\"texture_sampler\\\"\\n"
-  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
-  "}\\n"
-  "\"\n"
-  "  position {\n"
-  "    z: -789.0\n"
-  "  }\n"
-  "  scale {\n"
-  "    x: 4.0\n"
-  "    y: 4.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
   "  id: \"camera\"\n"
   "  type: \"camera\"\n"
   "  data: \"aspect_ratio: 1.333333\\n"
@@ -145,12 +37,52 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -5.0
     z: 851.0
   }
 }
 embedded_instances {
   id: "nest"
   children: "Rooster"
-  data: ""
+  data: "embedded_components {\n"
+  "  id: \"hint_pos1\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"anim\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 32.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  scale {\n"
+  "    x: 4.0\n"
+  "    y: 4.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"hint_pos2\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"anim\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 32.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/builtins/graphics/particle_blob.tilesource\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -556.0\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 8.0\n"
+  "    y: 8.0\n"
+  "  }\n"
+  "}\n"
+  ""
 }

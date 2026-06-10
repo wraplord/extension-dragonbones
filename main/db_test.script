@@ -24,39 +24,20 @@ function init(self)
 	
 
 	self.instance = nil
-	self.bicycle1_name = module_instance.create_buffer_prefix_name()
-	self.bicycle2_name = module_instance.create_buffer_prefix_name()
-	self.bicycle3_name = module_instance.create_buffer_prefix_name()
-	self.bicycle4_name = module_instance.create_buffer_prefix_name()
-
-	local tbl11 = getInitData("character4/Bicycle", self.bicycle1_name)
-	local tbl12 = getInitData("character4/Bicycle", self.bicycle2_name)
-	local tbl13 = getInitData("character4/Bicycle", self.bicycle3_name)
-	local tbl14 = getInitData("character4/Bicycle", self.bicycle4_name)
+	self.cam_pos = vmath.vector4()
 	
 	self.rooster_name = module_instance.create_buffer_prefix_name()
 	local tbl2 = getInitData("character2/Rooster_Ani", self.rooster_name)
 
-	msg.post("/Bicycle1",  hash("load"), tbl11)
-	msg.post("/Bicycle2",  hash("load"), tbl12)
-	msg.post("/Bicycle3",  hash("load"), tbl13)
-	msg.post("/Bicycle4",  hash("load"), tbl14)
-	
+
 	msg.post("/Rooster", hash("load"), tbl2)
 	
-	go.animate("/Bicycle1", "position.x", go.PLAYBACK_LOOP_PINGPONG, -400, 
-	go.EASING_LINEAR, 5)
-	go.animate("/Bicycle2", "position.x", go.PLAYBACK_LOOP_FORWARD, -400, 
-	go.EASING_LINEAR, 4)
-	go.animate("/Bicycle3", "position.x", go.PLAYBACK_LOOP_FORWARD, -300, 
-	go.EASING_LINEAR, 8)
 
-	go.animate("/nest", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
-	go.EASING_LINEAR, 5)
+	go.animate("/Rooster", "euler.z", go.PLAYBACK_LOOP_FORWARD, 359, go.EASING_LINEAR, 15)
 
-	go.animate("/main", "position.x", go.PLAYBACK_LOOP_FORWARD, -359, 
-	go.EASING_LINEAR, 5)
+	go.animate("/main", "position.x", go.PLAYBACK_LOOP_FORWARD, -1800, go.EASING_LINEAR, 10)
 end
+
 
 local function walk(self, instance, flip)
 	local p = go.get_position("/nest")
@@ -87,32 +68,8 @@ function on_message(self, message_id, message)
 			local config = {layer = 0, play_times = 0, fade_in_time = 0.2, time_scale = 1.50 }
 			dragonbones.fade_in_animation(instance, "rooster_walk_anim", config)
 			timer.delay(1/24.0, true, function()
-				msg.post("/Rooster", hash("update"), { dt = 1/24.0 })
+				msg.post("/Rooster", hash("update"), { dt = 1/24.0})
 			end)
-		elseif message.instance_name ==  self.bicycle1_name then
-			
-			timer.delay(1/30.0, true, function()
-				msg.post("/Bicycle1", hash("update"), { dt = 1/30.0 })
-			end)
-			--SIMPLE TEXTURE SWAPPING
-			timer.delay(10, false, function()
-				local tex_name = "my_unique_texture_id"
-				module_instance.textures[tex_name] = hash(self.my_texture) -- from go.property
-				msg.post("/Bicycle1", hash("swap_texture"), {texture_name = tex_name})
-			end)
-		elseif message.instance_name ==  self.bicycle2_name then
-			timer.delay(1/30.0, true, function()
-				msg.post("/Bicycle2", hash("update"), { dt = 1/30.0 })
-			end)
-			msg.post("/Bicycle2", hash("tint"), {tint = vmath.vector4(1.0, 0.0, 0.0, 1.0)})
-		elseif message.instance_name == self.bicycle3_name then
-			timer.delay(1/30.0, true, function()
-				msg.post("/Bicycle3", hash("update"), { dt = 1/30.0 })
-			end)
-		elseif message.instance_name == self.bicycle4_name then
-			--timer.delay(1/30.0, true, function()
-			--	msg.post("/Bicycle4", hash("update"), { dt = 1/30.0 })
-			--end)
 		end
 		
 		--dragonbones.add_event_callback(instance, function(me, tbl)

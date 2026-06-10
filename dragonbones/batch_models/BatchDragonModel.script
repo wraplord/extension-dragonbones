@@ -37,6 +37,7 @@ end
 
 local function update_db_world(self)
 	--update animation and get buffers
+	--
 	local scale, rotation, translation
 	if self.local_space then
 		scale   = go.get_scale(".")
@@ -65,6 +66,7 @@ local function update_db_world(self)
 	go.set(self.mesh_id, hash("scale"), self.scale)
 	go.set(self.mesh_id, hash("rotation"), self.rotation)
 	go.set(self.mesh_id, hash("translation"), self.translation)
+	--]]
 	
 	dragonbones.update(self.instance, self.dt)
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
@@ -104,6 +106,7 @@ local function load_world(self)
 	--pprint(tbl_animations)
 	dragonbones.fade_in_animation(self.instance, tbl_animations[1])
 
+	self.viewport = vmath.vector4(800, 600, 0, 0)
 	if self.enabled then
 		update_db_world(self)
 	end
@@ -117,10 +120,14 @@ function on_message(self, message_id, message, sender)
 		self.instance_name =  message.buffer_prefix
 		self.enabled = true
 		load_world(self)
+
+		--local vp = message.viewport or self.viewport
+		--self.viewport.x = vp.x ;
+		--self.viewport.y = vp.y ;
+		--go.set(self.mesh_id, hash("viewport"), self.viewport)
 		msg.post(sender, "loaded", {instance_name = self.instance_name})
 	elseif message_id == hash("update") then
 		if self.enabled then
-			self.camera_pos = message.camera_pos or self.camera_pos
 			self.dt = message.dt or self.dt
 			if self.instance then
 				update_db_world(self)
