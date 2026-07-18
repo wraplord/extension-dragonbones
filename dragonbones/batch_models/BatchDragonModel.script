@@ -110,6 +110,18 @@ local function load_world(self)
 	if self.enabled then
 		update_db_world(self)
 	end
+	self.loaded = true
+end
+
+function unload(self)
+	if not self.loaded then return end
+	if mod_instances.buffers[self.instance_name] then
+		resource.release(mod_instances.buffers[self.instance_name])
+		mod_instances.buffers[self.instance_name] = nil
+	end
+	dragonbones.destroy(self.instance)
+	mod_instances.instances[self.instance_name] = nil
+	self.loaded = false
 end
 
 function on_message(self, message_id, message, sender)
@@ -146,14 +158,11 @@ function on_message(self, message_id, message, sender)
 		self.local_space = message.is_local_space
 	elseif message_id == hash("tint") then
 		go.set(self.mesh_id, hash("tint"), message.tint)
+	elseif message_id == hash("unload") then
+		unload(self)
 	end
 end
 
 function final(self)
-	if mod_instances.buffers[self.instance_name] then
-		resource.release(mod_instances.buffers[self.instance_name])
-		mod_instances.buffers[self.instance_name] = nil
-	end
-	dragonbones.destroy(self.instance)
-	mod_instances.instances[self.instance_name] = nil
+	unload(self)
 end
