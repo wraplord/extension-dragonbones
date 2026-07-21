@@ -28,8 +28,15 @@ local function set_mesh_data(self, mesh_no, buffer_data)
 		my_buffer = mod_instances.buffers[self.instance_name]
 		resource.set_buffer(my_buffer, buffer_data.batch_buffer)
 	else
-		my_buffer = resource.create_buffer(buffer_name, { buffer = buffer_data.batch_buffer })
+		local success
+		success, my_buffer = pcall(function ()
+			return resource.create_buffer(buffer_name, { buffer = buffer_data.batch_buffer }) 
+		end)
+		if not success then
+			my_buffer = hash(buffer_name)
+		end
 		mod_instances.buffers[self.instance_name] = my_buffer 
+		
 	end
 
 	go.set(mesh_id, hash("vertices"), my_buffer )
