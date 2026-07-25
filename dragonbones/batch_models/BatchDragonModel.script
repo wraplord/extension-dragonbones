@@ -3,7 +3,7 @@ go.property("u_texture", resource.texture())
 local mod_instances = require("dragonbones.shared.instance")
 
 
-local function spawn_mesh(self, no)
+local function spawn_mesh(self)
 	--local z = 0 + 0.01 * no
 	local id = factory.create("#factory") --, vmath.vector3(0, 0, z))
 	local mesh_id =  msg.url(nil, id, "mesh" )
@@ -19,27 +19,23 @@ local function spawn_mesh(self, no)
 	return mesh_id
 end
 
-local function set_mesh_data(self, mesh_no, buffer_data)
-	local mesh_id = self.meshes[mesh_no]
-	local buffer_name = "/" .. self.instance_name .. tostring(mesh_no) .. ".bufferc"
-
-	local my_buffer
-	if mod_instances.buffers[self.instance_name] then
-		my_buffer = mod_instances.buffers[self.instance_name]
+local function set_mesh_data(self, buffer_data)
+	local my_buffer = mod_instances.buffers[self.instance_name]
+	if my_buffer then
 		resource.set_buffer(my_buffer, buffer_data.batch_buffer)
 	else
-		local success
-		success, my_buffer = pcall(function ()
-			return resource.create_buffer(buffer_name, { buffer = buffer_data.batch_buffer }) 
+		local success, new_buffer = pcall(function ()
+			return resource.create_buffer(self.buffer_name, { buffer = buffer_data.batch_buffer }) 
 		end)
 		if not success then
-			my_buffer = hash(buffer_name)
+			msg.post(self.owner, "load_error", {info = "Buffer name already used."})
+			return
 		end
-		mod_instances.buffers[self.instance_name] = my_buffer 
-		
+		mod_instances.buffers[self.instance_name] = new_buffer 
+		my_buffer = new_buffer
 	end
 
-	go.set(mesh_id, hash("vertices"), my_buffer )
+	go.set(self.mesh_id, hash("vertices"), my_buffer )
 end
 
 local function update_db_world(self)
@@ -79,7 +75,7 @@ local function update_db_world(self)
 	local buffer_table = dragonbones.get_batch_buffer(self.instance)
 	--pprint(buffer_table)
 
-	set_mesh_data(self, 1, buffer_table)
+	set_mesh_data(self,  buffer_table)
 
 	--free resources, IMPORTANT!
 	collectgarbage("step", 1)
@@ -102,34 +98,21 @@ local function load_world(self)
 	
 	dragonbones.load_data(self.instance, skeleton_json, tex_json)
 
-	self.current_buffers = {}
-	self.meshes  = {}
 
 	--dragonbones.get_no_slots(self.instance)
-	self.mesh_id = spawn_mesh(self, 1)
-	table.insert(self.meshes, self.mesh_id)
+	self.mesh_id = spawn_mesh(self)
 
 	local tbl_animations = dragonbones.get_anination_names(self.instance)
 	--pprint(tbl_animations)
 	dragonbones.fade_in_animation(self.instance, tbl_animations[1])
 
-	self.viewport = vmath.vector4(800, 600, 0, 0)
 	if self.enabled then
 		update_db_world(self)
 	end
 	self.loaded = true
 end
 
-function unload(self)
-	if not self.loaded then return end
-	if mod_instances.buffers[self.instance_name] then
-		resource.release(mod_instances.buffers[self.instance_name])
-		mod_instances.buffers[self.instance_name] = nil
-	end
-	dragonbones.destroy(self.instance)
-	mod_instances.instances[self.instance_name] = nil
-	self.loaded = false
-end
+
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("load") then
@@ -138,12 +121,10 @@ function on_message(self, message_id, message, sender)
 		self.texture_name = message.texture_name
 		self.instance_name =  message.buffer_prefix
 		self.enabled = true
-		load_world(self)
+		self.buffer_name  = "/" .. self.instance_name .. ".bufferc"
+		self.owner = sender
 
-		--local vp = message.viewport or self.viewport
-		--self.viewport.x = vp.x ;
-		--self.viewport.y = vp.y ;
-		--go.set(self.mesh_id, hash("viewport"), self.viewport)
+		load_world(self)
 		msg.post(sender, "loaded", {instance_name = self.instance_name})
 	elseif message_id == hash("update") then
 		if self.enabled then
@@ -165,11 +146,9 @@ function on_message(self, message_id, message, sender)
 		self.local_space = message.is_local_space
 	elseif message_id == hash("tint") then
 		go.set(self.mesh_id, hash("tint"), message.tint)
-	elseif message_id == hash("unload") then
-		unload(self)
 	end
 end
 
 function final(self)
-	unload(self)
+	--let lua gc take care
 end
