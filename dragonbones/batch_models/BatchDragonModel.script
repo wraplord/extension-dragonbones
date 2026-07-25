@@ -41,30 +41,10 @@ end
 local function update_db_world(self)
 	--update animation and get buffers
 	--
-	local scale, rotation, translation
-	if self.local_space then
-		scale   = go.get_scale(".")
-		rotation = go.get_rotation(".")
-		translation = go.get_position(".")
-	else
-		scale   = go.get_world_scale(".")
-		rotation = go.get_world_rotation(".")
-		translation = go.get_world_position(".")
-	end
-	
-	
-	self.scale.x = scale.x;
-	self.scale.y = scale.y;
-	self.scale.z = scale.z;
-	
-	self.rotation.x = rotation.x
-	self.rotation.y = rotation.y
-	self.rotation.z = rotation.z
-	self.rotation.w = rotation.w
-	
-	self.translation.x = translation.x
-	self.translation.y = translation.y
-	self.translation.z = translation.z
+	--local scale, rotation, translation
+	self.scale   = go.get_world_scale(".")
+	self.rotation = go.get_world_rotation(".")
+	self.translation = go.get_world_position(".")
 	
 	go.set(self.mesh_id, hash("scale"), self.scale)
 	go.set(self.mesh_id, hash("rotation"), self.rotation)
@@ -90,7 +70,6 @@ local function load_world(self)
 	self.scale = vmath.vector4(1.0)
 	self.rotation = vmath.vector4(1.0)
 	self.translation = vmath.vector4(1.0)
-	self.local_space = false
 
 	
 	self.instance = dragonbones.create()
@@ -142,8 +121,6 @@ function on_message(self, message_id, message, sender)
 		if tex then
 			go.set(self.mesh_id, "texture0",  tex)
 		end
-	elseif message_id == hash("coordinate_space") then
-		self.local_space = message.is_local_space
 	elseif message_id == hash("tint") then
 		go.set(self.mesh_id, hash("tint"), message.tint)
 	end

@@ -39,7 +39,7 @@
             msg.post(".", "acquire_input_focus")
 
             self.instance = nil
-            self.instance_name = "buffer1"
+            self.instance_name = "buffer1" --unique
             self.tex_name = "texture1"
 
 
@@ -168,15 +168,15 @@ function replace_skin(instance, armature_name)
 <pre>
     hash("load")
         Message format = {
-            skeleton_json = string  --valid path
+            skeleton_json = string  --custom resource valid path
             tex_json = string  
             buffer_prefix = string --unique
         }  
-        Return
+        Return "loaded"
             Message format = {
                  instance_name = string -- buffer_prefix from incoming
             } 
-            module_instance.instances[buffer_prefix] state changed.  
+            instance =  module_instance.instances[instance_name] state changed.  
 
     hash("update")
       Message format = {  
