@@ -42,9 +42,17 @@ local function update_db_world(self)
 	--update animation and get buffers
 	--
 	--local scale, rotation, translation
-	self.scale   = go.get_world_scale(".")
+	local scale   = go.get_world_scale(".")
+	self.scale.x  = scale.x ; 
+	self.scale.y  = scale.y ; 
+	self.scale.z  = scale.z ; 
+
 	self.rotation = go.get_world_rotation(".")
-	self.translation = go.get_world_position(".")
+
+	local translation = go.get_world_position(".")
+	self.translation.x = translation.x;
+	self.translation.y = translation.y;
+	self.translation.z = translation.z;
 	
 	go.set(self.mesh_id, hash("scale"), self.scale)
 	go.set(self.mesh_id, hash("rotation"), self.rotation)
