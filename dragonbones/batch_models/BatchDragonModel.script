@@ -28,7 +28,7 @@ local function set_mesh_data(self, buffer_data)
 			return resource.create_buffer(self.buffer_name, { buffer = buffer_data.batch_buffer }) 
 		end)
 		if not success then
-			msg.post(self.owner, "load_error", {info = "Buffer name already used."})
+			print("Mesh buffer name already used.")
 			return
 		end
 		mod_instances.buffers[self.instance_name] = new_buffer 
