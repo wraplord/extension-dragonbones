@@ -5,7 +5,7 @@ local mod_instances = require("dragonbones.shared.instance")
 
 local function spawn_mesh(self)
 	--local z = 0 + 0.01 * no
-	local id = factory.create("#factory") --, vmath.vector3(0, 0, z))
+	local id = factory.create("#factory", vmath.vector3(0, 0, 0))
 	local mesh_id =  msg.url(nil, id, "mesh" )
 	go.set_parent(id, ".")
 
