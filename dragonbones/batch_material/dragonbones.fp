@@ -10,7 +10,7 @@ uniform fs_uniforms
 };
 
 
-out vec2 out_fragColor;
+//out vec2 out_fragColor;
 
 void main() {
     //gl_FragColor = texture2D(u_texture, v_texCoord);
